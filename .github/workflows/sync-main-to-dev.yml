@@ -1,0 +1,25 @@
+name: Sync Main to Dev
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Sync Main to Dev
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+
+      - name: Merge main into dev
+        run: |
+          git checkout dev
+          git merge main
+          git push origin dev
