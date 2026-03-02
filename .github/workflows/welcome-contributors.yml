@@ -16,8 +16,8 @@ jobs:
       - name: Welcome First-time Contributors
         uses: actions/first-interaction@v3
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-message: |
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          issue_message: |
             👋 **Welcome to ACCESS Web Portal!**
 
             Thank you for opening your first issue! We're excited to have you as part of our community. 🎉
@@ -30,7 +30,7 @@ jobs:
             Feel free to join our community discussions and explore our [contributing guidelines](../CONTRIBUTING.md) if you'd like to help fix this issue yourself!
 
             Happy coding! 💻
-          pr-message: |
+          pr_message: |
             🎉 **Congratulations on your first Pull Request!**
 
             Thank you for contributing to ACCESS Web Portal! We're thrilled to have you join our community of contributors. 🚀
@@ -44,3 +44,4 @@ jobs:
             A maintainer will review your changes soon. We appreciate your patience and contribution!
 
             Welcome aboard! 🎊
+
