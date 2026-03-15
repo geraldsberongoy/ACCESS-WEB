@@ -8,8 +8,12 @@ export default function LandingPage() {
     <div className="flex min-h-screen flex-col">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="relative flex min-h-screen flex-col bg-black">
-        {/* animated 3-D floating blocks — owns the dark background */}
-        <FloatingBlocks />
+        {/* animated 3-D floating blocks — pinned to the right half */}
+        <div className="absolute inset-y-0 left-150 bottom-40 w-full flex justify-end pointer-events-none">
+          <div className="w-1/2 h-full">
+            <FloatingBlocks />
+          </div>
+        </div>
 
         {/* navbar floats above overlay */}
         <div className="relative z-10 pt-4">

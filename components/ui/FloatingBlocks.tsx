@@ -12,25 +12,29 @@ import * as THREE from "three";
 // float    : { speed, amplitude } — vertical bob (optional)
 const BLOCKS = [
   // ── upper-right dense cluster ──────────────────────────────────────────────
-  { position: [ 3.5,  3.5,  0.0] as [number,number,number], size: 1.40, rotation: [0.8, 0.6, 0.3] as [number,number,number], spin: [ 0.004,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.10 } },
-  { position: [ 4.8,  2.8, -0.4] as [number,number,number], size: 1.60, rotation: [1.1, 0.3, 0.5] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.42, amplitude: 0.13 } },
-  { position: [ 5.3,  3.8, -0.2] as [number,number,number], size: 1.25, rotation: [0.5, 1.2, 0.1] as [number,number,number], spin: [ 0.005,  0.004,  0.003] as [number,number,number], float: { speed: 0.55, amplitude: 0.09 } },
-  { position: [ 3.0,  2.8,  1.2] as [number,number,number], size: 1.45, rotation: [0.2, 0.8, 0.6] as [number,number,number], spin: [ 0.003,  0.007,  0.002] as [number,number,number], float: { speed: 0.38, amplitude: 0.11 } },
-  { position: [ 4.4,  4.1,  0.5] as [number,number,number], size: 1.15, rotation: [1.3, 0.5, 0.4] as [number,number,number], spin: [ 0.006,  0.003,  0.004] as [number,number,number], float: { speed: 0.60, amplitude: 0.08 } },
-  { position: [ 5.8,  2.2, -0.8] as [number,number,number], size: 1.10, rotation: [0.7, 1.1, 0.2] as [number,number,number], spin: [ 0.004,  0.005,  0.003] as [number,number,number], float: { speed: 0.48, amplitude: 0.10 } },
+  { position: [ 1.3,  2.9,  0.0] as [number,number,number], size: .9, rotation: [0.8, 0.6, 0.3] as [number,number,number], spin: [ 0.004,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.10 } },
+
+  { position: [ 3.5,  3.5,  0.0] as [number,number,number], size: 1.90, rotation: [0.8, 0.6, 0.3] as [number,number,number], spin: [ 0.004,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.10 } },
+  { position: [ 4.8,  2.8, -0.4] as [number,number,number], size: 2.10, rotation: [1.1, 0.3, 0.5] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.42, amplitude: 0.13 } },
+  { position: [ 5.3,  3.8, -0.2] as [number,number,number], size: 1.75, rotation: [0.5, 1.2, 0.1] as [number,number,number], spin: [ 0.005,  0.004,  0.003] as [number,number,number], float: { speed: 0.55, amplitude: 0.09 } },
+  { position: [ 3.0,  2.8,  1.2] as [number,number,number], size: 1.95, rotation: [0.2, 0.8, 0.6] as [number,number,number], spin: [ 0.003,  0.007,  0.002] as [number,number,number], float: { speed: 0.38, amplitude: 0.11 } },
+  { position: [ 4.4,  4.1,  0.5] as [number,number,number], size: 1.65, rotation: [1.3, 0.5, 0.4] as [number,number,number], spin: [ 0.006,  0.003,  0.004] as [number,number,number], float: { speed: 0.60, amplitude: 0.08 } },
+  { position: [ 5.8,  2.2, -0.8] as [number,number,number], size: 1.60, rotation: [0.7, 1.1, 0.2] as [number,number,number], spin: [ 0.004,  0.005,  0.003] as [number,number,number], float: { speed: 0.48, amplitude: 0.10 } },
 
   // ── mid-right sweep ────────────────────────────────────────────────────────
-  { position: [ 5.2,  0.8,  0.3] as [number,number,number], size: 1.55, rotation: [0.4, 0.9, 0.2] as [number,number,number], spin: [ 0.003,  0.005,  0.002] as [number,number,number], float: { speed: 0.45, amplitude: 0.12 } },
-  { position: [ 4.2,  1.5,  1.5] as [number,number,number], size: 1.45, rotation: [0.6, 0.4, 0.8] as [number,number,number], spin: [ 0.002,  0.006,  0.003] as [number,number,number], float: { speed: 0.35, amplitude: 0.14 } },
-  { position: [ 5.5, -0.2, -1.2] as [number,number,number], size: 1.45, rotation: [1.0, 0.2, 0.5] as [number,number,number], spin: [ 0.005,  0.003,  0.002] as [number,number,number], float: { speed: 0.52, amplitude: 0.11 } },
-  { position: [ 4.9, -0.7, -0.2] as [number,number,number], size: 1.55, rotation: [0.3, 1.0, 0.4] as [number,number,number], spin: [ 0.004,  0.004,  0.002] as [number,number,number], float: { speed: 0.40, amplitude: 0.13 } },
+  { position: [ 5.2,  0.8,  0.3] as [number,number,number], size: 2.05, rotation: [0.4, 0.9, 0.2] as [number,number,number], spin: [ 0.003,  0.005,  0.002] as [number,number,number], float: { speed: 0.45, amplitude: 0.12 } },
+  { position: [ 4.2,  1.5,  1.5] as [number,number,number], size: 1.95, rotation: [0.6, 0.4, 0.8] as [number,number,number], spin: [ 0.002,  0.006,  0.003] as [number,number,number], float: { speed: 0.35, amplitude: 0.14 } },
+  { position: [ 5.5, -0.2, -1.2] as [number,number,number], size: 1.95, rotation: [1.0, 0.2, 0.5] as [number,number,number], spin: [ 0.005,  0.003,  0.002] as [number,number,number], float: { speed: 0.52, amplitude: 0.11 } },
+  { position: [ 4.9, -0.7, -0.2] as [number,number,number], size: 2.05, rotation: [0.3, 1.0, 0.4] as [number,number,number], spin: [ 0.004,  0.004,  0.002] as [number,number,number], float: { speed: 0.40, amplitude: 0.13 } },
 
   // ── lower sweep to center ──────────────────────────────────────────────────
-  { position: [ 4.0, -1.2,  1.0] as [number,number,number], size: 1.55, rotation: [0.9, 0.7, 0.1] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.44, amplitude: 0.12 } },
-  { position: [ 3.8, -2.0,  0.5] as [number,number,number], size: 1.45, rotation: [0.5, 0.6, 0.7] as [number,number,number], spin: [ 0.004,  0.003,  0.003] as [number,number,number], float: { speed: 0.37, amplitude: 0.10 } },
-  { position: [ 2.8, -2.6, -0.4] as [number,number,number], size: 1.40, rotation: [1.2, 0.4, 0.3] as [number,number,number], spin: [ 0.002,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.09 } },
-  { position: [ 2.5, -3.0, -0.3] as [number,number,number], size: 1.35, rotation: [0.6, 1.1, 0.5] as [number,number,number], spin: [ 0.005,  0.004,  0.001] as [number,number,number], float: { speed: 0.43, amplitude: 0.11 } },
-  { position: [ 3.5, -3.4,  0.6] as [number,number,number], size: 1.25, rotation: [0.3, 0.8, 0.9] as [number,number,number], spin: [ 0.003,  0.005,  0.004] as [number,number,number], float: { speed: 0.56, amplitude: 0.08 } },
+  { position: [ 4.0, -1.2,  1.0] as [number,number,number], size: 2.05, rotation: [0.9, 0.7, 0.1] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.44, amplitude: 0.12 } },
+  { position: [ 3.8, -2.0,  0.5] as [number,number,number], size: 1.95, rotation: [0.5, 0.6, 0.7] as [number,number,number], spin: [ 0.004,  0.003,  0.003] as [number,number,number], float: { speed: 0.37, amplitude: 0.10 } },
+  { position: [ 2.8, -2.6, -0.4] as [number,number,number], size: 1.90, rotation: [1.2, 0.4, 0.3] as [number,number,number], spin: [ 0.002,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.09 } },
+  { position: [ 2.5, -3.0, -0.3] as [number,number,number], size: 1.85, rotation: [0.6, 1.1, 0.5] as [number,number,number], spin: [ 0.005,  0.004,  0.001] as [number,number,number], float: { speed: 0.43, amplitude: 0.11 } },
+  { position: [ 0.1, -3.4,  0.6] as [number,number,number], size: 1.75, rotation: [0.3, 0.8, 0.9] as [number,number,number], spin: [ 0.003,  0.005,  0.004] as [number,number,number], float: { speed: 0.56, amplitude: 0.08 } },
+  { position: [ 0, -3.4,  0.6] as [number,number,number], size: 1.5, rotation: [0.3, 0.8, 0.9] as [number,number,number], spin: [ 0.003,  0.005,  0.004] as [number,number,number], float: { speed: 0.56, amplitude: 0.08 } },
+
 ] satisfies BlockConfig[];
 
 interface BlockConfig {
