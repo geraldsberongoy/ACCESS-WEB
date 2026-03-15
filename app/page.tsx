@@ -21,11 +21,39 @@ export default function LandingPage() {
         {/* dark overlay */}
         <div className="absolute inset-0 bg-black/55 pointer-events-none" />
 
+
+
         {/* floating 3-D blocks — pinned to the right edge, responsive width */}
         <div className="absolute inset-y-0 right-0 w-full sm:w-3/4 md:w-1/2 pointer-events-none">
           <FloatingBlocks />
         </div>
+        {/* orange glow — bottom-right corner */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            bottom: "-14%",
+            right: "-8%",
+            width: "65%",
+            height: "80%",
+            background: "radial-gradient(ellipse at bottom right, rgba(242,98,35,0.95) 0%, rgba(242,98,35,0.65) 33%, rgba(242,98,35,0.4) 55%, rgba(180,60,10,0.28) 75%, transparent 97%)",
+            filter: "blur(140px) brightness(1.3)",
+            opacity: 1,
+            zIndex: 1,
+          }}
+        />
 
+        {/* secondary softer glow — right-center */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            bottom: "20%",
+            right: "5%",
+            width: "35%",
+            height: "40%",
+            background: "radial-gradient(ellipse at center, rgba(255,140,50,0.30) 0%, transparent 70%)",
+            filter: "blur(50px)",
+          }}
+        />
         {/* navbar floats above overlay */}
         <div className="relative z-10 pt-4">
           <Navbar />
