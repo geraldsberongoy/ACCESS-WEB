@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/ui/Navbar";
 import Link from "next/link";
 
@@ -17,12 +18,12 @@ export default function LandingPage() {
         <div className="absolute inset-0 bg-black/55 pointer-events-none" />
 
         {/* navbar floats above overlay */}
-        <div className="relative z-10">
+        <div className="relative z-10 pt-4">
           <Navbar />
         </div>
 
         {/* centred hero copy */}
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center pb-12 text-center">
           <h1
             className="max-w-4xl text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
             style={{
