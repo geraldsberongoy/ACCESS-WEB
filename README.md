@@ -13,6 +13,35 @@ The **ACCESS Web Portal** is a centralized platform designed to modernize the ad
 
 Currently, information regarding the organizational hierarchy (Batch Officers, Class Representatives) is scattered across social media and private chats. Additionally, the tracking of technical equipment and electronics (microcontrollers, sensors, tools) relies on less efficient methods. This project addresses these issues by providing a **digital "single source of truth"** for both directory information and asset management.
 
+## Landing Page
+
+The public-facing landing page (`app/page.tsx`) introduces ACCESS to visitors with a fully animated hero section:
+
+- **Background** — full-cover photo (`/public/BG-ACCESS.png`) with a `bg-black/55` dark overlay for readability.
+- **Gradient heading** — "Association of Concerned Computer Engineering for Service" rendered with a top-to-bottom white → orange (`#F26223`) CSS gradient clip.
+- **Animated 3-D blocks** — `components/ui/FloatingBlocks.tsx` uses [Three.js](https://threejs.org/) to render a configurable array of rotating, floating cubes pinned to the right side of the viewport.
+- **Corner glow** — layered radial-gradient divs produce the warm orange glow at the bottom-right, matching the brand palette.
+- **CTA buttons** — "Get Started" (solid orange) and "Get In Touch" (frosted-glass), linking to `/about` and `/contact`.
+
+### Configuring the 3-D Blocks
+
+Edit the `BLOCKS` array at the top of `components/ui/FloatingBlocks.tsx`:
+
+```ts
+const BLOCKS = [
+  {
+    position:  [x, y, z],            // world-space position
+    size:      1.4,                   // cube edge length
+    rotation:  [rx, ry, rz],         // initial rotation (radians)
+    spin:      [rx, ry, rz],         // rotation speed per frame
+    float:     { speed, amplitude },  // vertical bob
+  },
+  // add more entries to add more cubes…
+];
+```
+
+---
+
 ## Key Features
 
 ### 1. Organizational Directory
