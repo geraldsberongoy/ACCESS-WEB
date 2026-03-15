@@ -27,9 +27,10 @@ export default function EventCard({
         width: "376px",
         height: "471px",
         borderRadius: "24px",
-        border: "1px solid rgba(255, 255, 255, 0.13)",
-        background: "rgba(255, 255, 255, 0.03)",
-        backdropFilter: "blur(16.5px)",
+        border: "1px solid rgba(255, 255, 255, 0.22)",
+        background: "rgba(255, 255, 255, 0.09)",
+        backdropFilter: "blur(24px)",
+        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.12), 0 8px 32px rgba(0,0,0,0.35)",
       }}
     >
       {/* ── Image ──────────────────────────────────────────── */}
@@ -41,7 +42,7 @@ export default function EventCard({
           className="object-cover"
         />
         {/* Bottom gradient fade into card body */}
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#1e0808] to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 to-transparent" />
         {/* Date pill — white bg, dark text */}
         <span className="absolute top-5.5 left-5.5 rounded-lg bg-white px-3 py-1 text-xs font-semibold text-gray-900 shadow-md">
           {date}
