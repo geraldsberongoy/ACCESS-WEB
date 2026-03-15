@@ -1,18 +1,29 @@
-
 import Navbar from "@/components/ui/Navbar";
 import FloatingBlocks from "@/components/ui/FloatingBlocks";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen flex-col bg-black">
-        {/* animated 3-D floating blocks — pinned to the right half */}
-        <div className="absolute inset-y-0 left-150 bottom-40 w-full flex justify-end pointer-events-none">
-          <div className="w-1/2 h-full">
-            <FloatingBlocks />
-          </div>
+      <section className="relative flex min-h-screen flex-col bg-black overflow-hidden">
+
+        {/* background photo */}
+        <Image
+          src="/BG-ACCESS.png"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+        />
+
+        {/* dark overlay */}
+        <div className="absolute inset-0 bg-black/55 pointer-events-none" />
+
+        {/* floating 3-D blocks — right half only */}
+        <div className="absolute inset-y-0 left-270 bottom-40 w-full pointer-events-none">
+          <FloatingBlocks />
         </div>
 
         {/* navbar floats above overlay */}
