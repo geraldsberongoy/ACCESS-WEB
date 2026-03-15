@@ -2,6 +2,10 @@ import Navbar from "@/components/ui/Navbar";
 import FloatingBlocks from "@/components/ui/FloatingBlocks";
 import Link from "next/link";
 import Image from "next/image";
+import About from "@/components/marketing/AboutSection";
+import Events from "@/components/marketing/EventsSection";
+import Borrow from "@/components/marketing/BorrowSection";
+import Contact from "@/components/marketing/ContactSection";
 
 export default function LandingPage() {
   return (
@@ -108,6 +112,9 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
+
+      <Events />
+
     </div>
   );
 }
