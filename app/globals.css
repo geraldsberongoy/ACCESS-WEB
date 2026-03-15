@@ -24,3 +24,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.bg-ember {
+  background:
+    radial-gradient(ellipse 70% 90% at 30% 25%, #ff7105 0%, #a92222 45%, #6a0000 100%),
+    radial-gradient(ellipse 50% 60% at 75% 75%, #3a0000 0%, transparent 70%);
+  background-blend-mode: multiply;
+}
