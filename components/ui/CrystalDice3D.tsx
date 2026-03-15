@@ -72,7 +72,9 @@ export default function CrystalDice3D({
       className={className}
       style={{
         position: "absolute",
-        inset: 0,
+        top: 0,
+        bottom: 0,
+        width: "100%",
         pointerEvents: "none",
         overflow: "hidden",
       }}

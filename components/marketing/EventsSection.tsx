@@ -70,7 +70,7 @@ export default function EventsSection() {
         fill
         className="absolute inset-0 z-0 object-cover pointer-events-none"
       />
-      <CrystalDice3D className="absolute right-10" />
+      <CrystalDice3D className="absolute right-70" />
 
 
         <div className="relative z-10 mx-auto max-w-6xl">
