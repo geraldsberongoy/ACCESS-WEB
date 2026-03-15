@@ -1,4 +1,5 @@
 import EventCard, { EventCardProps } from "@/components/ui/EventCard"
+import EventsGradientBg from "@/components/ui/EventsGradientBg"
 
 const MOCK_EVENTS: EventCardProps[] = [
   {
@@ -59,43 +60,22 @@ const MOCK_EVENTS: EventCardProps[] = [
 
 export default function EventsSection() {
   return (
-    <section className="relative overflow-hidden bg-[#1a0505] py-20 px-5 sm:px-8 md:px-16 lg:px-24">
-      {/* Background geometric shapes — bottom-left */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          bottom: "-10%",
-          left: "-8%",
-          width: "40%",
-          height: "70%",
-          background:
-            "radial-gradient(ellipse at bottom left, rgba(180,20,20,0.6) 0%, rgba(120,10,10,0.3) 40%, transparent 70%)",
-          filter: "blur(80px)",
-        }}
-      />
-      {/* Background geometric shapes — top-right */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          top: "-5%",
-          right: "-5%",
-          width: "35%",
-          height: "50%",
-          background:
-            "radial-gradient(ellipse at top right, rgba(160,15,15,0.5) 0%, rgba(100,5,5,0.2) 50%, transparent 75%)",
-          filter: "blur(60px)",
-        }}
-      />
+    <div className="relative overflow-hidden py-20 px-5 sm:px-8 md:px-16 lg:px-24">
+      {/* ShaderGradient background — absolute fill */}
+      <div className="absolute inset-0 z-0">
+        <EventsGradientBg />
+      </div>
 
       <div className="relative z-10 mx-auto max-w-6xl">
         {/* Section heading */}
         <h2
-          className="mb-10 text-center text-4xl font-bold tracking-widest uppercase"
+          className="mb-10 text-center text-6xl font-extrabold tracking-widest"
           style={{
-            background: "linear-gradient(180deg, #f5c07a 0%, #c8742a 100%)",
+            background: "linear-gradient(180deg, #F5C4A0 20%, #F26223 45%, #7B2210 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
+            filter: "drop-shadow(2px 3px 4px rgba(0,0,0,0.5))",
           }}
         >
           Events
@@ -108,6 +88,6 @@ export default function EventsSection() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   )
 }
