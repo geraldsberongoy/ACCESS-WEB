@@ -11,7 +11,7 @@ export default function EventsGradientBg() {
       }}
       lazyLoad={undefined}
       
-      fov={undefined}
+      fov={45}
       pixelDensity={1}
       pointerEvents="none"
     >
@@ -20,38 +20,38 @@ export default function EventsGradientBg() {
         type="waterPlane"
         wireframe={false}
         shader="defaults"
-        uTime={0}
-        uSpeed={0.93}
-        uStrength={0.9}
-        uDensity={2.5}
-        uFrequency={0}
+        uTime={0.2}
+        uSpeed={0.1}
+        uStrength={2.4}
+        uDensity={1.1}
+        uFrequency={5.5}
         uAmplitude={0}
-        positionX={-1.5}
-        positionY={0.9}
-        positionZ={-0.3}
-        rotationX={45}
+        positionX={-0.5}
+        positionY={0.1}
+        positionZ={0}
+        rotationX={0}
         rotationY={0}
-        rotationZ={0}
-        color1="#c03000"
-        color2="#f8430a"
-        color3="#973305"
-        reflection={1}
+        rotationZ={235}
+        color1="#ff0505"
+        color2="#ff6300"
+        color3="#000000"
+        reflection={0.1}
 
         // View (camera) props
-        cAzimuthAngle={170}
-        cPolarAngle={70}
-        cDistance={4.4}
+        cAzimuthAngle={180}
+        cPolarAngle={115}
+        cDistance={3.9}
         cameraZoom={1}
 
         // Effect props
         lightType="3d"
-        brightness={0.5}
-        envPreset="dawn"
+        brightness={1.1}
+        envPreset="city"
         grain="off"
 
         // Tool props
-        toggleAxis={false}
-        zoomOut={false}
+        toggleAxis={undefined}
+        zoomOut={undefined}
         hoverState=""
 
         // Optional - if using transition features

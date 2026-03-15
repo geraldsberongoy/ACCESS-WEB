@@ -1,247 +1,184 @@
-"use client"
-
-import { useEffect, useRef } from "react"
-import * as THREE from "three"
-
-const iridVertexShader = `
-  varying vec3 vNormal;
-  varying vec3 vViewDir;
-  varying vec3 vWorldPos;
-  varying vec2 vUv;
-
-  void main() {
-    vUv = uv;
-    vec4 worldPos = modelMatrix * vec4(position, 1.0);
-    vWorldPos = worldPos.xyz;
-    vNormal = normalize(normalMatrix * normal);
-    vec3 cameraPos = cameraPosition;
-    vViewDir = normalize(cameraPos - worldPos.xyz);
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`
-
-const iridFragmentShader = `
-  varying vec3 vNormal;
-  varying vec3 vViewDir;
-  varying vec3 vWorldPos;
-  varying vec2 vUv;
-
-  uniform float uTime;
-  uniform float uIridStrength;
-
-  float fresnel(vec3 viewDir, vec3 normal, float power) {
-    return pow(1.0 - abs(dot(viewDir, normal)), power);
-  }
-
-  vec3 rainbow(float t) {
-    t = fract(t);
-    vec3 c = vec3(0.0);
-    c.r = smoothstep(0.0, 0.5, t) - smoothstep(0.5, 1.0, t);
-    c.g = smoothstep(0.25, 0.75, t) - smoothstep(0.75, 1.0, t);
-    c.b = smoothstep(0.5, 1.0, t);
-    c += vec3(smoothstep(0.0, 0.25, t)) * vec3(0.2, 0.0, 0.5);
-    return clamp(c, 0.0, 1.0);
-  }
-
-  void main() {
-    vec3 n = normalize(vNormal);
-    vec3 v = normalize(vViewDir);
-
-    float fres = fresnel(v, n, 2.5);
-    float fresSharp = fresnel(v, n, 5.0);
-
-    float angle = dot(v, n);
-    float iridAngle = angle * 0.5 + 0.5 + uTime * 0.03;
-    vec3 iridColor = rainbow(iridAngle + uIridStrength * 0.2);
-    vec3 iridColor2 = rainbow(iridAngle + 0.15);
-
-    vec3 baseColor = vec3(0.04, 0.06, 0.08);
-    float faceDark = max(0.0, dot(n, vec3(0.0, 1.0, 0.0))) * 0.3;
-    baseColor += faceDark * vec3(0.02, 0.03, 0.05);
-
-    vec3 lightDir = normalize(vec3(-1.0, 2.0, 1.5));
-    float spec = pow(max(0.0, dot(reflect(-lightDir, n), v)), 32.0);
-    vec3 specColor = vec3(1.0, 0.95, 0.9) * spec * 0.8;
-
-    float topSpec = pow(max(0.0, dot(reflect(-vec3(0.5, 1.0, 0.5), n), v)), 48.0);
-    vec3 topHighlight = vec3(1.0) * topSpec;
-
-    vec3 color = baseColor;
-    color += iridColor * fres * 0.9;
-    color += iridColor2 * fresSharp * 0.5;
-    color += specColor;
-    color += topHighlight;
-
-    float alpha = mix(0.55, 0.92, 1.0 - fres * 0.6);
-
-    color += vec3(0.3, 0.5, 0.8) * fresSharp * 0.4;
-    color += vec3(0.8, 0.3, 0.2) * fresSharp * 0.25;
-
-    gl_FragColor = vec4(color, alpha);
-  }
-`
-
-interface PyramidConfig {
-  pos: [number, number, number]
-  scale: [number, number, number]
-  rot: [number, number, number]
-  irid: number
-}
-
-function buildSquarePyramid(): THREE.BufferGeometry {
-  const h = 1.0
-  const s = 0.7
-
-  const vertices = new Float32Array([
-     0,  h,  0,   -s, -h,  s,    s, -h,  s,
-     0,  h,  0,    s, -h,  s,    s, -h, -s,
-     0,  h,  0,    s, -h, -s,   -s, -h, -s,
-     0,  h,  0,   -s, -h, -s,   -s, -h,  s,
-    -s, -h,  s,    s, -h,  s,    s, -h, -s,
-    -s, -h,  s,    s, -h, -s,   -s, -h, -s,
-  ])
-
-  const geometry = new THREE.BufferGeometry()
-  geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3))
-  geometry.computeVertexNormals()
-  geometry.setAttribute("uv", new THREE.BufferAttribute(new Float32Array((vertices.length / 3) * 2), 2))
-
-  return geometry
-}
+import { useEffect, useRef } from "react";
 
 export default function Crystal() {
-  const mountRef = useRef<HTMLDivElement>(null)
+  const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const mount = mountRef.current
-    if (!mount) return
+    const mount = mountRef.current;
+    if (!mount) return;
 
-    const width = mount.clientWidth
-    const height = mount.clientHeight
-
-    const scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x000000)
-
-    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 100)
-    camera.position.set(0, 1.5, 9)
-    camera.lookAt(0.5, 0, 0)
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false })
-    renderer.setSize(width, height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.2
-    mount.appendChild(renderer.domElement)
-
-    const makeMaterial = (iridStrength = 1.0) =>
-      new THREE.ShaderMaterial({
-        vertexShader: iridVertexShader,
-        fragmentShader: iridFragmentShader,
-        uniforms: {
-          uTime: { value: 0 },
-          uIridStrength: { value: iridStrength },
-        },
-        transparent: true,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      })
-
-    const configs: PyramidConfig[] = [
-      { pos: [-0.8,  0.2,  0],   scale: [2.0,  2.2,  2.0],  rot: [ 0.15,  0.4,  -0.3],  irid: 1.0  },
-      { pos: [-4.5,  2.2, -1],   scale: [0.7,  0.75, 0.7],  rot: [ 0.1,   0.6,   0.2],  irid: 0.8  },
-      { pos: [ 2.8,  2.0, -0.5], scale: [1.1,  1.2,  1.1],  rot: [-0.1,  -0.5,   0.4],  irid: 1.1  },
-      { pos: [ 3.5, -0.3,  0.5], scale: [1.0,  1.1,  1.0],  rot: [ 0.3,   0.3,  -0.2],  irid: 0.9  },
-      { pos: [-3.5, -2.5,  0],   scale: [0.9,  1.0,  0.9],  rot: [ 0.2,   0.8,   0.1],  irid: 1.0  },
-      { pos: [ 0.5, -2.8,  0.3], scale: [0.85, 0.9,  0.85], rot: [-0.2,   0.5,   0.3],  irid: 0.85 },
-      { pos: [ 4.5, -2.5,  0.5], scale: [1.3,  1.4,  1.3],  rot: [ 0.1,  -0.2,  -0.15], irid: 1.2  },
-    ]
-
-    const geometry = buildSquarePyramid()
-    const pyramids: THREE.Mesh[] = []
-
-    configs.forEach((cfg) => {
-      const mat = makeMaterial(cfg.irid)
-      const mesh = new THREE.Mesh(geometry, mat)
-      mesh.position.set(...cfg.pos)
-      mesh.scale.set(...cfg.scale)
-      mesh.rotation.set(...cfg.rot)
-
-      mesh.userData.baseRot = { x: cfg.rot[0], y: cfg.rot[1], z: cfg.rot[2] }
-      mesh.userData.basePos = { x: cfg.pos[0], y: cfg.pos[1], z: cfg.pos[2] }
-      mesh.userData.floatOffset = Math.random() * Math.PI * 2
-      mesh.userData.floatSpeed = 0.25 + Math.random() * 0.3
-      mesh.userData.rotSpeed = {
-        y: (Math.random() - 0.5) * 0.004,
-        x: (Math.random() - 0.5) * 0.002,
-      }
-
-      scene.add(mesh)
-      pyramids.push(mesh)
-    })
-
-    const blueLight = new THREE.PointLight(0x4488ff, 1.5, 15)
-    blueLight.position.set(-3, 3, 3)
-    scene.add(blueLight)
-
-    const orangeLight = new THREE.PointLight(0xff6622, 0.8, 12)
-    orangeLight.position.set(4, -2, 2)
-    scene.add(orangeLight)
-
-    const whiteLight = new THREE.PointLight(0xffffff, 2.0, 20)
-    whiteLight.position.set(0, 5, 5)
-    scene.add(whiteLight)
-
-    let frameId: number
-    const clock = new THREE.Clock()
-
-    const animate = () => {
-      frameId = requestAnimationFrame(animate)
-      const t = clock.getElapsedTime()
-
-      pyramids.forEach((mesh) => {
-        const { floatOffset, floatSpeed, basePos, baseRot } = mesh.userData
-        mesh.position.y = basePos.y + Math.sin(t * floatSpeed + floatOffset) * 0.08
-        mesh.rotation.y = baseRot.y + Math.sin(t * 0.2 + floatOffset) * 0.15
-        mesh.rotation.x = baseRot.x + Math.sin(t * 0.15 + floatOffset + 1) * 0.05
-        ;(mesh.material as THREE.ShaderMaterial).uniforms.uTime.value = t
-      })
-
-      blueLight.position.x = -3 + Math.sin(t * 0.3) * 1.5
-      blueLight.position.z = 3 + Math.cos(t * 0.3) * 1.5
-
-      renderer.render(scene, camera)
-    }
-    animate()
-
-    const handleResize = () => {
-      const w = mount.clientWidth
-      const h = mount.clientHeight
-      camera.aspect = w / h
-      camera.updateProjectionMatrix()
-      renderer.setSize(w, h)
-    }
-    window.addEventListener("resize", handleResize)
+    // Dynamically load Three.js
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+    script.onload = () => initScene(mount);
+    document.head.appendChild(script);
 
     return () => {
-      cancelAnimationFrame(frameId)
-      window.removeEventListener("resize", handleResize)
-      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
-      renderer.dispose()
-    }
-  }, [])
+      document.head.removeChild(script);
+    };
+  }, []);
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
-      {/* Three.js canvas mount */}
-      <div ref={mountRef} className="absolute inset-0 w-full h-full" />
+    <div
+      ref={mountRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        pointerEvents: "none",
+        overflow: "hidden",
+      }}
+    />
+  );
+}
 
-      {/* Radial vignette */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(0,0,0,0.75) 100%)",
-        }}
-      />
-    </div>
-  )
+function initScene(mount: HTMLDivElement) {
+  const THREE = (window as any).THREE;
+
+  // Renderer
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(mount.clientWidth, mount.clientHeight);
+  renderer.setClearColor(0x000000, 0);
+  mount.appendChild(renderer.domElement);
+
+  // Scene & Camera
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, mount.clientWidth / mount.clientHeight, 0.1, 100);
+  camera.position.set(0, 0, 14);
+
+  // Lighting
+  const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+  scene.add(ambient);
+
+  const lights = [
+    { color: 0xffffff, intensity: 2.5, pos: [5, 8, 6] },
+    { color: 0x8866ff, intensity: 1.5, pos: [-6, -4, 4] },
+    { color: 0xff6644, intensity: 1.0, pos: [4, -6, -3] },
+    { color: 0x44aaff, intensity: 1.2, pos: [-5, 6, -4] },
+  ];
+  lights.forEach(({ color, intensity, pos }) => {
+    const light = new THREE.PointLight(color, intensity, 30);
+    light.position.set(...(pos as [number, number, number]));
+    scene.add(light);
+  });
+
+  // Crystal material factory
+  function makeMaterial(hue: number) {
+    return new THREE.MeshPhysicalMaterial({
+      color: new THREE.Color().setHSL(hue, 0.3, 0.55),
+      metalness: 0.1,
+      roughness: 0.05,
+      transmission: 0.88,
+      thickness: 1.2,
+      ior: 2.1,
+      reflectivity: 1.0,
+      transparent: true,
+      opacity: 0.92,
+      envMapIntensity: 1.5,
+      clearcoat: 1.0,
+      clearcoatRoughness: 0.05,
+      iridescence: 1.0,
+      iridescenceIOR: 1.8,
+      iridescenceThicknessRange: [100, 800],
+      side: THREE.DoubleSide,
+    });
+  }
+
+  // Octahedron geometry (diamond-like)
+  function makeOctahedron(size: number, hue: number) {
+    const geo = new THREE.OctahedronGeometry(size, 0);
+    // Flatten slightly to look more like a gem/dice
+    geo.scale(1, 0.75, 1);
+    const mat = makeMaterial(hue);
+    const mesh = new THREE.Mesh(geo, mat);
+
+    // Wireframe edge accent
+    const edgeGeo = new THREE.EdgesGeometry(geo);
+    const edgeMat = new THREE.LineBasicMaterial({
+      color: new THREE.Color().setHSL(hue, 0.6, 0.85),
+      transparent: true,
+      opacity: 0.35,
+    });
+    const edges = new THREE.LineSegments(edgeGeo, edgeMat);
+    mesh.add(edges);
+
+    return mesh;
+  }
+
+  // Crystal configs: [x, y, z, size, hue, speedX, speedY, speedZ, floatAmp, floatSpeed]
+  type CrystalConfig = {
+    x: number; y: number; z: number;
+    size: number; hue: number;
+    sx: number; sy: number; sz: number;
+    fa: number; fs: number;
+    phase: number;
+  };
+
+  const configs: CrystalConfig[] = [
+    { x: -4.5, y:  2.0, z:  0.0, size: 1.8, hue: 0.62, sx: 0.003, sy: 0.005, sz: 0.002, fa: 0.4, fs: 0.7, phase: 0.0 },
+    { x: -6.5, y:  3.5, z: -1.5, size: 0.8, hue: 0.65, sx: 0.006, sy: 0.003, sz: 0.004, fa: 0.3, fs: 0.9, phase: 1.2 },
+    { x:  2.5, y:  0.5, z:  1.0, size: 1.0, hue: 0.58, sx: 0.004, sy: 0.006, sz: 0.003, fa: 0.35,fs: 0.8, phase: 2.1 },
+    { x: -5.0, y: -2.5, z:  0.5, size: 0.85,hue: 0.60, sx: 0.005, sy: 0.004, sz: 0.005, fa: 0.25,fs: 1.0, phase: 0.7 },
+    { x:  1.0, y: -2.8, z: -0.5, size: 0.95,hue: 0.55, sx: 0.003, sy: 0.007, sz: 0.002, fa: 0.3, fs: 0.75,phase: 3.0 },
+    { x:  4.5, y: -3.2, z:  0.8, size: 1.2, hue: 0.63, sx: 0.006, sy: 0.003, sz: 0.006, fa: 0.45,fs: 0.65,phase: 1.8 },
+  ];
+
+  const meshes = configs.map((c) => {
+    const mesh = makeOctahedron(c.size, c.hue);
+    mesh.position.set(c.x, c.y, c.z);
+    // Random initial rotation
+    mesh.rotation.set(
+      Math.random() * Math.PI,
+      Math.random() * Math.PI,
+      Math.random() * Math.PI
+    );
+    scene.add(mesh);
+    return { mesh, config: c, baseY: c.y };
+  });
+
+  // Env map for reflections (simple gradient env)
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  const envScene = new THREE.Scene();
+  envScene.background = new THREE.Color(0x111122);
+  const envTexture = pmremGenerator.fromScene(envScene).texture;
+  scene.environment = envTexture;
+
+  // Animation
+  let frameId: number;
+  let t = 0;
+
+  function animate() {
+    frameId = requestAnimationFrame(animate);
+    t += 0.01;
+
+    meshes.forEach(({ mesh, config, baseY }) => {
+      mesh.rotation.x += config.sx;
+      mesh.rotation.y += config.sy;
+      mesh.rotation.z += config.sz;
+      mesh.position.y = baseY + Math.sin(t * config.fs + config.phase) * config.fa;
+      mesh.position.x = config.x + Math.cos(t * config.fs * 0.5 + config.phase) * 0.12;
+    });
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // Resize handler
+  function onResize() {
+    const w = mount.clientWidth;
+    const h = mount.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  }
+  window.addEventListener("resize", onResize);
+
+  // Cleanup stored on mount element
+  (mount as any)._cleanup = () => {
+    cancelAnimationFrame(frameId);
+    window.removeEventListener("resize", onResize);
+    renderer.dispose();
+    mount.removeChild(renderer.domElement);
+  };
 }
