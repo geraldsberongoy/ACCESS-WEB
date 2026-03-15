@@ -24,36 +24,19 @@ export default function LandingPage() {
         {/* centred hero copy */}
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 text-center">
           <h1
-            className="max-w-4xl text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-white"
+            className="max-w-4xl text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+            style={{
+              background: "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(242,98,35,1) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
           >
-            <span className="block">
-              Association of Concerned
-            </span>
-            <span
-              className="block"
-              style={{
-                color: "#F7B497",
-                fontWeight: 700,
-                fontFamily: "inherit",
-              }}
-            >
-              Computer Engineering
-            </span>
-            <span
-              className="block"
-              style={{
-                background: "linear-gradient(90deg,#F26223 0%,#FF8C55 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-                fontWeight: 700,
-                fontFamily: "inherit",
-                marginTop: 0,
-                marginBottom: 0,
-              }}
-            >
-              for Service
-            </span>
+            Association of Concerned
+            <br />
+            Computer Engineering
+            <br />
+            for Service
           </h1>
 
           <p className="mt-6 max-w-xl text-sm text-zinc-300 md:text-base">
