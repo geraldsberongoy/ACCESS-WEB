@@ -9,24 +9,23 @@ export default function LandingPage() {
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section className="relative flex min-h-screen flex-col bg-black overflow-hidden">
 
-        {/* background photo */}
+        {/* background photo — shifted right on mobile so subject stays visible */}
         <Image
           src="/BG-ACCESS.png"
           alt=""
           fill
           priority
-          className="object-cover object-center"
+          className="object-cover object-[70%_center] sm:object-center"
         />
 
-        {/* dark overlay */}
-        <div className="absolute inset-0 bg-black/55 pointer-events-none" />
+        {/* dark overlay — slightly heavier on mobile for text contrast */}
+        <div className="absolute inset-0 bg-black/65 sm:bg-black/55 pointer-events-none" />
 
-
-
-        {/* floating 3-D blocks — pinned to the right edge, responsive width */}
-        <div className="absolute inset-y-0 right-0 w-full sm:w-3/4 md:w-1/2 pointer-events-none">
+        {/* floating 3-D blocks — hidden on phone, right strip on tablet, half on desktop */}
+        <div className="absolute inset-y-0 right-0 hidden sm:block sm:w-2/3 md:w-1/2 pointer-events-none">
           <FloatingBlocks />
         </div>
+
         {/* orange glow — bottom-right corner */}
         <div
           className="absolute pointer-events-none"
@@ -37,7 +36,6 @@ export default function LandingPage() {
             height: "80%",
             background: "radial-gradient(ellipse at bottom right, rgba(242,98,35,0.95) 0%, rgba(242,98,35,0.65) 33%, rgba(242,98,35,0.4) 55%, rgba(180,60,10,0.28) 75%, transparent 97%)",
             filter: "blur(140px) brightness(1.3)",
-            opacity: 1,
             zIndex: 1,
           }}
         />
@@ -54,15 +52,19 @@ export default function LandingPage() {
             filter: "blur(50px)",
           }}
         />
-        {/* navbar floats above overlay */}
-        <div className="relative z-10 pt-4">
+
+        {/* navbar */}
+        <div className="relative z-10">
           <Navbar />
         </div>
 
-        {/* centred hero copy */}
-        <div className="relative z-10 flex flex-1 flex-col items-center justify-center pb-12 text-center">
+        {/* hero copy */}
+        <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-4 text-center sm:px-8 sm:pb-12 md:px-16 lg:px-24">
           <h1
-            className="max-w-4xl text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight"
+            className="max-w-xs text-3xl font-extrabold leading-tight tracking-tight
+                       sm:max-w-lg sm:text-4xl
+                       md:max-w-2xl md:text-5xl
+                       lg:max-w-4xl lg:text-6xl"
             style={{
               background: "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(242,98,35,1) 100%)",
               WebkitBackgroundClip: "text",
@@ -77,16 +79,19 @@ export default function LandingPage() {
             for Service
           </h1>
 
-          <p className="mt-6 max-w-xl text-sm text-zinc-300 md:text-base">
+          <p className="mt-5 max-w-sm text-sm leading-relaxed text-zinc-300
+                        sm:max-w-md sm:text-base
+                        md:max-w-lg">
             Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet
             consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
             <Link
               href="/about"
-              className="rounded-lg px-9 py-3 text-sm font-semibold text-white
-                         transition-opacity hover:opacity-90 md:px-10 md:py-3.5 md:text-base"
+              className="rounded-lg py-3 text-sm font-semibold text-white text-center
+                         transition-opacity hover:opacity-90
+                         px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"
               style={{ background: "#F26223" }}
             >
               Get Started
@@ -94,9 +99,9 @@ export default function LandingPage() {
 
             <Link
               href="/contact"
-              className="rounded-lg border border-white/30 bg-white/10 px-9 py-3 text-sm font-semibold
-                         text-white backdrop-blur-sm transition-colors hover:bg-white/20
-                         md:px-10 md:py-3.5 md:text-base"
+              className="rounded-lg border border-white/30 bg-white/10 py-3 text-sm font-semibold
+                         text-white text-center backdrop-blur-sm transition-colors hover:bg-white/20
+                         px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"
             >
               Get In Touch
             </Link>
