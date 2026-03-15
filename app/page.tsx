@@ -21,8 +21,8 @@ export default function LandingPage() {
         {/* dark overlay */}
         <div className="absolute inset-0 bg-black/55 pointer-events-none" />
 
-        {/* floating 3-D blocks — right half only */}
-        <div className="absolute inset-y-0 left-270 bottom-40 w-full pointer-events-none">
+        {/* floating 3-D blocks — pinned to the right edge, responsive width */}
+        <div className="absolute inset-y-0 right-0 w-full sm:w-3/4 md:w-1/2 pointer-events-none">
           <FloatingBlocks />
         </div>
 
