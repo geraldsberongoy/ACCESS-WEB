@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import About from "@/components/marketing/AboutSection";
 import Events from "@/components/marketing/EventsSection";
+import MeetTheOfficers from "@/components/marketing/MeetTheOfficersSection";
 import Borrow from "@/components/marketing/BorrowSection";
 import Contact from "@/components/marketing/ContactSection";
 
@@ -114,6 +115,7 @@ export default function LandingPage() {
       </section>
 
       <Events />
+      <MeetTheOfficers />
 
     </div>
   );
