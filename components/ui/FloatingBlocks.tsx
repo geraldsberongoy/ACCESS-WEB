@@ -3,6 +3,45 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
+// ─── Box config ───────────────────────────────────────────────────────────────
+// Add, remove, or reposition boxes here.
+// position : [x, y, z]  — world-space position
+// size     : number      — cube edge length
+// rotation : [rx, ry, rz] — initial rotation in radians (optional, defaults 0)
+// spin     : [x, y, z]  — rotation speed per frame (optional)
+// float    : { speed, amplitude } — vertical bob (optional)
+const BLOCKS = [
+  // ── upper-right dense cluster ──────────────────────────────────────────────
+  { position: [ 3.5,  3.5,  0.0] as [number,number,number], size: 1.40, rotation: [0.8, 0.6, 0.3] as [number,number,number], spin: [ 0.004,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.10 } },
+  { position: [ 4.8,  2.8, -0.4] as [number,number,number], size: 1.60, rotation: [1.1, 0.3, 0.5] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.42, amplitude: 0.13 } },
+  { position: [ 5.3,  3.8, -0.2] as [number,number,number], size: 1.25, rotation: [0.5, 1.2, 0.1] as [number,number,number], spin: [ 0.005,  0.004,  0.003] as [number,number,number], float: { speed: 0.55, amplitude: 0.09 } },
+  { position: [ 3.0,  2.8,  1.2] as [number,number,number], size: 1.45, rotation: [0.2, 0.8, 0.6] as [number,number,number], spin: [ 0.003,  0.007,  0.002] as [number,number,number], float: { speed: 0.38, amplitude: 0.11 } },
+  { position: [ 4.4,  4.1,  0.5] as [number,number,number], size: 1.15, rotation: [1.3, 0.5, 0.4] as [number,number,number], spin: [ 0.006,  0.003,  0.004] as [number,number,number], float: { speed: 0.60, amplitude: 0.08 } },
+  { position: [ 5.8,  2.2, -0.8] as [number,number,number], size: 1.10, rotation: [0.7, 1.1, 0.2] as [number,number,number], spin: [ 0.004,  0.005,  0.003] as [number,number,number], float: { speed: 0.48, amplitude: 0.10 } },
+
+  // ── mid-right sweep ────────────────────────────────────────────────────────
+  { position: [ 5.2,  0.8,  0.3] as [number,number,number], size: 1.55, rotation: [0.4, 0.9, 0.2] as [number,number,number], spin: [ 0.003,  0.005,  0.002] as [number,number,number], float: { speed: 0.45, amplitude: 0.12 } },
+  { position: [ 4.2,  1.5,  1.5] as [number,number,number], size: 1.45, rotation: [0.6, 0.4, 0.8] as [number,number,number], spin: [ 0.002,  0.006,  0.003] as [number,number,number], float: { speed: 0.35, amplitude: 0.14 } },
+  { position: [ 5.5, -0.2, -1.2] as [number,number,number], size: 1.45, rotation: [1.0, 0.2, 0.5] as [number,number,number], spin: [ 0.005,  0.003,  0.002] as [number,number,number], float: { speed: 0.52, amplitude: 0.11 } },
+  { position: [ 4.9, -0.7, -0.2] as [number,number,number], size: 1.55, rotation: [0.3, 1.0, 0.4] as [number,number,number], spin: [ 0.004,  0.004,  0.002] as [number,number,number], float: { speed: 0.40, amplitude: 0.13 } },
+
+  // ── lower sweep to center ──────────────────────────────────────────────────
+  { position: [ 4.0, -1.2,  1.0] as [number,number,number], size: 1.55, rotation: [0.9, 0.7, 0.1] as [number,number,number], spin: [ 0.003,  0.005,  0.001] as [number,number,number], float: { speed: 0.44, amplitude: 0.12 } },
+  { position: [ 3.8, -2.0,  0.5] as [number,number,number], size: 1.45, rotation: [0.5, 0.6, 0.7] as [number,number,number], spin: [ 0.004,  0.003,  0.003] as [number,number,number], float: { speed: 0.37, amplitude: 0.10 } },
+  { position: [ 2.8, -2.6, -0.4] as [number,number,number], size: 1.40, rotation: [1.2, 0.4, 0.3] as [number,number,number], spin: [ 0.002,  0.006,  0.002] as [number,number,number], float: { speed: 0.50, amplitude: 0.09 } },
+  { position: [ 2.5, -3.0, -0.3] as [number,number,number], size: 1.35, rotation: [0.6, 1.1, 0.5] as [number,number,number], spin: [ 0.005,  0.004,  0.001] as [number,number,number], float: { speed: 0.43, amplitude: 0.11 } },
+  { position: [ 3.5, -3.4,  0.6] as [number,number,number], size: 1.25, rotation: [0.3, 0.8, 0.9] as [number,number,number], spin: [ 0.003,  0.005,  0.004] as [number,number,number], float: { speed: 0.56, amplitude: 0.08 } },
+] satisfies BlockConfig[];
+
+interface BlockConfig {
+  position:  [number, number, number];
+  size:      number;
+  rotation?: [number, number, number];
+  spin?:     [number, number, number];
+  float?:    { speed: number; amplitude: number };
+}
+// ──────────────────────────────────────────────────────────────────────────────
+
 export default function FloatingBlocks() {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -17,7 +56,7 @@ export default function FloatingBlocks() {
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x000000, 0.08);
 
-    // Camera
+    // Camera — left-offset, looking right to frame the arc
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 100);
     camera.position.set(-3, 0, 8);
     camera.lookAt(2, 0, 0);
@@ -48,61 +87,26 @@ export default function FloatingBlocks() {
     rimLight.position.set(5, -3, -5);
     scene.add(rimLight);
 
-    // Cube material — dark brownish-gray matching the reference design
-    const cubeMaterial = new THREE.MeshStandardMaterial({
+    // Build meshes from config
+    const baseMaterial = new THREE.MeshStandardMaterial({
       color: 0x3a2a2a,
       roughness: 0.55,
       metalness: 0.15,
     });
 
-    // Arc positions — sweeping upper-right to lower-center
-    const arcPositions: [number, number, number][] = [
-      [3.5,  3.5,  0.0],
-      [4.8,  2.2, -0.5],
-      [5.2,  0.8,  0.3],
-      [4.9, -0.7, -0.2],
-      [3.8, -2.0,  0.5],
-      [2.5, -3.0, -0.3],
-      [4.2,  1.5,  1.5],
-      [5.5, -0.2, -1.2],
-      [3.0,  2.8,  1.2],
-      [4.0, -1.2,  1.0],
-    ];
-
-    const sizes = [0.7, 0.85, 0.75, 0.9, 0.8, 0.7, 0.65, 0.8, 0.75, 0.7];
-
-    const cubes: THREE.Mesh[] = [];
-
-    for (let i = 0; i < arcPositions.length; i++) {
-      const size = sizes[i];
-      const geometry = new THREE.BoxGeometry(size, size, size);
-      const mesh = new THREE.Mesh(geometry, cubeMaterial.clone());
-
-      const [x, y, z] = arcPositions[i];
-      mesh.position.set(x, y, z);
-      mesh.rotation.x = Math.random() * Math.PI;
-      mesh.rotation.y = Math.random() * Math.PI;
-      mesh.rotation.z = Math.random() * Math.PI * 0.5;
+    const meshes = BLOCKS.map((cfg) => {
+      const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(cfg.size, cfg.size, cfg.size),
+        baseMaterial.clone(),
+      );
+      mesh.position.set(...cfg.position);
+      if (cfg.rotation) {
+        mesh.rotation.set(...cfg.rotation);
+      }
       mesh.castShadow = true;
       mesh.receiveShadow = true;
-
-      mesh.userData.rotX       = (Math.random() - 0.5) * 0.005;
-      mesh.userData.rotY       = (Math.random() - 0.5) * 0.008;
-      mesh.userData.rotZ       = (Math.random() - 0.5) * 0.004;
-      mesh.userData.floatOffset = Math.random() * Math.PI * 2;
-      mesh.userData.floatSpeed  = 0.3 + Math.random() * 0.4;
-      mesh.userData.baseY       = y;
-
       scene.add(mesh);
-      cubes.push(mesh);
-    }
-
-    // Depth fade for far-back cubes
-    cubes.forEach((cube) => {
-      if (cube.position.z < -0.5) {
-        (cube.material as THREE.MeshStandardMaterial).transparent = true;
-        (cube.material as THREE.MeshStandardMaterial).opacity = 0.75 + cube.position.z * 0.1;
-      }
+      return { mesh, cfg };
     });
 
     // Animation loop
@@ -113,14 +117,17 @@ export default function FloatingBlocks() {
       frameId = requestAnimationFrame(animate);
       const elapsed = clock.getElapsedTime();
 
-      cubes.forEach((cube) => {
-        cube.rotation.x += cube.userData.rotX;
-        cube.rotation.y += cube.userData.rotY;
-        cube.rotation.z += cube.userData.rotZ;
+      meshes.forEach(({ mesh, cfg }, i) => {
+        const [sx = 0, sy = 0, sz = 0] = cfg.spin ?? [0, 0, 0];
+        mesh.rotation.x += sx;
+        mesh.rotation.y += sy;
+        mesh.rotation.z += sz;
 
-        cube.position.y =
-          cube.userData.baseY +
-          Math.sin(elapsed * cube.userData.floatSpeed + cube.userData.floatOffset) * 0.12;
+        if (cfg.float) {
+          const baseY = cfg.position[1];
+          mesh.position.y =
+            baseY + Math.sin(elapsed * cfg.float.speed + i) * cfg.float.amplitude;
+        }
       });
 
       renderer.render(scene, camera);

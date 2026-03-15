@@ -1,21 +1,15 @@
 
 import Navbar from "@/components/ui/Navbar";
+import FloatingBlocks from "@/components/ui/FloatingBlocks";
 import Link from "next/link";
 
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section
-        className="relative flex min-h-screen flex-col"
-        style={{
-          backgroundImage: "url('/hero-bg.jpg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* dark overlay */}
-        <div className="absolute inset-0 bg-black/55 pointer-events-none" />
+      <section className="relative flex min-h-screen flex-col bg-black">
+        {/* animated 3-D floating blocks — owns the dark background */}
+        <FloatingBlocks />
 
         {/* navbar floats above overlay */}
         <div className="relative z-10 pt-4">
