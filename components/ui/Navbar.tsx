@@ -94,6 +94,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
               boxSizing: "border-box",
             }}
           />
+          
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="160"
