@@ -47,7 +47,7 @@ export default function OfficerCard({
     <div
       className="relative flex flex-col select-none transition-all duration-500 flex-shrink-0"
       style={{
-        width          : 280,
+        width          : "100%",
         borderRadius   : 24,
         border         : "1px solid rgba(255, 255, 255, 0.13)",
         background     : "rgba(255, 255, 255, 0.03)",

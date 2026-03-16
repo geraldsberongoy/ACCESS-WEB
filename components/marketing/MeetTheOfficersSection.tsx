@@ -9,54 +9,54 @@ import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
 const OFFICER_CRYSTALS: CrystalConfig[] = [
   // ── LEFT SIDE ──────────────────────────────────────────────────────────
   // dominant large — top-left, partially cropped
-  { x: -7.0, y:  4.2, z:  0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
+  { x: -7.0, y: 4.2, z: 0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
   // medium — left, upper-mid
-  { x: -5.8, y:  1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
+  { x: -5.8, y: 1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
   // small — left center
-  { x: -6.5, y: -0.8, z:  0.8, size: 1.0, hue: 0.00, sx: 0.004, sy: 0.006, sz: 0.003, fa: 0.18, fs: 0.75, phase: 2.3 },
+  { x: -6.5, y: -0.8, z: 0.8, size: 1.0, hue: 0.00, sx: 0.004, sy: 0.006, sz: 0.003, fa: 0.18, fs: 0.75, phase: 2.3 },
   // tiny — left, low
-  { x: -5.2, y: -2.5, z: -0.8, size: 0.7, hue: 0.015,sx: 0.006, sy: 0.004, sz: 0.005, fa: 0.14, fs: 0.85, phase: 3.5 },
+  { x: -5.2, y: -2.5, z: -0.8, size: 0.7, hue: 0.015, sx: 0.006, sy: 0.004, sz: 0.005, fa: 0.14, fs: 0.85, phase: 3.5 },
   // large — bottom-left, partially cropped
-  { x: -6.8, y: -4.5, z:  0.3, size: 2.0, hue: 0.02, sx: 0.003, sy: 0.005, sz: 0.003, fa: 0.30, fs: 0.50, phase: 1.7 },
+  { x: -6.8, y: -4.5, z: 0.3, size: 2.0, hue: 0.02, sx: 0.003, sy: 0.005, sz: 0.003, fa: 0.30, fs: 0.50, phase: 1.7 },
 
   // ── RIGHT SIDE ─────────────────────────────────────────────────────────
   // small — upper-right
-  { x:  6.8, y:  3.8, z:  0.5, size: 1.0, hue: 0.00, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.20, fs: 0.70, phase: 1.4 },
+  { x: 6.8, y: 3.8, z: 0.5, size: 1.0, hue: 0.00, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.20, fs: 0.70, phase: 1.4 },
   // medium — right edge mid
-  { x:  7.2, y: -1.2, z:  0.8, size: 1.6, hue: 0.03, sx: 0.004, sy: 0.005, sz: 0.003, fa: 0.28, fs: 0.55, phase: 2.2 },
+  { x: 7.2, y: -1.2, z: 0.8, size: 1.6, hue: 0.03, sx: 0.004, sy: 0.005, sz: 0.003, fa: 0.28, fs: 0.55, phase: 2.2 },
   // large — bottom-right, partially cropped
-  { x:  6.0, y: -4.5, z:  0.5, size: 2.0, hue: 0.01, sx: 0.003, sy: 0.004, sz: 0.003, fa: 0.35, fs: 0.50, phase: 1.8 },
+  { x: 6.0, y: -4.5, z: 0.5, size: 2.0, hue: 0.01, sx: 0.003, sy: 0.004, sz: 0.003, fa: 0.35, fs: 0.50, phase: 1.8 },
   // tiny — upper-center-right
-  { x:  2.5, y:  4.8, z: -1.2, size: 0.6, hue: 0.00, sx: 0.007, sy: 0.003, sz: 0.005, fa: 0.18, fs: 0.90, phase: 0.8 },
+  { x: 2.5, y: 4.8, z: -1.2, size: 0.6, hue: 0.00, sx: 0.007, sy: 0.003, sz: 0.005, fa: 0.18, fs: 0.90, phase: 0.8 },
 ]
 
 const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   {
-    name: "Antonio Mickel Tantia",
+    name: "Antonio ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
     image: "/BG-ACCESS.png",
   },
   {
-    name: "Antonio Mickel Tantia",
+    name: "Mickel ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
     image: "/BG-ACCESS.png",
   },
   {
-    name: "Antonio Mickel Tantia",
+    name: "Antonio Mickel ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
     image: "/BG-ACCESS.png",
   },
   {
-    name: "Antonio Mickel Tantia",
+    name: "Mickel Tantia",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
     image: "/BG-ACCESS.png",
   },
   {
-    name: "Antonio Mickel Tantia",
+    name: "Tantia",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
     image: "/BG-ACCESS.png",
@@ -92,9 +92,9 @@ export default function MeetTheOfficersSection() {
     setPage(([prev]) => [(prev + dir + total) % total, dir])
   }
 
-  const leftIdx   = (activeIndex - 1 + total) % total
+  const leftIdx = (activeIndex - 1 + total) % total
   const centerIdx = activeIndex
-  const rightIdx  = (activeIndex + 1) % total
+  const rightIdx = (activeIndex + 1) % total
 
   return (
     <section className="relative overflow-hidden min-h-screen flex flex-col justify-center px-5 sm:px-8 md:px-16 lg:px-24 py-16">
@@ -135,13 +135,7 @@ export default function MeetTheOfficersSection() {
 
       {/* ── Horizontal image strip (decorative bg band) ── */}
       <div
-        className="absolute left-0 right-0 pointer-events-none overflow-hidden"
-        style={{
-          top: "36%",
-          transform: "translateY(-20%)",
-          height: 300,
-          zIndex: 1,
-        }}
+        className="absolute left-0 right-0 pointer-events-none overflow-hidden top-[46%] sm:top-[44%] md:top-[42%] lg:top-[40%] -translate-y-1/2 h-[240px] sm:h-[260px] md:h-[300px] z-[1]"
       >
         <Image
           src="/meet-the-officers.png"
@@ -199,8 +193,7 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Heading ── */}
         <h2
-            className="mb-10 text-center text-6xl font-extrabold tracking-widest"
-
+          className="mb-8 sm:mb-10 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-widest leading-tight"
           style={{
             background: "linear-gradient(180deg, #F5C4A0 35%, #F26223 90%, #7B2210 100%)",
             WebkitBackgroundClip: "text",
@@ -214,7 +207,7 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Subtitle ── */}
         <p
-          className="mb-20 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
+          className="mb-26 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
           style={{ color: "rgb(255, 255, 255)" }}
         >
           We are a community of student leaders and innovators committed to advancing technology,
@@ -222,7 +215,7 @@ export default function MeetTheOfficersSection() {
         </p>
 
         {/* ── Carousel ── */}
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center mt-4 sm:mt-6">
 
           {/* Nav button – Left */}
           <button
@@ -231,14 +224,16 @@ export default function MeetTheOfficersSection() {
             className="absolute left-0 z-20 transition-all duration-200 hover:scale-110 active:scale-95"
           >
             <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-
               <path d="M28 19 L21 26 L28 33" stroke="white" strokeWidth="2"
                 strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
 
           {/* Cards — animated */}
-          <div className="relative overflow-hidden w-full flex justify-center px-16 py-6" style={{ minHeight: 420 }}>
+          <div
+            className="relative overflow-hidden w-full flex justify-center py-6 px-14"
+            style={{ minHeight: 480 }}
+          >
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={activeIndex}
@@ -247,11 +242,20 @@ export default function MeetTheOfficersSection() {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                className="flex items-start justify-center gap-5 absolute"
+                className="absolute flex items-end justify-center gap-5"
+                style={{ width: "calc(100% - 112px)" }}
               >
-                <OfficerCard {...MOCK_OFFICERS[leftIdx]}   featured={false} />
-                <OfficerCard {...MOCK_OFFICERS[centerIdx]} featured={true}  />
-                <OfficerCard {...MOCK_OFFICERS[rightIdx]}  featured={false} />
+                {/* Side cards — visible from lg (1024px) upward */}
+                <div className="hidden lg:block flex-shrink-0" style={{ width: 240 }}>
+                  <OfficerCard {...MOCK_OFFICERS[leftIdx]} featured={false} />
+                </div>
+                {/* Center card: lifts upward vs side cards */}
+                <div className="flex-shrink-0 w-full lg:w-auto" style={{ maxWidth: 240, transform: "translateY(-22px)" }}>
+                  <OfficerCard {...MOCK_OFFICERS[centerIdx]} featured={true} />
+                </div>
+                <div className="hidden lg:block flex-shrink-0" style={{ width: 240 }}>
+                  <OfficerCard {...MOCK_OFFICERS[rightIdx]} featured={false} />
+                </div>
               </motion.div>
             </AnimatePresence>
           </div>

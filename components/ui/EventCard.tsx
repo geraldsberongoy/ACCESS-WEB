@@ -24,8 +24,9 @@ export default function EventCard({
     <div
       className="flex flex-col overflow-hidden shrink-0 transition-all hover:-translate-y-0.5 duration-200"
       style={{
-        width: "376px",
-        height: "471px",
+        width: "100%",
+        maxWidth: 376,
+        minHeight: 471,
         borderRadius: "24px",
         border: "1px solid rgba(255, 255, 255, 0.22)",
         background: "rgba(255, 255, 255, 0.09)",
