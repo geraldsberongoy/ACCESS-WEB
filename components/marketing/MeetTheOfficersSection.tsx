@@ -73,7 +73,7 @@ export default function MeetTheOfficersSection() {
   const rightIdx = (activeIndex + 1) % total
 
   return (
-    <section className="relative overflow-hidden py-24 px-5 sm:px-8 md:px-16 lg:px-24">
+    <section className="relative overflow-hidden min-h-screen flex flex-col justify-center px-5 sm:px-8 md:px-16 lg:px-24 py-16">
       {/* ── Background photo ── */}
       <Image
         src="/EventsBG.png"
@@ -166,7 +166,7 @@ export default function MeetTheOfficersSection() {
       </div>
 
       {/* ── Content ── */}
-      <div className="relative z-20 mx-auto max-w-5xl">
+      <div className="relative z-20 mx-auto max-w-5xl w-full">
 
 
 
