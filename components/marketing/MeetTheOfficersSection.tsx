@@ -3,6 +3,31 @@
 import { useState } from "react"
 import Image from "next/image"
 import OfficerCard, { OfficerCardProps } from "@/components/ui/OfficerCard"
+import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
+
+const OFFICER_CRYSTALS: CrystalConfig[] = [
+  // ── LEFT SIDE ──────────────────────────────────────────────────────────
+  // dominant large — top-left, partially cropped
+  { x: -7.0, y:  4.2, z:  0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
+  // medium — left, upper-mid
+  { x: -5.8, y:  1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
+  // small — left center
+  { x: -6.5, y: -0.8, z:  0.8, size: 1.0, hue: 0.00, sx: 0.004, sy: 0.006, sz: 0.003, fa: 0.18, fs: 0.75, phase: 2.3 },
+  // tiny — left, low
+  { x: -5.2, y: -2.5, z: -0.8, size: 0.7, hue: 0.015,sx: 0.006, sy: 0.004, sz: 0.005, fa: 0.14, fs: 0.85, phase: 3.5 },
+  // large — bottom-left, partially cropped
+  { x: -6.8, y: -4.5, z:  0.3, size: 2.0, hue: 0.02, sx: 0.003, sy: 0.005, sz: 0.003, fa: 0.30, fs: 0.50, phase: 1.7 },
+
+  // ── RIGHT SIDE ─────────────────────────────────────────────────────────
+  // small — upper-right
+  { x:  6.8, y:  3.8, z:  0.5, size: 1.0, hue: 0.00, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.20, fs: 0.70, phase: 1.4 },
+  // medium — right edge mid
+  { x:  7.2, y: -1.2, z:  0.8, size: 1.6, hue: 0.03, sx: 0.004, sy: 0.005, sz: 0.003, fa: 0.28, fs: 0.55, phase: 2.2 },
+  // large — bottom-right, partially cropped
+  { x:  6.0, y: -4.5, z:  0.5, size: 2.0, hue: 0.01, sx: 0.003, sy: 0.004, sz: 0.003, fa: 0.35, fs: 0.50, phase: 1.8 },
+  // tiny — upper-center-right
+  { x:  2.5, y:  4.8, z: -1.2, size: 0.6, hue: 0.00, sx: 0.007, sy: 0.003, sz: 0.005, fa: 0.18, fs: 0.90, phase: 0.8 },
+]
 
 const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   {
@@ -105,6 +130,9 @@ export default function MeetTheOfficersSection() {
           background: "linear-gradient(180deg, rgba(10,2,2,0.50) 0%, transparent 100%)",
         }}
       />
+
+      {/* ── Crystal dice (scattered, z-index 1) ── */}
+      <CrystalDice3D crystals={OFFICER_CRYSTALS} cameraZ={13} className="z-[1]" />
 
       {/* ── Horizontal image strip (decorative bg band) ── */}
       <div
