@@ -110,7 +110,7 @@ export default function MeetTheOfficersSection() {
       <div
         className="absolute left-0 right-0 pointer-events-none overflow-hidden"
         style={{
-          top: "34%",
+          top: "36%",
           transform: "translateY(-20%)",
           height: 300,
           zIndex: 1,
@@ -172,14 +172,14 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Heading ── */}
         <h2
-          className="mb-3 text-center font-extrabold tracking-tight leading-none"
+            className="mb-10 text-center text-6xl font-extrabold tracking-widest"
+
           style={{
-            fontSize: "clamp(2.5rem, 5vw, 4rem)",
-            background: "linear-gradient(170deg, #FFFFFF 0%, #F5C4A0 40%, #F26223 80%, #8B2810 100%)",
+            background: "linear-gradient(180deg, #F5C4A0 35%, #F26223 90%, #7B2210 100%)",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
             backgroundClip: "text",
-            filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.6))",
+            filter: "drop-shadow(2px 3px 4px rgba(0,0,0,0.5))",
           }}
         >
           Meet the Officers
@@ -187,7 +187,7 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Subtitle ── */}
         <p
-          className="mb-16 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
+          className="mb-20 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
           style={{ color: "rgba(255,255,255,0.52)" }}
         >
           We are a community of student leaders and innovators committed to advancing technology,
