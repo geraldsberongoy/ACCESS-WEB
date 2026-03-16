@@ -79,16 +79,7 @@ export default function EventsSection() {
 
         <div className="relative z-10 mx-auto max-w-6xl">
           {/* Section heading */}
-          <h2
-            className="mb-10 text-center text-6xl font-extrabold tracking-widest"
-            style={{
-              background: "linear-gradient(180deg, #F5C4A0 35%, #F26223 90%, #7B2210 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-              filter: "drop-shadow(2px 3px 4px rgba(0,0,0,0.5))",
-            }}
-          >
+          <h2 className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header">
             Events
           </h2>
 

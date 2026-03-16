@@ -126,7 +126,7 @@ export default function AboutSection() {
         >
           {/* "About Us" heading */}
           <h2
-            className="whitespace-nowrap text-[clamp(2.4rem,5.5vw,5.5rem)] font-extrabold leading-none text-white"
+            className="whitespace-nowrap text-[clamp(2.4rem,5.5vw,5.5rem)] font-extrabold leading-none text-white title-header"
             style={{ letterSpacing: "0.18em" }}
           >
             About Us
