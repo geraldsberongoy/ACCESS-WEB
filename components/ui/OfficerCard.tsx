@@ -33,8 +33,8 @@ const LAVA = `
   linear-gradient(145deg, #090100 0%, #1d0301 35%, #0d0200 65%, #220502 100%)
 `
 
-const AVATAR_SIZE = 88
-const BANNER_H    = 144
+const AVATAR_SIZE = 100
+const BANNER_H    = 94
 
 export default function OfficerCard({
   name,
@@ -56,7 +56,6 @@ export default function OfficerCard({
           ? "0 28px 72px rgba(0,0,0,0.60), 0 0 0 1px rgba(255,255,255,0.08)"
           : "0 10px 40px rgba(0,0,0,0.40)",
         overflow : "hidden",
-        opacity  : featured ? 1 : 0.78,
       }}
     >
       {/* ── Lava banner ─────────────────────────────────────── */}
@@ -82,31 +81,36 @@ export default function OfficerCard({
         />
       </div>
 
-      {/* ── Avatar — straddles banner / body ────────────────── */}
-      <div
-        className="absolute left-1/2 rounded-full overflow-hidden flex-shrink-0"
-        style={{
-          width     : AVATAR_SIZE,
-          height    : AVATAR_SIZE,
-          top       : BANNER_H - AVATAR_SIZE / 2,
-          transform : "translateX(-50%)",
-          border    : "2.5px solid rgba(255, 255, 255, 0.22)",
-          boxShadow : [
-            "0 0 0 4px rgba(255,255,255,0.05)",
-            "0 8px 32px rgba(0,0,0,0.60)",
-            "inset 0 1px 0 rgba(255,255,255,0.15)",
-          ].join(", "),
-        }}
-      >
-        <div className="relative w-full h-full">
-          <Image src={image} alt={name} fill className="object-cover" />
-        </div>
-      </div>
+      {/* ── Avatar (Circle Profile) ───────────────────────── */}
+      {image && (
+        <img
+          src={image}
+          alt={name}
+          width={AVATAR_SIZE}
+          height={AVATAR_SIZE}
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: BANNER_H - AVATAR_SIZE / 2,
+            transform: "translateX(-50%)",
+            width: AVATAR_SIZE,
+            height: AVATAR_SIZE,
+            borderRadius: "50%",
+            boxShadow: "0 0 0 1px F26223",
+            objectFit: "cover",
+            boxShadow: "0 4px 24px 4px rgba(0,0,0,0.24)",
+            background: "#1a0602",
+            zIndex: 1,
+          }}
+          className="shadow-xl"
+        />
+      )}
+
 
       {/* ── Body ────────────────────────────────────────────── */}
       <div
         className="flex flex-col items-center text-center w-full px-6"
-        style={{ paddingTop: AVATAR_SIZE / 2 + 14, paddingBottom: 26 }}
+        style={{ paddingTop: AVATAR_SIZE / 2 + 14, paddingBottom: 66 }}
       >
         {/* Name */}
         <h3
@@ -130,16 +134,11 @@ export default function OfficerCard({
         {/* Thin divider */}
         <div
           className="my-3 rounded-full"
-          style={{
-            width      : 40,
-            height     : 1,
-            background : "rgba(255, 255, 255, 0.10)",
-          }}
-        />
 
+        />
         {/* Description */}
         <p
-          className="leading-relaxed"
+          className="font-light"
           style={{
             color    : "rgba(255, 245, 240, 0.75)",
             fontSize : "0.8125rem",
