@@ -10,7 +10,7 @@ const SOCIALS = [
       </svg>
     ),
     handle: "@OfficialACCESS",
-    href: "#",
+    href: "/not-found",
   },
   {
     icon: (
@@ -19,7 +19,7 @@ const SOCIALS = [
       </svg>
     ),
     handle: "@OfficialACCESS",
-    href: "#",
+    href: "/not-found",
   },
   {
     icon: (
@@ -28,29 +28,29 @@ const SOCIALS = [
       </svg>
     ),
     handle: "ACCESS / ACCESS TV",
-    href: "#",
+    href: "/not-found",
   },
 ]
 
 const ORG_LINKS = [
-  { label: "About Us", href: "#" },
-  { label: "Location", href: "#" },
-  { label: "Partners", href: "#" },
-  { label: "Contacts", href: "#" },
+  { label: "About Us", href: "/not-found" },
+  { label: "Location", href: "/not-found" },
+  { label: "Partners", href: "/not-found" },
+  { label: "Contacts", href: "/not-found" },
   { label: "Contributors", href: "/contributors" },
 ]
 
 const RESOURCE_LINKS = [
-  { label: "Documentation", href: "#" },
-  { label: "Help Center", href: "#" },
-  { label: "Community", href: "#" },
-  { label: "Status Page", href: "#" },
+  { label: "Documentation", href: "/not-found" },
+  { label: "Help Center", href: "/not-found" },
+  { label: "Community", href: "/not-found" },
+  { label: "Status Page", href: "/not-found" },
 ]
 
 const BOTTOM_LINKS = [
-  { label: "Privacy Center", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "Cookie Policy", href: "#" },
+  { label: "Privacy Center", href: "/not-found" },
+  { label: "Terms of Service", href: "/not-found" },
+  { label: "Cookie Policy", href: "/not-found" },
 ]
 
 export default function FooterSection() {

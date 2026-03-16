@@ -8,7 +8,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
   {
     title: "Junior and Senior Hardhatting",
@@ -17,7 +17,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
   {
     title: "Junior and Senior Hardhatting",
@@ -26,7 +26,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
   {
     title: "Junior and Senior Hardhatting",
@@ -35,7 +35,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
   {
     title: "Junior and Senior Hardhatting",
@@ -44,7 +44,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
   {
     title: "Junior and Senior Hardhatting",
@@ -53,7 +53,7 @@ const MOCK_EVENTS: EventCardProps[] = [
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
     image: "/BG-ACCESS.png",
-    href: "#",
+    href: "/not-found",
   },
 ]
 
