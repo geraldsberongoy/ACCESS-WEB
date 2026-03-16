@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import OfficerCard, { OfficerCardProps } from "@/components/ui/OfficerCard"
 import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
@@ -62,40 +63,38 @@ const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   },
 ]
 
-function ChevronLeft() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
-      <path
-        fillRule="evenodd"
-        d="M12.79 5.23a.75.75 0 0 1-.02 1.06L8.832 10l3.938 3.71a.75.75 0 1 1-1.04 1.08l-4.5-4.25a.75.75 0 0 1 0-1.08l4.5-4.25a.75.75 0 0 1 1.06.02Z"
-        clipRule="evenodd"
-      />
-    </svg>
-  )
-}
 
-function ChevronRight() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5">
-      <path
-        fillRule="evenodd"
-        d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
-        clipRule="evenodd"
-      />
-    </svg>
-  )
+const slideVariants = {
+  enter: (dir: number) => ({
+    x: dir > 0 ? "55%" : "-55%",
+    opacity: 0,
+    scale: 0.94,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+    transition: { type: "spring" as const, stiffness: 300, damping: 30, mass: 0.8 },
+  },
+  exit: (dir: number) => ({
+    x: dir > 0 ? "-55%" : "55%",
+    opacity: 0,
+    scale: 0.94,
+    transition: { duration: 0.22, ease: "easeIn" as const },
+  }),
 }
 
 export default function MeetTheOfficersSection() {
-  const [activeIndex, setActiveIndex] = useState(0)
+  const [[activeIndex, direction], setPage] = useState([0, 0])
   const total = MOCK_OFFICERS.length
 
-  const prev = () => setActiveIndex((i) => (i - 1 + total) % total)
-  const next = () => setActiveIndex((i) => (i + 1) % total)
+  const paginate = (dir: number) => {
+    setPage(([prev]) => [(prev + dir + total) % total, dir])
+  }
 
-  const leftIdx = (activeIndex - 1 + total) % total
+  const leftIdx   = (activeIndex - 1 + total) % total
   const centerIdx = activeIndex
-  const rightIdx = (activeIndex + 1) % total
+  const rightIdx  = (activeIndex + 1) % total
 
   return (
     <section className="relative overflow-hidden min-h-screen flex flex-col justify-center px-5 sm:px-8 md:px-16 lg:px-24 py-16">
@@ -227,41 +226,46 @@ export default function MeetTheOfficersSection() {
 
           {/* Nav button – Left */}
           <button
-            onClick={prev}
+            onClick={() => paginate(-1)}
             aria-label="Previous officer"
-            className="absolute left-0 z-20 flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              backdropFilter: "blur(12px)",
-              color: "rgba(255,255,255,0.85)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
-            }}
+            className="absolute left-0 z-20 transition-all duration-200 hover:scale-110 active:scale-95"
           >
-            <ChevronLeft />
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+              <path d="M28 19 L21 26 L28 33" stroke="white" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
 
-          {/* Cards */}
-          <div className="flex items-start justify-center gap-5 px-16 py-6">
-            <OfficerCard {...MOCK_OFFICERS[leftIdx]}   featured={false} />
-            <OfficerCard {...MOCK_OFFICERS[centerIdx]} featured={true}  />
-            <OfficerCard {...MOCK_OFFICERS[rightIdx]}  featured={false} />
+          {/* Cards — animated */}
+          <div className="relative overflow-hidden w-full flex justify-center px-16 py-6" style={{ minHeight: 420 }}>
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
+              <motion.div
+                key={activeIndex}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                className="flex items-start justify-center gap-5 absolute"
+              >
+                <OfficerCard {...MOCK_OFFICERS[leftIdx]}   featured={false} />
+                <OfficerCard {...MOCK_OFFICERS[centerIdx]} featured={true}  />
+                <OfficerCard {...MOCK_OFFICERS[rightIdx]}  featured={false} />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Nav button – Right */}
           <button
-            onClick={next}
+            onClick={() => paginate(1)}
             aria-label="Next officer"
-            className="absolute right-0 z-20 flex h-11 w-11 items-center justify-center rounded-full transition-all duration-200 hover:scale-110 active:scale-95"
-            style={{
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              backdropFilter: "blur(12px)",
-              color: "rgba(255,255,255,0.85)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.35)",
-            }}
+            className="absolute right-0 z-20 transition-all duration-200 hover:scale-110 active:scale-95"
           >
-            <ChevronRight />
+            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 19 L31 26 L24 33" stroke="white" strokeWidth="2"
+                strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
           </button>
         </div>
 
@@ -270,7 +274,7 @@ export default function MeetTheOfficersSection() {
           {MOCK_OFFICERS.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => setPage(([prev]) => [i, i > prev ? 1 : -1])}
               aria-label={`Go to officer ${i + 1}`}
               className="rounded-full transition-all duration-300"
               style={{
