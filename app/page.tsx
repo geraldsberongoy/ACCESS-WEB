@@ -114,6 +114,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      <About />
       <Events />
       <MeetTheOfficers />
 
