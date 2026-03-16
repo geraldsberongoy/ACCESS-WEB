@@ -35,7 +35,7 @@ export default function AboutSection() {
       className="relative overflow-hidden py-10"
       style={{
         background:
-          "linear-gradient(135deg, #f26223 0%, #e84d0e 30%, #c73a08 55%, #a82d06 75%, #8b2005 100%)",
+          "linear-gradient(135deg, #672b03ff 0%, #e84d0e 30%, #c73a08 55%, #a82d06 75%, #8b2005 100%)",
         minHeight: "520px",
       }}
     >

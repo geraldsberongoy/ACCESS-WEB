@@ -1,20 +1,12 @@
 "use client"
 
 import Image from "next/image"
-import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
 
 interface Contributor {
   name: string
   role: string
   image: string
 }
-
-const CONTRIBUTOR_CRYSTALS: CrystalConfig[] = [
-  { x: -7.0, y: 5.2, z: 0.5, size: 2.0, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
-  { x: 6.8, y: -4.8, z: 0.5, size: 2.5, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.20, fs: 0.70, phase: 1.4 },
-  { x: 6.0, y: 4.5, z: 1.5, size: 1.5, hue: 0.01, sx: 0.003, sy: 0.004, sz: 0.003, fa: 0.35, fs: 0.50, phase: 1.8 },
-  { x: -5.5, y: -3.8, z: -1.2, size: 1.2, hue: 0.00, sx: 0.007, sy: 0.003, sz: 0.005, fa: 0.18, fs: 0.90, phase: 0.8 },
-]
 
 const MOCK_CONTRIBUTORS: Contributor[] = Array(6).fill({
   name: "Antonio Mickel\nTantia",
@@ -24,31 +16,7 @@ const MOCK_CONTRIBUTORS: Contributor[] = Array(6).fill({
 
 export default function ContributorsSection() {
   return (
-    <section className="relative overflow-hidden min-h-screen flex flex-col justify-center px-5 sm:px-8 md:px-16 lg:px-24 py-16">
-      {/* ── Background photo ── */}
-      <Image
-        src="/EventsBG.png"
-        alt=""
-        fill
-        className="absolute inset-0 z-0 object-cover pointer-events-none"
-      />
-
-      {/* ── Deep dark-red overlay ── */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(25,4,4,0.72) 0%, rgba(50,8,8,0.60) 50%, rgba(20,3,3,0.78) 100%)" }}
-      />
-
-      {/* ── Ambient radial glows ── */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(ellipse 60% 40% at 50% 50%, rgba(242,98,35,0.2) 0%, transparent 70%)",
-        }}
-      />
-
-      {/* ── Crystal dice (scattered, z-index 1) ── */}
-      <CrystalDice3D crystals={CONTRIBUTOR_CRYSTALS} cameraZ={13} className="z-[1]" />
+    <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
 
       {/* ── Content ── */}
       <div className="relative z-20 mx-auto max-w-7xl w-full flex flex-col items-center">
