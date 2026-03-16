@@ -144,7 +144,21 @@ export default function LandingPage() {
         </div>
         
         {/* Transparent Overlays */}
-        <div className="relative z-10 -mt-[100vh]">
+        <div className="relative z-10 -mt-[100vh] overflow-hidden">
+          
+          {/* ── Seamless Decorative Blobs ── */}
+          {/* Black Blobs */}
+          <div className="absolute top-[20%] left-[-30%] w-[600px] h-[500px] bg-black/85 blur-[120px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
+          <div className="absolute top-[30%] right-[-20%] w-[700px] h-[600px] bg-black/90 blur-[130px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
+          <div className="absolute top-[60%] left-[-30%] w-[600px] h-[600px] bg-black/85 blur-[140px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
+          <div className="absolute top-[85%] right-[-5%] w-[500px] h-[500px] bg-black/90 blur-[130px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
+          
+          {/* Yellow/Orange Blobs */}
+          <div className="absolute top-[1%] left-[5%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[140px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[15%] right-[5%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[140px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[60%] left-[40%] w-[600px] h-[600px] bg-[#FF8C00] opacity-40 blur-[140px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[90%] left-[15%] w-[400px] h-[400px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
+
           <Events />
           <MeetTheOfficers />
           <Contributors />
