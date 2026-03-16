@@ -144,7 +144,7 @@ export default function MeetTheOfficersSection() {
         }}
       >
         <Image
-          src="/BG-ACCESS.png"
+          src="/meet-the-officers.png"
           alt=""
           fill
           className="object-cover object-center"
@@ -215,7 +215,7 @@ export default function MeetTheOfficersSection() {
         {/* ── Subtitle ── */}
         <p
           className="mb-20 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
-          style={{ color: "rgba(255,255,255,0.52)" }}
+          style={{ color: "rgb(255, 255, 255)" }}
         >
           We are a community of student leaders and innovators committed to advancing technology,
           collaboration, and excellence within PUP.
