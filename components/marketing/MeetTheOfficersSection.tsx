@@ -106,8 +106,67 @@ export default function MeetTheOfficersSection() {
         }}
       />
 
+      {/* ── Horizontal image strip (decorative bg band) ── */}
+      <div
+        className="absolute left-0 right-0 pointer-events-none overflow-hidden"
+        style={{
+          top: "34%",
+          transform: "translateY(-20%)",
+          height: 300,
+          zIndex: 1,
+        }}
+      >
+        <Image
+          src="/BG-ACCESS.png"
+          alt=""
+          fill
+          className="object-cover object-center"
+          style={{ opacity: 0.18, filter: "blur(2px) saturate(1.4)" }}
+        />
+        {/* left fade */}
+        <div
+          className="absolute inset-y-0 left-0 pointer-events-none"
+          style={{
+            width: "22%",
+            background: "linear-gradient(to right, rgba(15,3,3,1) 0%, transparent 100%)",
+          }}
+        />
+        {/* right fade */}
+        <div
+          className="absolute inset-y-0 right-0 pointer-events-none"
+          style={{
+            width: "22%",
+            background: "linear-gradient(to left, rgba(15,3,3,1) 0%, transparent 100%)",
+          }}
+        />
+        {/* top fade */}
+        <div
+          className="absolute inset-x-0 top-0 pointer-events-none"
+          style={{
+            height: "35%",
+            background: "linear-gradient(to bottom, rgba(15,3,3,1) 0%, transparent 100%)",
+          }}
+        />
+        {/* bottom fade */}
+        <div
+          className="absolute inset-x-0 bottom-0 pointer-events-none"
+          style={{
+            height: "35%",
+            background: "linear-gradient(to top, rgba(15,3,3,1) 0%, transparent 100%)",
+          }}
+        />
+        {/* center orange glow overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(180,50,10,0.30) 0%, transparent 70%)",
+          }}
+        />
+      </div>
+
       {/* ── Content ── */}
-      <div className="relative z-10 mx-auto max-w-5xl">
+      <div className="relative z-20 mx-auto max-w-5xl">
 
 
 
