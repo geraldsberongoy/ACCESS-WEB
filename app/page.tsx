@@ -7,6 +7,7 @@ import Events from "@/components/marketing/EventsSection";
 import MeetTheOfficers from "@/components/marketing/MeetTheOfficersSection";
 import Borrow from "@/components/marketing/BorrowSection";
 import Contact from "@/components/marketing/ContactSection";
+import Contributors from "@/components/marketing/ContributorsSection";
 
 export default function LandingPage() {
   return (
@@ -117,6 +118,7 @@ export default function LandingPage() {
       <About />
       <Events />
       <MeetTheOfficers />
+      <Contributors />
 
     </div>
   );
