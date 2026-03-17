@@ -1,6 +1,6 @@
 "use client";
 
-export const dyanmic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
@@ -9,15 +9,20 @@ export default function DbTestPage() {
   const [dbTime, setDbTime] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Initialize Supabase
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
-  );
-
   async function handleCheckTime() {
     setLoading(true);
     try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const supabaseKey =
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY;
+
+      if (!supabaseUrl || !supabaseKey) {
+        setDbTime("Missing Supabase environment variables.");
+        return;
+      }
+
+      const supabase = createClient(supabaseUrl, supabaseKey);
+
       // This calls an SQL function defined in supabase
       const { data, error } = await supabase.rpc("get_server_time");
 
