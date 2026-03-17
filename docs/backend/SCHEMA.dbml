@@ -37,7 +37,7 @@ Enum borrow_status {
   Cancelled
 }
 
-Table Profiles {
+Table Users {
   id uuid [primary key, note: 'References auth.users(id)']
   email varchar
   role user_role
@@ -67,14 +67,14 @@ Table Events {
   event_date timestamp
   status event_status
   image_url varchar [note: 'Supabase Storage Public URL']
-  created_by uuid [ref: > Profiles.id, note: 'Admin/Officer']
+  created_by uuid [ref: > Users.id, note: 'Admin/Officer']
   created_at timestamp
   updated_at timestamp
 }
 
 Table Officers {
   id uuid [primary key]
-  user_id uuid [ref: - Profiles.id, note: 'Optional']
+  user_id uuid [ref: - Users.id, note: 'Optional']
   full_name varchar
   email varchar [note: 'Contact email for frontend display']
   position_title varchar [note: 'e.g., President, Secretary']
@@ -89,7 +89,7 @@ Table Officers {
 
 Table BorrowRequests {
   id uuid [primary key]
-  user_id uuid [ref: > Profiles.id, note: 'Organization']
+  user_id uuid [ref: > Users.id, note: 'Organization']
   borrower_contact_name varchar [note: 'Specific person borrowing']
   borrower_email varchar
   borrower_phone varchar
@@ -98,7 +98,7 @@ Table BorrowRequests {
   letter_file_url varchar [note: 'Supabase Storage Secured/Signed URL']
   status borrow_status
   rejection_reason text [note: 'Reason for rejection, null if not rejected']
-  reviewed_by uuid [ref: > Profiles.id, note: 'Admin/Officer']
+  reviewed_by uuid [ref: > Users.id, note: 'Admin/Officer']
   reviewed_at timestamp
   created_at timestamp
   updated_at timestamp
@@ -112,7 +112,7 @@ Table BorrowRequestItems {
 
 Table AuditLogs {
   id uuid [primary key]
-  user_id uuid [ref: > Profiles.id, note: 'Who performed the action']
+  user_id uuid [ref: > Users.id, note: 'Who performed the action']
   action varchar [note: 'e.g., STATUS_CHANGED, REQUEST_APPROVED']
   entity_type varchar [note: 'e.g., Asset, BorrowRequest']
   entity_id uuid

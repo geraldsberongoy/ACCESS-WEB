@@ -3,17 +3,17 @@
 The following Mermaid diagram outlines the relational database structure needed to support the ACCESS Borrowing System, CMS, and Asset Tracking.
 
 > [!IMPORTANT]
-> This schema uses Supabase Auth for authentication. The `Profiles` table extends `auth.users` — passwords are managed entirely by Supabase, NOT stored in your application tables.
+> This schema uses Supabase Auth for authentication. The `Users` (or `public.users`) table extends `auth.users` — passwords are managed entirely by Supabase, NOT stored in your application tables.
 
 ```mermaid
 erDiagram
-    Profiles ||--o{ BorrowRequests : "makes"
-    Profiles ||--o{ Events : "creates"
-    Profiles ||--o{ Officers : "optionally_linked"
+    Users ||--o{ BorrowRequests : "makes"
+    Users ||--o{ Events : "creates"
+    Users ||--o{ Officers : "optionally_linked"
     BorrowRequests ||--|{ BorrowRequestItems : "contains"
     Assets ||--o{ BorrowRequestItems : "included_in"
 
-    Profiles {
+    Users {
         uuid id PK "References auth.users(id)"
         string email
         string role "Enum: Admin, Organization, Pending"
@@ -43,14 +43,14 @@ erDiagram
         datetime event_date
         string status "Enum: Draft, Published"
         string image_url "Supabase Storage Public URL"
-        uuid created_by FK "References Profiles(id) [Admin/Officer]"
+        uuid created_by FK "References Users(id) [Admin/Officer]"
         datetime created_at
         datetime updated_at
     }
 
     Officers {
         uuid id PK
-        uuid user_id FK "Optional: References Profiles(id)"
+        uuid user_id FK "Optional: References Users(id)"
         string full_name
         string email "Contact email for frontend display"
         string position_title "e.g., President, Secretary"
@@ -65,7 +65,7 @@ erDiagram
 
     BorrowRequests {
         uuid id PK
-        uuid user_id FK "References Profiles(id) [Organization]"
+        uuid user_id FK "References Users(id) [Organization]"
         string borrower_contact_name "Specific person borrowing"
         string borrower_email
         string borrower_phone
@@ -74,7 +74,7 @@ erDiagram
         string letter_file_url "Supabase Storage Secured/Signed URL"
         string status "Enum: Pending, Approved, Rejected, Active, Returned, Cancelled"
         text rejection_reason "Reason for rejection, null if not rejected"
-        uuid reviewed_by FK "References Profiles(id) [Admin/Officer]"
+        uuid reviewed_by FK "References Users(id) [Admin/Officer]"
         datetime reviewed_at
         datetime created_at
         datetime updated_at
