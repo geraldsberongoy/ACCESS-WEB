@@ -1,4 +1,4 @@
-import EventCard, { EventCardProps } from "@/components/ui/EventCard"
+import { EventCard, type EventCardProps } from "@/features/events"
 
 const MOCK_EVENTS: EventCardProps[] = [
   {
@@ -7,7 +7,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
   {
@@ -16,7 +16,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
   {
@@ -25,7 +25,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
   {
@@ -34,7 +34,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
   {
@@ -43,7 +43,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
   {
@@ -52,7 +52,7 @@ const MOCK_EVENTS: EventCardProps[] = [
     description:
       "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum",
     date: "February 20, 2026",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
     href: "/not-found",
   },
 ]

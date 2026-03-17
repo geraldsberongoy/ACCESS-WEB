@@ -11,7 +11,7 @@ interface Contributor {
 const MOCK_CONTRIBUTORS: Contributor[] = Array(6).fill({
   name: "Antonio Mickel\nTantia",
   role: "Control Officer",
-  image: "/BG-ACCESS.png",
+  image: "/BG-ACCESS.webp",
 })
 
 export default function ContributorsSection() {

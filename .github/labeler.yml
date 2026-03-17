@@ -2,10 +2,11 @@
 frontend:
   - changed-files:
       - any-glob-to-any-file:
-          - "app/**"
-          - "components/**"
-          - "hooks/**"
-          - "styles/**"
+          - "src/app/**"
+          - "src/components/**"
+          - "src/features/**"
+          - "src/hooks/**"
+          - "src/styles/**"
           - "public/**"
           - "types/**"
 
@@ -13,11 +14,11 @@ frontend:
 backend:
   - changed-files:
       - any-glob-to-any-file:
-          - "app/api/**"
-          - "lib/**"
-          - "utils/**"
+          - "src/app/api/**"
+          - "src/lib/**"
+          - "src/utils/**"
           - "supabase/**"
-          - "actions/**"
+          - "src/actions/**"
 
 # Configuration & Dependencies
 configuration:

@@ -18,7 +18,7 @@ export default function EventCard({
   date,
   image,
   href = "#",
-  logos = ["/AccessLogo.png"],
+  logos = ["/AccessLogo.webp"],
 }: EventCardProps) {
   return (
     <div

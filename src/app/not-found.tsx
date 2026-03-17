@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
-import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
-import Navbar from "@/components/ui/Navbar"
+import { CrystalDice3D, type CrystalConfig } from "@/features/effects"
+import { Navbar } from "@/components/ui"
 
 const CRYSTALS: CrystalConfig[] = [
   { x: -7.0, y:  4.2, z:  0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
@@ -17,7 +17,7 @@ export default function NotFound() {
     <div className="relative min-h-screen flex flex-col overflow-hidden">
       {/* ── Background ── */}
       <Image
-        src="/EventsBG.png"
+        src="/EventsBG.webp"
         alt=""
         fill
         priority

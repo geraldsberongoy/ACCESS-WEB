@@ -17,6 +17,17 @@ We follow a strict Git workflow to ensure code quality and stability.
 6.  **Pull Request**: Open a Pull Request (PR) targeting the `dev` branch of the main repository.
     - **Do NOT target `main` directly.** Merges to `main` happen only for production releases.
 
+## File Placement
+
+Follow the architecture rules in [ARCHITECTURE.md](ARCHITECTURE.md) when adding or moving files.
+
+- Put route entrypoints and layouts in `src/app/`.
+- Put feature-specific components in `src/features/<feature>/`.
+- Keep `src/components/ui/` limited to shared primitives.
+- Prefer incremental migration over large folder reshuffles with no behavior change.
+
+If your PR introduces a new component in a global folder, be ready to justify why it is reusable across unrelated features.
+
 ## Commit Messages
 
 We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.

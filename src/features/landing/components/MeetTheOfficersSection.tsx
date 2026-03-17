@@ -3,38 +3,38 @@
 import { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
-import OfficerCard, { OfficerCardProps } from "@/components/ui/OfficerCard"
+import { OfficerCard, type OfficerCardProps } from "@/features/officers"
 
 const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   {
     name: "Antonio ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
   },
   {
     name: "Mickel ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
   },
   {
     name: "Antonio Mickel ",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
   },
   {
     name: "Mickel Tantia",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
   },
   {
     name: "Tantia",
     role: "Control Officer",
     description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.png",
+    image: "/BG-ACCESS.webp",
   },
 ]
 
@@ -84,7 +84,7 @@ export default function MeetTheOfficersSection() {
         }}
       >
         <Image
-          src="/meet-the-officers.png"
+          src="/meet-the-officers.webp"
           alt=""
           fill
           className="object-cover object-center"

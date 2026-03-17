@@ -1,6 +1,5 @@
 import Image from "next/image"
 import Link from "next/link"
-import ContributorsSection from "@/components/marketing/ContributorsSection"
 
 const SOCIALS = [
   {
@@ -65,7 +64,7 @@ export default function FooterSection() {
         {/* ── Brand column ── */}
         <div className="flex flex-col gap-5" style={{ fontFamily: `'Josefin Sans', sans-serif` }}>
           <Image
-            src="/AccessLogo.png"
+            src="/AccessLogo.webp"
             alt="ACCESS"
             width={130}
             height={46}

@@ -1,8 +1,6 @@
-import Navbar from "@/components/ui/Navbar"
-import ContributorsSection from "@/components/marketing/ContributorsSection"
-import FooterSection from "@/components/marketing/FooterSection"
+import { ContributorsSection, FooterSection } from "@/features/landing"
 import Image from "next/image"
-import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D"
+import { CrystalDice3D, type CrystalConfig } from "@/features/effects"
 import Link from "next/link"
 
 const CONTRIBUTORS_CRYSTALS: CrystalConfig[] = [
@@ -27,7 +25,7 @@ export default function ContributorsPage() {
       <div className="relative flex-1">
         {/* Sticky Background & Crystals (matches home page sections) */}
         <div className="sticky top-0 h-screen w-full z-0 overflow-hidden pointer-events-none">
-          <Image src="/EventsBG.png" alt="" fill className="object-cover" />
+          <Image src="/EventsBG.webp" alt="" fill className="object-cover" />
           <div className="absolute inset-0" style={{ background: "#862520" }} />
           <CrystalDice3D crystals={CONTRIBUTORS_CRYSTALS} cameraZ={13} className="z-[1]" />
         </div>

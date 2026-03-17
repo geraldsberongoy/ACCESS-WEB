@@ -1,16 +1,16 @@
-import Navbar from "@/components/ui/Navbar";
-import FloatingBlocks from "@/components/ui/FloatingBlocks";
+import { Navbar } from "@/components/ui";
 import Link from "next/link";
 import Image from "next/image";
-import About from "@/components/marketing/AboutSection";
-import Events from "@/components/marketing/EventsSection";
-import MeetTheOfficers from "@/components/marketing/MeetTheOfficersSection";
-import BorrowSection from "@/components/marketing/BorrowSection";
-import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D";
-import FooterSection from "@/components/marketing/FooterSection";
-import ContributorsSection from "@/components/marketing/ContributorsSection";
-import FAQSection from "@/components/marketing/FAQSection";
-import CTASection from "@/components/marketing/CTASection";
+import {
+  AboutSection,
+  BorrowSection,
+  CTASection,
+  EventsSection,
+  FAQSection,
+  FooterSection,
+  MeetTheOfficersSection,
+} from "@/features/landing";
+import { CrystalDice3D, FloatingBlocks, type CrystalConfig } from "@/features/effects";
 const COMBINED_CRYSTALS: CrystalConfig[] = [
   { x: -7.0, y: 4.2, z: 0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
   { x: -5.8, y: 1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
@@ -31,7 +31,7 @@ export default function LandingPage() {
 
         {/* background photo — shifted right on mobile so subject stays visible */}
         <Image
-          src="/BG-ACCESS.png"
+          src="/BG-ACCESS.webp"
           alt=""
           fill
           priority
@@ -129,13 +129,13 @@ export default function LandingPage() {
         </div>
       </section>
             
-      <About />
+      <AboutSection />
       
       <div className="relative">
         {/* Sticky Background & Crystals seamlessly spanning the sections */}
         <div className="sticky top-0 h-screen w-full z-0 overflow-hidden pointer-events-none">
           <Image
-            src="/EventsBG.png"
+            src="/EventsBG.webp"
             alt=""
             fill
             className="object-cover"
@@ -163,8 +163,8 @@ export default function LandingPage() {
           <div className="absolute top-[50%] right-[-10%] w-[400px] h-[400px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
           <div className="absolute top-[40%] left-[0%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
 
-          <Events />
-          <MeetTheOfficers />
+          <EventsSection />
+          <MeetTheOfficersSection />
           <BorrowSection />
           <FAQSection />
           <CTASection />

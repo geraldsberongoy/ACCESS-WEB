@@ -45,7 +45,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
         {/* ── Logo ── */}
         <Link href="/" className="flex items-center shrink-0 mr-auto">
           <Image
-            src="/AccessLogo.png"
+            src="/AccessLogo.webp"
             alt="ACCESS Logo"
             // phone: 110×50 | tablet: 130×60 | desktop: 150×70
             width={150}

@@ -96,9 +96,8 @@ export default function OfficerCard({
             width: AVATAR_SIZE,
             height: AVATAR_SIZE,
             borderRadius: "50%",
-            boxShadow: "0 0 0 1px F26223",
+            boxShadow: "0 0 0 1px #F26223, 0 4px 24px 4px rgba(0,0,0,0.24)",
             objectFit: "cover",
-            boxShadow: "0 4px 24px 4px rgba(0,0,0,0.24)",
             background: "#1a0602",
             zIndex: 1,
           }}

@@ -1,0 +1,8 @@
+export { default as AboutSection } from "./components/AboutSection";
+export { default as BorrowSection } from "./components/BorrowSection";
+export { default as ContributorsSection } from "./components/ContributorsSection";
+export { default as CTASection } from "./components/CTASection";
+export { default as EventsSection } from "./components/EventsSection";
+export { default as FAQSection } from "./components/FAQSection";
+export { default as FooterSection } from "./components/FooterSection";
+export { default as MeetTheOfficersSection } from "./components/MeetTheOfficersSection";

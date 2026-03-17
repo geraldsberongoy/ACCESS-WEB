@@ -35,7 +35,7 @@ export default function AboutSection() {
   const W3 = 180;
   const GAP = 16;
 
-  // Natural image dimensions (AboutUsPic.png)
+  // Natural image dimensions (AboutUsPic.webp)
   const IMG_NATURAL_W = 1456;
   const IMG_NATURAL_H = 816;
   const CARD_TALLEST_H = 560; // card 2 height — image scaled to fill this
@@ -48,7 +48,7 @@ export default function AboutSection() {
   const x3 = W1 + GAP + W2 + GAP;  // 412
 
   const panoramaBg = (offsetX: number): React.CSSProperties => ({
-    backgroundImage: "url('/AboutUsPic.png')",
+    backgroundImage: "url('/AboutUsPic.webp')",
     backgroundSize: `${IMG_SCALED_W}px auto`, // height scales naturally — no distortion
     backgroundPosition: `-${offsetX}px 0px`,
     backgroundRepeat: "no-repeat",
