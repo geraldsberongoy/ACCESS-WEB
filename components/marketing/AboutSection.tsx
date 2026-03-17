@@ -1,6 +1,34 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 export default function AboutSection() {
+  const [scale, setScale] = useState(1);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 768;
+      // On desktop, available width is roughly half the screen minus some padding
+      // On mobile, available width is full window minus padding
+      const availableW = isDesktop 
+        ? (window.innerWidth / 2) - 48
+        : window.innerWidth - 32;
+        
+      const TARGET_W = 592; // The fixed width of the banner (180+16+200+16+180)
+      if (availableW < TARGET_W) {
+        setScale(availableW / TARGET_W);
+      } else {
+        setScale(1);
+      }
+    };
+    
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   // ── Panorama slice constants ──────────────────────────────────────────
   const W1 = 180;
   const W2 = 200;
@@ -32,11 +60,10 @@ export default function AboutSection() {
 
   return (
     <section
-      className="relative overflow-hidden py-10"
+      className="relative overflow-hidden md:py-16"
       style={{
         background:
           "linear-gradient(135deg, #672b03ff 0%, #e84d0e 30%, #c73a08 55%, #a82d06 75%, #8b2005 100%)",
-        minHeight: "520px",
       }}
     >
       {/* ── bokeh / glow blobs ──────────────────────────────────────────── */}
@@ -117,12 +144,11 @@ export default function AboutSection() {
       />
 
       {/* ── Full-width layout — left 50% text, right 50% cards ──────────── */}
-      <div className="relative z-10 flex flex-col md:flex-row md:items-start">
+      <div className="relative z-10 flex flex-col md:flex-row md:items-center">
 
         {/* LEFT col — 50% width ──────────────────────────────────────────── */}
         <div
-          className="flex shrink-0 flex-col pb-10 md:w-1/2 md:pb-14 lg:pl-20 lg:pr-16"
-          style={{ paddingTop: "260px", paddingLeft: "3rem" }}
+          className="flex shrink-0 flex-col px-6 pt-16 pb-10 md:w-1/2 md:pl-12 md:pr-10 md:py-16 lg:pl-20 lg:pr-16"
         >
           {/* "About Us" heading */}
           <h2
@@ -147,57 +173,75 @@ export default function AboutSection() {
         </div>
 
         {/* RIGHT col — remaining 50%, cards flush left, overflow downward ── */}
-        <div
-          className="relative flex flex-1 items-start justify-start overflow-visible pb-6 md:pb-0"
-          style={{ gap: `${GAP}px` }}
-        >
-          {/* Card 1 — left slice, shorter */}
+        <div className="relative flex flex-1 items-start justify-center overflow-visible px-4 pt-4 pb-12 md:justify-start md:px-0 md:pb-0 md:pt-0">
+          {/* Sizing wrapper to reserve height in document flow for scaled content */}
           <div
-            className="shrink-0 overflow-hidden"
             style={{
-              width: `${W1}px`,
-              height: "260px",
-              borderRadius: "18px",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.40)",
-              ...panoramaBg(x1),
-              ...glassOutline,
+              width: mounted ? `${592 * scale}px` : "100%",
+              height: mounted ? `${560 * scale}px` : "560px",
+              position: "relative",
+              transition: "width 0.2s ease-out, height 0.2s ease-out",
             }}
-          />
-
-          {/* Card 2 — middle slice, tallest */}
-          <div
-            className="shrink-0 overflow-hidden"
-            style={{
-              width: `${W2}px`,
-              height: "560px",
-              borderRadius: "18px",
-              boxShadow: "0 12px 40px rgba(0,0,0,0.50)",
-              ...panoramaBg(x2),
-              ...glassOutline,
-            }}
-          />
-
-          {/* Card 3 — right slice + description pill */}
-          <div className="flex shrink-0 flex-col" style={{ gap: "12px" }}>
+          >
+            {/* The scaled inner container containing the cards */}
             <div
-              className="overflow-hidden"
+              className="absolute left-0 top-0 flex origin-top-left"
               style={{
-                width: `${W3}px`,
-                height: "370px",
-                borderRadius: "18px",
-                boxShadow: "0 8px 32px rgba(0,0,0,0.40)",
-                ...panoramaBg(x3),
-                ...glassOutline,
+                gap: `${GAP}px`,
+                transform: `scale(${scale})`,
+                width: "592px",
+                transition: "transform 0.2s ease-out",
               }}
-            />
-            <div
-              className="rounded-xl px-4 py-3"
-              style={{ width: `${W3}px` }}
             >
-              <p className="text-xs leading-relaxed text-white/90">
-                Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet
-                consectetur Lorem ipsum dolor sit amet consectetur
-              </p>
+              {/* Card 1 — left slice, shorter */}
+              <div
+                className="shrink-0 overflow-hidden"
+                style={{
+                  width: `${W1}px`,
+                  height: "260px",
+                  borderRadius: "18px",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.40)",
+                  ...panoramaBg(x1),
+                  ...glassOutline,
+                }}
+              />
+
+              {/* Card 2 — middle slice, tallest */}
+              <div
+                className="shrink-0 overflow-hidden"
+                style={{
+                  width: `${W2}px`,
+                  height: "560px",
+                  borderRadius: "18px",
+                  boxShadow: "0 12px 40px rgba(0,0,0,0.50)",
+                  ...panoramaBg(x2),
+                  ...glassOutline,
+                }}
+              />
+
+              {/* Card 3 — right slice + description pill */}
+              <div className="flex shrink-0 flex-col" style={{ gap: "12px" }}>
+                <div
+                  className="overflow-hidden"
+                  style={{
+                    width: `${W3}px`,
+                    height: "370px",
+                    borderRadius: "18px",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.40)",
+                    ...panoramaBg(x3),
+                    ...glassOutline,
+                  }}
+                />
+                <div
+                  className="rounded-xl px-4 py-3"
+                  style={{ width: `${W3}px` }}
+                >
+                  <p className="text-xs leading-relaxed text-white/90">
+                    Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet
+                    consectetur Lorem ipsum dolor sit amet consectetur
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
