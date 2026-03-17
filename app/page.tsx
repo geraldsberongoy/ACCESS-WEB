@@ -5,6 +5,7 @@ import Image from "next/image";
 import About from "@/components/marketing/AboutSection";
 import Events from "@/components/marketing/EventsSection";
 import MeetTheOfficers from "@/components/marketing/MeetTheOfficersSection";
+import BorrowSection from "@/components/marketing/BorrowSection";
 import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D";
 import FooterSection from "@/components/marketing/FooterSection";
 import ContributorsSection from "@/components/marketing/ContributorsSection";
@@ -157,9 +158,13 @@ export default function LandingPage() {
           <div className="absolute top-[15%] right-[5%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[140px] rounded-full pointer-events-none z-[-1]" />
           <div className="absolute top-[60%] left-[40%] w-[600px] h-[600px] bg-[#FF8C00] opacity-40 blur-[140px] rounded-full pointer-events-none z-[-1]" />
           <div className="absolute top-[90%] left-[15%] w-[400px] h-[400px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[80%] left-[5%] w-[700px] h-[700px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[50%] right-[-10%] w-[400px] h-[400px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
+          <div className="absolute top-[40%] left-[0%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
 
           <Events />
           <MeetTheOfficers />
+          <BorrowSection />
           <FAQSection />
           <FooterSection />
         </div>
