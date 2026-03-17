@@ -8,6 +8,7 @@ import MeetTheOfficers from "@/components/marketing/MeetTheOfficersSection";
 import CrystalDice3D, { CrystalConfig } from "@/components/ui/CrystalDice3D";
 import FooterSection from "@/components/marketing/FooterSection";
 import ContributorsSection from "@/components/marketing/ContributorsSection";
+import FAQSection from "@/components/marketing/FAQSection";
 const COMBINED_CRYSTALS: CrystalConfig[] = [
   { x: -7.0, y: 4.2, z: 0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
   { x: -5.8, y: 1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
@@ -159,6 +160,7 @@ export default function LandingPage() {
 
           <Events />
           <MeetTheOfficers />
+          <FAQSection />
           <FooterSection />
         </div>
       </div>
