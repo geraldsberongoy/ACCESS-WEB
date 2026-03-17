@@ -1,0 +1,9 @@
+name = "access-web"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".open-next/assets"
+
+[vars]
+# Add your public env vars here, e.g.:
+# NEXT_PUBLIC_SUPABASE_URL = "https://xxxx.supabase.co"
+# NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY = "..."
