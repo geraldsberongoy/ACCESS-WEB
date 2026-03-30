@@ -9,6 +9,8 @@ FROM node:${NODE_VERSION} AS dependencies
 
 WORKDIR /app
 
+RUN corepack enable pnpm
+
 # Copy package-related files first to leverage Docker's caching mechanism
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
 
@@ -17,11 +19,11 @@ RUN --mount=type=cache,target=/root/.npm \
     --mount=type=cache,target=/usr/local/share/.cache/yarn \
     --mount=type=cache,target=/root/.local/share/pnpm/store \
   if [ -f package-lock.json ]; then \
-    npm ci --no-audit --no-fund; \
+    npm ci --no-audit --no-fund && npm prune --omit=optional; \
   elif [ -f yarn.lock ]; then \
-    corepack enable yarn && yarn install --frozen-lockfile --production=false; \
+    yarn install --frozen-lockfile --production=false; \
   elif [ -f pnpm-lock.yaml ]; then \
-    corepack enable pnpm && pnpm install --frozen-lockfile; \
+    pnpm install --frozen-lockfile --no-optional; \
   else \
     echo "No lockfile found." && exit 1; \
   fi
