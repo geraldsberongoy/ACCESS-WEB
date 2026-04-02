@@ -1,13 +1,17 @@
 "use client";
 
 import { createBrowserClient } from "@supabase/ssr";
+import { Database } from "./database.types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-type SupabaseSchema = Record<string, never>;
+/**
+ * Singleton instance of the Supabase Browser Client.
+ * Using a singleton prevents creating multiple connection instances 
+ * during React re-renders in the browser.
+ */
+let client: SupabaseClient<Database> | null = null;
 
-let client: SupabaseClient<SupabaseSchema> | null = null;
-
-export function getSupabaseBrowserClient(): SupabaseClient<SupabaseSchema> {
+export function getSupabaseBrowserClient(): SupabaseClient<Database> {
   if (client) {
     return client;
   }
@@ -21,6 +25,7 @@ export function getSupabaseBrowserClient(): SupabaseClient<SupabaseSchema> {
     );
   }
 
-  client = createBrowserClient<SupabaseSchema>(supabaseUrl, supabaseAnonKey);
+// Initializing client with generated Database types for IntelliSense
+  client = createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
   return client;
 }
