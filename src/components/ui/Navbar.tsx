@@ -1,8 +1,11 @@
 "use client";
 
+import { signOut } from "@/features/auth/actions/auth.actions";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
+import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface NavItem {
   label: string;
@@ -30,6 +33,12 @@ const glassStyle = {
 
 export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const supabase = getSupabaseBrowserClient();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+  });
 
   return (
     // Outer wrapper — tighter padding on phone, roomier on desktop
@@ -76,6 +85,25 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </li>
           ))}
         </ul>
+        
+        {/* ── Login/SignOut Button ── */}
+        {user ? (
+          <form action={signOut}>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 hover:border-gray-300 transition-colors duration-150"
+            >
+              Logout
+            </button>
+          </form>
+        ) : (
+          <Link
+            href="/auth/login"
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-md hover:bg-gray-50 hover:border-gray-300 transition-colors duration-150"
+          >
+            Login
+          </Link>
+        )}
 
         {/* ── Desktop search pill (lg+) ── */}
         <div
