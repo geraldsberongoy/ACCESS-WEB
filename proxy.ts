@@ -24,14 +24,19 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  console.log ({ user });
 
   // Redirect non-authenticated users away from protected routes
-  const internalRoutes = ["/admin", "borrow", "events"];
+  const internalRoutes = ["/admin", "/borrow", "/events"];
+  const authOnlyRoutes = ["/auth/forgot-password", "/auth/reset-password"];
+
+  const isAuthOnlyRoute = authOnlyRoutes.some(route =>
+    request.nextUrl.pathname.startsWith(route)
+  );
   const isInternalRoute = internalRoutes.some(route => 
     request.nextUrl.pathname.startsWith(route)
   );
-  if (!user && isInternalRoute) {
+
+  if (!user && (isInternalRoute || isAuthOnlyRoute)) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
