@@ -10,7 +10,7 @@ export async function registerOrganization(input: SignUpInput) {
     password: input.password!,
     options: {
       data: {
-        organization_name: input.organizationName,
+        organization_name: input.organization_name,
       },
     },
   });
@@ -57,7 +57,10 @@ export async function resetPasswordService(password: string) {
   const supabase = await createSupabaseServerClient();
   
   const { error } = await supabase.auth.updateUser({ password });
-
   if (error) throw new AppError(error.message, error.status);
+
+  // Invalidate the recovery session immediately after reset
+  await logOutService();
+
   return { success: true };
 }

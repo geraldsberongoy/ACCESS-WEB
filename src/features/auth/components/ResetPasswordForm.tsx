@@ -10,7 +10,7 @@ export function ResetPasswordForm() {
 
   useEffect(() => {
     if (state.status === "success") {
-      const timer = setTimeout(() => router.push("/"), 3000); 
+      const timer = setTimeout(() => router.push("/auth/login"), 3000); 
       return () => clearTimeout(timer);
     }
   }, [router, state.status]);
