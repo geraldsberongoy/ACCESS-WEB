@@ -33,6 +33,12 @@ export const signUp = async (formData: FormData) => {
       password,
       organizationName,
     });
+
+    // Revalidate to clear any stale cache
+    revalidatePath("/", "layout");
+    
+    return { success: true };
+
   } catch (err: unknown) {
     const errorMessage = err instanceof Error 
       ? err.message 
@@ -40,9 +46,6 @@ export const signUp = async (formData: FormData) => {
 
     return { error: errorMessage };
   }
-
-  revalidatePath("/", "layout");
-  redirect("/");
 };
 
 export const signOut = async () => {

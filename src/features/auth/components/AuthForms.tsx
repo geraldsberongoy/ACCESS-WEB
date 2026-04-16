@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation";
 import {useState, useTransition} from "react";
 
 type AuthFormProps = {
@@ -10,16 +11,25 @@ type AuthFormProps = {
 export const AuthForms = ({action, isRegister}: AuthFormProps) => {
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
     setError(null);
+
     startTransition(async () => {
       const result = await action(formData);
       if (result?.error){
         setError(result.error)
+      } else if (isRegister) {
+        // Show the feedback before redirect
+        alert("Check your email for the confirmation link.");
+        router.push("/");
+      } else {
+        // For log-ins, just go to home
+        router.push("/");
       }
     })
-  }
+  };
 
   return (
     <form action={handleSubmit} className="w-full space-y-4">
