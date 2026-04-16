@@ -1,23 +1,19 @@
 "use client";
 
+import { useActionState } from "react";
+import { forgotPasswordAction } from "../actions/auth.actions";
+
 export function ForgotPasswordForm() {
-
-  async function handleRequest(formData: FormData) {
-    const email = formData.get("email");
-
-    const res = await fetch("/api/auth/forgot-password", {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    });
-
-    if (res.ok) alert("Check your email for the reset link!");
-    else alert("Error sending reset link.");
-  };
-
+  const [state, formAction, isPending] = useActionState(forgotPasswordAction, { status: "idle" });
+  
   return (
-    <form action={handleRequest} className="flex flex-col gap-4">
+    <form action={formAction} className="flex flex-col gap-4">
       <input name="email" type="email" placeholder="Enter your email" required />
-      <button type="submit">Send Reset Link</button>
+      {state.status === "error" && <p className="text-red-500">{state.message}</p>}
+      {state.status === "success" && <p className="text-green-500">Check your email for the reset link!</p>}
+      <button type="submit" disabled={isPending}>
+        {isPending ? "Sending..." : "Send reset link"}
+      </button>
     </form>
   );
 }

@@ -1,5 +1,4 @@
-import { signIn } from "@/features/auth/actions/auth.actions";
-import { AuthForms } from "@/features/auth/components/AuthForms";
+import { LogInForm } from "@/features/auth/components/LogInForm";
 import Link from "next/link";
 
 const LoginPage = () => {
@@ -11,8 +10,7 @@ const LoginPage = () => {
           <p className="mt-2 text-sm">Welcome to ACCESS-WEB, please sign-in to your account</p>
         </div>
         <div className="bg-white-900 border border-gray-800 p-8 rounded-lg">
-          <AuthForms action={signIn}/>
-
+          <LogInForm/>
           <div className="text-sm text-center mt-6">
             <span className="text-white-700">{"Dont have an account?"} </span>
             <Link href={"/auth/register"} className="font-medium text-white underline">

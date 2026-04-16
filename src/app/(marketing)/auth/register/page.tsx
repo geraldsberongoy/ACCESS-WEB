@@ -1,5 +1,4 @@
-import { signUp } from "@/features/auth/actions/auth.actions";
-import { AuthForms } from "@/features/auth/components/AuthForms";
+import { RegistrationForm } from "@/features/auth/components/RegistrationForm";
 import Link from "next/link";
 
 const RegisterPage = () => {
@@ -11,11 +10,11 @@ const RegisterPage = () => {
           <p className="mt-2 text-sm">Welcome to ACCESS-WEB, please register an account</p>
         </div>
         <div className="bg-white-900 border border-gray-800 p-8 rounded-lg">
-          <AuthForms action={signUp} isRegister/>
+          <RegistrationForm/>
           <div className="text-sm text-center mt-6">
             <span className="text-white-700">Already have an account? </span>
             <Link href={"/auth/login"} className="font-medium text-white underline">
-            Sign Up
+            Log In
             </Link>
             <div className="text-sm text-center mt-1">
               <Link href={"/"} className="font-medium text-white underline">

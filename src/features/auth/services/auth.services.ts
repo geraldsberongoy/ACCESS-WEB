@@ -1,11 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { SignUpInput, LoginInput } from "../schemas";
 import { AppError } from "@/lib/errors";
-
-export type SignUpInput = {
-  email: string;
-  password: string; 
-  organizationName: string;
-};
 
 export async function registerOrganization(input: SignUpInput) {
   const supabase = await createSupabaseServerClient();
@@ -25,12 +20,7 @@ export async function registerOrganization(input: SignUpInput) {
   return data;
 }
 
-export type SignInInput = {
-  email: string;
-  password: string;
-};
-
-export async function logInService(input: SignInInput) {
+export async function logInService(input: LoginInput) {
   const supabase = await createSupabaseServerClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
