@@ -1,54 +1,53 @@
 import { z } from "zod";
 
-/**
- * Login Schema
- * Validates that the input is a properly formatted email 
- * and that the password isn't just whitespace.
- */
+// --- Base Schemas (Re-usable) ---
+
+const emailSchema = z.string()
+  .trim()
+  .min(1, { error: "Password is required" })
+  .toLowerCase()
+  .pipe(
+    z.email({ message: "Please enter a valid email address" })
+  );
+
+const passwordSchema = z.string()
+  .min(8, "Password must be at least 8 characters")
+  .max(70, "Password must not exceed 70 characters")
+  .regex(/[A-Z]/, "Must contain at least one uppercase letter")
+  .regex(/[0-9]/, "Must contain at least one number");
+
+// --- Exported Schemas ---
+
 export const LoginSchema = z.object({
-  email: z.email({ error: "Please enter a valid email address" }),
-  password: z.string().min(1, { error: "Password is required" }),
+  email: emailSchema,
+  // No validation complexity for older passwords
+  password: z.string().min(1, "Password is required"), 
 });
 
-export type LoginInput = z.infer<typeof LoginSchema>;
-
-
-/**
- * SignUp Schema
- * Includes organization validation.
- * Automatically strips invisible whitespace
- */
 export const SignUpSchema = z.object({
-  email: z.string().trim().pipe(
-    z.email({ error: "Please enter a valid email address" })
-  ),
-  password: z.string().min(8, { error: "Password must be at least 8 characters" }),
-  organizationName: z.string().min(1, { error: "Organization name is required" }).trim(),
+  email: emailSchema,
+  password: passwordSchema,
+  organizationName: z.string()
+    .trim()
+    .min(3, "Org name must be at least 3 characters")
+    .max(50, "Max 50 characters allowed")
+    .regex(/^[a-zA-Z0-9\s\-'.]+$/, "Name contains invalid characters"),
 });
 
-export type SignUpInput = z.infer<typeof SignUpSchema>;
-
-
-/**
- * Forgot Password Schema
- */
 export const ForgotPasswordSchema = z.object({
-  email: z.string().trim().email({ message: "Invalid email address" }),
+  email: emailSchema,
 });
 
-export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
-
-
-/**
- * Reset Password Schema
- * Includes >8 char and matching password validation
- */
 export const ResetPasswordSchema = z.object({
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string()
+  password: passwordSchema,
+  confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
 });
 
+// Types
+export type LoginInput = z.infer<typeof LoginSchema>;
+export type SignUpInput = z.infer<typeof SignUpSchema>;
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
