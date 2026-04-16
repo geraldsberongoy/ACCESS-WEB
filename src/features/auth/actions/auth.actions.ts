@@ -49,8 +49,6 @@ export const signOut = async () => {
   try {
     await logOutService();
   } catch (error) {
-    // We usually don't block the user from redirecting even if 
-    // the server-side sign-out has a hiccup, but we log it.
     console.error("Sign out error:", error);
   }
 

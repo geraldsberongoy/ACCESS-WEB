@@ -44,6 +44,9 @@ importers:
       three:
         specifier: ^0.183.2
         version: 0.183.2
+      zod:
+        specifier: ^4.3.6
+        version: 4.3.6
     devDependencies:
       '@tailwindcss/oxide-linux-x64-gnu':
         specifier: ^4.2.2

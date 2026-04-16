@@ -27,3 +27,28 @@ export const SignUpSchema = z.object({
 });
 
 export type SignUpInput = z.infer<typeof SignUpSchema>;
+
+
+/**
+ * Forgot Password Schema
+ */
+export const ForgotPasswordSchema = z.object({
+  email: z.string().trim().email({ message: "Invalid email address" }),
+});
+
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
+
+
+/**
+ * Reset Password Schema
+ * Includes >8 char and matching password validation
+ */
+export const ResetPasswordSchema = z.object({
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
+
+export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
