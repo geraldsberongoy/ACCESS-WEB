@@ -1,7 +1,7 @@
 import { ForgotPasswordForm } from "@/features/auth/components/ForgotPasswordForm";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export const metadata = {
   title: "Forgot Password | ACCESS Web Portal",
