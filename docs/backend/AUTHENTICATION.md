@@ -105,9 +105,9 @@ Reads the current session from the Supabase browser client on mount. Renders a *
 
 ---
 
-## Route Protection (`middleware.ts`)
+## Route Protection (`Proxy.ts`)
 
-Middleware runs on every request and validates the session using the Supabase server client. Unauthenticated users attempting to access internal routes are redirected to `/auth/login`.
+Proxy runs on every request and validates the session using the Supabase server client. Unauthenticated users attempting to access internal routes are redirected to `/auth/login`.
 
 ```typescript
   // 1. Guard unauthorized password resets
