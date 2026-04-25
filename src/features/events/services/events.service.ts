@@ -50,3 +50,25 @@ export async function getEventById(id: string) {
   if (error) throw error;
   return data;
 }
+
+export async function publishEventById(id: string) {
+  const supabase = await createSupabaseServerClient();
+
+  const { error } = await supabase
+    .from('Events')
+    .update({ status: 'Published' })
+    .eq('id', id);
+
+  if (error) throw error;
+}
+
+export async function unpublishEventById(id: string) {
+  const supabase = await createSupabaseServerClient();
+
+  const { error } = await supabase
+    .from('Events')
+    .update({ status: 'Draft' })
+    .eq('id', id);
+
+  if (error) throw error;
+}

@@ -1,11 +1,27 @@
+"use client";
+
+import { useTransition } from 'react';
+import { togglePublishAction } from "@/features/events/actions/events.actions";
 import { Tables } from '@/lib/supabase/database.types';
 import Link from 'next/link';
 
 type EventRowProps = Pick<Tables<'Events'>, 'id' | 'title' | 'event_date' | 'status'>;
 
 export default function EventRow({ event }: { event: EventRowProps }) {
+  const [isPending, startTransition] = useTransition();
+
+  const handleToggleStatus = () => {
+    // startTransition keeps the UI responsive while the server works
+    startTransition(async () => {
+      const result = await togglePublishAction(event.id, event.status ?? 'Draft');
+      if (!result.success) {
+        alert("Something went wrong!");
+      }
+    });
+  };
+
   return (
-    <tr className="group hover:bg-slate-50 transition-colors">
+    <tr className={`group hover:bg-slate-50 transition-colors ${isPending ? 'opacity-50' : ''}`}>
       <td className="px-6 py-4">
         <div className="font-semibold text-slate-800">{event.title ?? '—'}</div>
       </td>
@@ -14,15 +30,20 @@ export default function EventRow({ event }: { event: EventRowProps }) {
       </td>
       <td className="px-6 py-4">
         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide ${
-          event.status === 'Published'
-            ? 'bg-emerald-100 text-emerald-700'
+          event.status === 'Published' 
+            ? 'bg-emerald-100 text-emerald-700' 
             : 'bg-amber-100 text-amber-700'
         }`}>
-          {event.status ?? 'Draft'}
+          {isPending ? 'Updating...' : event.status}
         </span>
       </td>
+
       <td className="px-6 py-4 text-right space-x-3">
-        <button className="text-xs font-bold text-slate-500 hover:text-indigo-600 uppercase transition-colors">
+        <button 
+          onClick={handleToggleStatus}
+          disabled={isPending}
+          className="text-xs font-bold text-slate-500 hover:text-indigo-600 uppercase transition-colors disabled:cursor-not-allowed"
+        >
           {event.status === 'Published' ? 'Unpublish' : 'Publish'}
         </button>
         <Link
