@@ -20,6 +20,11 @@ const RegisterPage = () => {
               <Link href={"/"} className="font-medium text-white underline">
               Register as Guest
               </Link>
+            <div className="text-sm text-center mt-1">
+              <Link href={"/auth/forgot-password"} className="font-medium text-white underline">
+              Forgot Password
+              </Link>
+            </div>
             </div>
           </div> 
         </div>

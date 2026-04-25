@@ -1,6 +1,4 @@
 import { ForgotPasswordForm } from "@/features/auth/components/ForgotPasswordForm";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export const metadata = {
@@ -9,13 +7,6 @@ export const metadata = {
 };
 
 export default async function ForgotPasswordPage() {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user }, error } = await supabase.auth.getUser();
-
-  // Check if user is logged-in
-  if (!user || error) {
-    redirect("/auth/login?error=unauthorized");
-  }
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-black-50 p-4">

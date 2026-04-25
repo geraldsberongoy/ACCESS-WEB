@@ -21,6 +21,11 @@ const LoginPage = () => {
               Sign In as Guest
               </Link>
             </div>
+            <div className="text-sm text-center mt-1">
+              <Link href={"/auth/forgot-password"} className="font-medium text-white underline">
+              Forgot Password
+              </Link>
+            </div>
           </div>
         </div>
       </div>
