@@ -49,10 +49,10 @@ export async function getEventForAdminById(id: string) {
     .from("Events")
     .select("id, title, content_description, event_date, status, image_url, created_at, updated_at")
     .eq("id", id)
-    .eq("status", "Published")
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error(`Event with id ${id} not found`);
   return data;
 }
 
@@ -81,15 +81,39 @@ export async function unpublishEventById(id: string) {
 }
 
 export async function deleteEventById(id: string) {
-  await checkRole({roles: "Admin"});
+  await checkRole({ roles: "Admin" });
   const supabase = await createSupabaseServerClient();
 
-  const { error } = await supabase
-    .from('Events')
+  // Fetch the image_url before deleting
+  const { data: event, error: fetchError } = await supabase
+    .from("Events")
+    .select("image_url")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (fetchError) throw fetchError;
+
+  // Delete image from storage if it exists
+  if (event?.image_url) {
+    const path = event.image_url.split("/access_web_assets/")[1]?.split("?")[0];
+    if (path) {
+      const { error: storageError } = await supabase.storage
+        .from("access_web_assets")
+        .remove([path]);
+
+      if (storageError) console.error("[deleteEventById] Failed to delete image:", storageError);
+    }
+  }
+
+  const { data, error } = await supabase
+    .from("Events")
     .delete()
-    .eq('id', id);
+    .eq("id", id)
+    .select()
+    .single();
 
   if (error) throw error;
+  return data;
 }
 
 export type EventProps = {
@@ -128,6 +152,29 @@ export async function postEvent(event: EventProps) {
   return data;
 }
 
+export async function uploadEventImage(file: File): Promise<string> {
+  const supabase = await createSupabaseServerClient();
+
+  const ext = file.name.split(".").pop();
+  const fileName = `${crypto.randomUUID()}.${ext}`;
+  const filePath = `events/${fileName}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from("access_web_assets") // replace with your bucket name
+    .upload(filePath, file, {
+      contentType: file.type,
+      upsert: false,
+    });
+
+  if (uploadError) throw uploadError;
+
+  const { data } = supabase.storage
+  .from("access_web_assets")
+  .getPublicUrl(filePath);
+
+  return data.publicUrl;
+}
+
 export type UpdateEventProps = Partial<EventProps>;
 
 export async function editEvent(id: string, event: UpdateEventProps) {
@@ -142,8 +189,9 @@ export async function editEvent(id: string, event: UpdateEventProps) {
     })
     .eq("id", id)
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
+  if (!data) throw new Error(`Event with id ${id} not found`);
   return data;
 }
