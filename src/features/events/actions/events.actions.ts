@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidatePath } from 'next/cache';
-import { publishEventById, unpublishEventById, deleteEventById } from '../services/events.service';
+import { publishEventById, unpublishEventById, deleteEventById } from '../services/events.admin.service';
 
 export async function togglePublishAction(id: string, currentStatus: 'Published' | 'Draft') {
   try {

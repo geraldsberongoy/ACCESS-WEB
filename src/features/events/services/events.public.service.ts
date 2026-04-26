@@ -8,8 +8,10 @@ export type EventsFilterPublic = {
 
 export async function getPublishedEvents({ status = "all", page = 1, limit = 10 }: EventsFilterPublic = {}) {
   const supabase = await createSupabaseServerClient();
+
+  const max_rows = Math.min(limit, 50);
   const from = (page - 1) * limit;
-  const to = from + limit - 1;
+  const to = from + max_rows - 1;
 
   let query = supabase
     .from("Events")
