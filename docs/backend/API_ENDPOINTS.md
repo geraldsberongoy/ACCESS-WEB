@@ -27,7 +27,7 @@ This document lists the essential RESTful API endpoints required to support the 
 
 | Method | Endpoint | Description | Auth |
 | --- | --- | --- | --- |
-| `GET` | `/api/public/events` | List published events (paginated, filterable by `?status=upcoming`) | No |
+| `GET` | `/api/public/events` | List published events (paginated, filterable by `?status=upcoming/past/all`) | No |
 | `GET` | `/api/public/events/{uuid}` | Fetch details for a specific published event | No |
 | `GET` | `/api/public/officers` | List active officers sorted by `display_order` | No |
 
@@ -37,7 +37,7 @@ This document lists the essential RESTful API endpoints required to support the 
 
 | Method | Endpoint | Description | Auth |
 | --- | --- | --- | --- |
-| `GET`  | `/api/admin/events` | List all events including Drafts | Admin |
+| `GET`  | `/api/admin/events` | List all events (paginated, filterable by `?status=Draft/Published/All`) | Admin |
 | `POST` | `/api/admin/events` | Create a new event (status: Draft or Published) | Admin |
 | `PUT`  | `/api/admin/events/{uuid}` | Update an existing event | Admin |
 | `DELETE`| `/api/admin/events/{uuid}` | Delete an event | Admin |

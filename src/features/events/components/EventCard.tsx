@@ -3,7 +3,6 @@ import Link from "next/link"
 
 export interface EventCardProps {
   title: string
-  subtitle: string
   description: string
   date: string
   image: string
@@ -13,12 +12,10 @@ export interface EventCardProps {
 
 export default function EventCard({
   title,
-  subtitle,
   description,
   date,
   image,
   href = "#",
-  logos = ["/AccessLogo.webp"],
 }: EventCardProps) {
   return (
     <div
@@ -69,8 +66,6 @@ export default function EventCard({
             />
           </svg>
         </Link>
-
-        <p className="text-sm font-semibold text-zinc-400">{subtitle}</p>
 
         <div className="h-px w-full" />
 
