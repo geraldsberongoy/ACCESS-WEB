@@ -1,29 +1,39 @@
 import {
-  createOfficerAction,
   deactivateOfficerAction,
   updateOfficerAction,
 } from "@/features/officers/actions/officers.actions";
-import { getAllOfficers } from "@/features/officers/services/officers.services";
+import { getOfficersForAdmin } from "@/features/officers/services/officers.admin.service";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
   searchParams?: Promise<{
-    status?: "success" | "error";
+    feedback?: "success" | "error";
     message?: string;
+    page?: string;
+    status?: "All" | "Active" | "Inactive";
+    q?: string;
   }>;
 };
 
 export default async function AdminOfficersPage({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
-  const status = params.status;
+  const feedback = params.feedback;
   const message = params.message;
+  const currentPage = Number(params.page) || 1;
+  const currentStatus = params.status ?? "All";
+  const currentQuery = params.q?.trim() ?? "";
 
-  // Step 1: Load officers from the service layer on the server.
-  // This keeps data fetching simple and secure for the admin page.
-  const officers = await getAllOfficers({ includeInactive: true });
+  // Step 1: Load paginated officers with filters from the service layer.
+  const { data: officers, meta } = await getOfficersForAdmin({
+    page: currentPage,
+    limit: 10,
+    status: currentStatus,
+    search: currentQuery,
+  });
 
   // Step 1.1: Detect current user's role to explain RLS failures.
   const supabase = await createSupabaseServerClient();
@@ -42,32 +52,17 @@ export default async function AdminOfficersPage({ searchParams }: PageProps) {
     currentRole = userRow?.role ?? null;
   }
 
-  // Step 2: Define form actions that call the action layer.
-  // Each form action receives FormData and forwards it to the proper server action.
-  async function handleCreate(formData: FormData) {
-    "use server";
-    const result = await createOfficerAction({ status: "idle" }, formData);
-
-    if (result.status === "error") {
-      redirect(
-        `/admin/officers?status=error&message=${encodeURIComponent(result.message)}`
-      );
-    }
-
-    redirect("/admin/officers?status=success&message=Officer%20created%20successfully");
-  }
-
   async function handleUpdate(formData: FormData) {
     "use server";
     const result = await updateOfficerAction({ status: "idle" }, formData);
 
     if (result.status === "error") {
       redirect(
-        `/admin/officers?status=error&message=${encodeURIComponent(result.message)}`
+        `/admin/officers?feedback=error&message=${encodeURIComponent(result.message)}`
       );
     }
 
-    redirect("/admin/officers?status=success&message=Officer%20updated%20successfully");
+    redirect("/admin/officers?feedback=success&message=Officer%20updated%20successfully");
   }
 
   async function handleDeactivate(formData: FormData) {
@@ -78,14 +73,14 @@ export default async function AdminOfficersPage({ searchParams }: PageProps) {
 
       if (result.status === "error") {
         redirect(
-          `/admin/officers?status=error&message=${encodeURIComponent(result.message)}`
+          `/admin/officers?feedback=error&message=${encodeURIComponent(result.message)}`
         );
       }
 
-      redirect("/admin/officers?status=success&message=Officer%20deactivated%20successfully");
+      redirect("/admin/officers?feedback=success&message=Officer%20deactivated%20successfully");
     }
 
-    redirect("/admin/officers?status=error&message=Officer%20ID%20is%20required");
+    redirect("/admin/officers?feedback=error&message=Officer%20ID%20is%20required");
   }
 
   return (
@@ -94,14 +89,14 @@ export default async function AdminOfficersPage({ searchParams }: PageProps) {
         <header className="space-y-2">
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Officers Admin</h1>
           <p className="text-sm text-neutral-400">
-            Simple CRUD interface for backend workflow. Frontend team can replace this UI later.
+            Manage officers record.
           </p>
         </header>
 
-        {status && message ? (
+        {feedback && message ? (
           <section
             className={
-              status === "success"
+              feedback === "success"
                 ? "rounded-lg border border-emerald-700/60 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-200"
                 : "rounded-lg border border-rose-700/60 bg-rose-950/40 px-4 py-3 text-sm text-rose-200"
             }
@@ -118,79 +113,52 @@ export default async function AdminOfficersPage({ searchParams }: PageProps) {
         ) : null}
 
         <section className="rounded-xl border border-neutral-800 bg-neutral-900/70 p-5">
-          <h2 className="mb-4 text-lg font-medium">Create Officer</h2>
-
-          {/*
-            Step 3: Create form
-            - Submits to handleCreate server action
-            - Validation and database insert are handled in schema -> action -> service
-          */}
-          <form action={handleCreate} className="grid gap-3 sm:grid-cols-2">
-            <input
-              name="full_name"
-              placeholder="Full name"
-              required
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="email"
-              type="email"
-              placeholder="Email"
-              required
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="position_title"
-              placeholder="Position title"
-              required
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="department"
-              placeholder="Department"
-              required
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="academic_year"
-              placeholder="2025-2026"
-              required
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="image_url"
-              placeholder="https://..."
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <input
-              name="display_order"
-              type="number"
-              min={0}
-              placeholder="Display order (optional)"
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
-            <select
-              name="is_active"
-              defaultValue="true"
-              className="rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-medium">Officers ({meta.total})</h2>
+            <Link
+              href="/admin/officers/new"
+              className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-500"
             >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
+              Add Officer
+            </Link>
+          </div>
 
-            <div className="sm:col-span-2">
-              <button
-                type="submit"
-                className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-orange-500"
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            {(["All", "Active", "Inactive"] as const).map((option) => (
+              <Link
+                key={option}
+                href={`?status=${option}&page=1&q=${encodeURIComponent(currentQuery)}`}
+                className={`rounded-full px-3 py-1 text-sm transition ${
+                  currentStatus === option
+                    ? "bg-sky-600 text-white"
+                    : "bg-neutral-800 text-neutral-300 hover:bg-neutral-700"
+                }`}
               >
-                Create Officer
-              </button>
-            </div>
-          </form>
-        </section>
+                {option}
+              </Link>
+            ))}
+          </div>
 
-        <section className="rounded-xl border border-neutral-800 bg-neutral-900/70 p-5">
-          <h2 className="mb-4 text-lg font-medium">Existing Officers ({officers.length})</h2>
+          <form className="mb-5 flex items-center gap-2" method="get">
+            <input type="hidden" name="status" value={currentStatus} />
+            <input
+              type="hidden"
+              name="page"
+              value="1"
+            />
+            <input
+              name="q"
+              defaultValue={currentQuery}
+              placeholder="Search name, email, position, department"
+              className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-sky-500 focus:ring-2"
+            />
+            <button
+              type="submit"
+              className="rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-sky-500"
+            >
+              Filter
+            </button>
+          </form>
 
           {/*
             Step 4: Render one update form per officer.
@@ -276,7 +244,39 @@ export default async function AdminOfficersPage({ searchParams }: PageProps) {
                 </form>
               </article>
             ))}
+
+            {officers.length === 0 ? (
+              <article className="rounded-lg border border-neutral-800 bg-neutral-950/60 p-4 text-sm text-neutral-400">
+                No officers found for this filter.
+              </article>
+            ) : null}
           </div>
+
+          {meta.totalPages > 1 ? (
+            <div className="mt-6 flex items-center justify-between gap-3 text-sm text-neutral-400">
+              <p>
+                Showing {(currentPage - 1) * meta.limit + 1}-{Math.min(currentPage * meta.limit, meta.total)} of {meta.total}
+              </p>
+              <div className="flex gap-2">
+                {currentPage > 1 ? (
+                  <Link
+                    href={`?status=${currentStatus}&q=${encodeURIComponent(currentQuery)}&page=${currentPage - 1}`}
+                    className="rounded-md border border-neutral-700 px-3 py-2 text-neutral-200 hover:bg-neutral-800"
+                  >
+                    Previous
+                  </Link>
+                ) : null}
+                {currentPage < meta.totalPages ? (
+                  <Link
+                    href={`?status=${currentStatus}&q=${encodeURIComponent(currentQuery)}&page=${currentPage + 1}`}
+                    className="rounded-md bg-sky-600 px-3 py-2 text-white hover:bg-sky-500"
+                  >
+                    Next
+                  </Link>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </section>
       </section>
     </main>
