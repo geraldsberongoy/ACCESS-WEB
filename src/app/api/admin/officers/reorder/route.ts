@@ -8,7 +8,7 @@
 // PURPOSE: Reorder officers for the carousel/landing page display
 // ─────────────────────────────────────────────────────────────────────────
 
-import { reorderOfficers } from "@/features/officers/services/officers.services";
+import { reorderOfficers } from "@/features/officers/services/officers.admin.service";
 import { ReorderOfficersSchema } from "@/features/officers/schemas";
 import { AppError } from "@/lib/errors";
 import { NextResponse } from "next/server";

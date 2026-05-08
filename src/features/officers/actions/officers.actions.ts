@@ -21,10 +21,10 @@ import {
 } from "../schemas";
 import {
   createOfficer,
+  deactivateOfficer,
   updateOfficer,
-  deleteOfficer,
   reorderOfficers,
-} from "../services/officers.services";
+} from "../services/officers.admin.service";
 
 // ─────────────────────────────────────────────────────────────────────────
 // ACTION STATE TYPE
@@ -166,7 +166,7 @@ export async function deactivateOfficerAction(
     }
 
     // Call service to soft-delete the officer (set is_active to false)
-    await deleteOfficer(officerId);
+    await deactivateOfficer(officerId);
 
     // Revalidate cache
     revalidatePath("/admin/officers", "layout");
