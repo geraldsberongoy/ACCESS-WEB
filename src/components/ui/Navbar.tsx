@@ -112,7 +112,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </form>
           ) : (
             <Link
-              href="/auth/login"
+              href="/auth"
               className="hidden h-9 w-9 items-center justify-center rounded-full text-[#D8D8D8] transition-colors hover:bg-white/10 hover:text-white md:flex"
               aria-label="Sign in"
               title="Sign in"
@@ -204,7 +204,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </form>
           ) : (
             <Link
-              href="/auth/login"
+              href="/auth"
               className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-[#D8D8D8] transition-colors hover:bg-white/5"
               onClick={() => setMenuOpen(false)}
             >

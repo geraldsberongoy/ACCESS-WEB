@@ -1,5 +1,5 @@
-import RoleSelectionScreen from "@/features/auth/components/RoleSelectionScreen";
+import LoginScreen from "@/features/auth/components/LoginScreen";
 
 export default function LoginPage() {
-  return <RoleSelectionScreen />;
+  return <LoginScreen />;
 }

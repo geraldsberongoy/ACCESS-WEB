@@ -46,8 +46,9 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // Redirect authenticated users away from login/register
-  if (user && (request.nextUrl.pathname === "/auth/login" || request.nextUrl.pathname === "/auth/register")) {
+  // Redirect authenticated users away from auth pages
+  const authEntryPaths = ["/auth", "/auth/login", "/auth/register"];
+  if (user && authEntryPaths.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -59,6 +60,7 @@ export const config = {
     "/admin/:path*",
     "/borrow/:path*",
     "/auth/reset-password/:path*",
+    "/auth",
     "/auth/login",
     "/auth/register",
   ],

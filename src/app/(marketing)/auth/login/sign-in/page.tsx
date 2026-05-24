@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function OfficerLoginPage() {
+export default function SignInRedirectPage() {
   redirect("/auth/login");
 }

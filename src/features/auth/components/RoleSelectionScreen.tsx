@@ -85,14 +85,14 @@ export default function RoleSelectionScreen() {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
             <Link
-              href="/"
+              href="/auth/login"
               className="inline-flex min-w-[140px] items-center justify-center rounded-xl px-8 py-3 text-sm font-semibold text-white transition-all hover:opacity-95 sm:text-base"
               style={{ background: "#F26223" }}
             >
               Log In
             </Link>
             <Link
-              href="/auth/login/officer"
+              href="/auth/register"
               className="inline-flex min-w-[140px] items-center justify-center rounded-xl bg-white px-8 py-3 text-sm font-semibold text-black transition-all hover:bg-white/90 sm:text-base"
             >
               Sign Up
