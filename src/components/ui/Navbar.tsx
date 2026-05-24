@@ -5,6 +5,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface NavItem {
@@ -27,11 +28,31 @@ const defaultItems: NavItem[] = [
 export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const supabase = getSupabaseBrowserClient();
+  const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-  }, [supabase.auth]);
+    const supabase = getSupabaseBrowserClient();
+
+    const syncUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      setUser(session?.user ?? null);
+    };
+
+    syncUser();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+        router.refresh();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [router]);
 
   return (
     <div className="sticky top-0 z-50 w-full px-3 pt-3 md:px-5 md:pt-4 lg:px-6 lg:pt-5">
@@ -42,7 +63,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
           boxShadow: "0 4px 24px rgba(0, 0, 0, 0.35)",
         }}
       >
-        {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center justify-self-start">
           <Image
             src="/AccessLogo.webp"
@@ -54,7 +74,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
           />
         </Link>
 
-        {/* Desktop nav — centered */}
         <ul className="hidden list-none items-center justify-center gap-1 p-0 md:flex lg:gap-2">
           {items.map((item) => (
             <li key={item.href}>
@@ -69,9 +88,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
           ))}
         </ul>
 
-        {/* Right utilities */}
         <div className="flex items-center justify-end gap-2 justify-self-end md:gap-3">
-          {/* Search */}
           <div className="relative hidden h-8 w-[140px] shrink-0 md:block lg:w-[160px]">
             <input
               type="text"
@@ -98,22 +115,23 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </svg>
           </div>
 
-          {/* Profile / account */}
           {user ? (
-            <form action={signOut} className="hidden md:block">
+            <form action={signOut}>
               <button
                 type="submit"
-                className="flex h-9 w-9 items-center justify-center rounded-full text-[#D8D8D8] transition-colors hover:bg-white/10 hover:text-white"
-                aria-label="Sign out"
-                title="Sign out"
+                className="rounded-xl px-3 py-2 text-xs font-semibold text-white transition-all hover:opacity-90 sm:px-4 sm:text-sm"
+                style={{
+                  background: "linear-gradient(180deg, #F26223 0%, #C93A12 100%)",
+                  boxShadow: "0 4px 14px rgba(242, 98, 35, 0.35)",
+                }}
               >
-                <ProfileIcon />
+                Logout
               </button>
             </form>
           ) : (
             <Link
               href="/auth"
-              className="hidden h-9 w-9 items-center justify-center rounded-full text-[#D8D8D8] transition-colors hover:bg-white/10 hover:text-white md:flex"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-[#D8D8D8] transition-colors hover:bg-white/10 hover:text-white"
               aria-label="Sign in"
               title="Sign in"
             >
@@ -121,7 +139,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </Link>
           )}
 
-          {/* Mobile menu toggle */}
           <button
             type="button"
             className="flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-[5px] md:hidden"
@@ -142,7 +159,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
         </div>
       </nav>
 
-      {/* Mobile dropdown */}
       {menuOpen && (
         <div
           className="mx-auto mt-2 flex w-full max-w-[1248px] flex-col gap-4 rounded-3xl border border-white/10 px-5 pb-5 pt-4 backdrop-blur-xl md:hidden"
@@ -196,10 +212,13 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             <form action={signOut}>
               <button
                 type="submit"
-                className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-[#D8D8D8] transition-colors hover:bg-white/5"
+                className="flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition-all hover:opacity-90"
+                style={{
+                  background: "linear-gradient(180deg, #F26223 0%, #C93A12 100%)",
+                }}
+                onClick={() => setMenuOpen(false)}
               >
-                <ProfileIcon />
-                Sign out
+                Logout
               </button>
             </form>
           ) : (
