@@ -74,14 +74,14 @@ export function LogInForm() {
 
       <div className="relative py-1">
         <div className="absolute inset-x-0 top-1/2 h-px bg-white/15" />
-        <p className="relative mx-auto w-fit bg-[#141414] px-3 text-xs text-white/60">
+        <p className="relative mx-auto w-fit px-3 text-xs text-white/60 backdrop-blur-sm">
           Don&apos;t have an account?
         </p>
       </div>
 
       <Link
         href="/auth/register"
-        className="flex w-full items-center justify-center rounded-xl bg-black px-4 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-black/80"
+        className="flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-3.5 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/15"
       >
         Sign up
       </Link>
