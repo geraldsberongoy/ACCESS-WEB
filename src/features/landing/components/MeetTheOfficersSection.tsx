@@ -138,35 +138,47 @@ export default function MeetTheOfficersSection() {
             </svg>
           </button>
 
-          {/* Cards — animated */}
+          {/* Cards — animated continuous layout showing exactly 3 cards */}
           <div
-            className="relative overflow-hidden w-full flex justify-center py-6 px-14"
-            style={{ minHeight: 480 }}
+            className="relative w-full py-12 px-14"
+            style={{ minHeight: 510 }}
           >
-            <AnimatePresence initial={false} custom={direction} mode="popLayout">
-              <motion.div
-                key={activeIndex}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                className="absolute flex items-end justify-center gap-5"
-                style={{ width: "calc(100% - 112px)" }}
-              >
-                {/* Side cards — visible from lg (1024px) upward */}
-                <div className="hidden lg:block flex-shrink-0" style={{ width: 240 }}>
-                  <OfficerCard {...MOCK_OFFICERS[leftIdx]} featured={false} />
-                </div>
-                {/* Center card: lifts upward vs side cards */}
-                <div className="flex-shrink-0 w-full lg:w-auto" style={{ maxWidth: 240, transform: "translateY(-22px)" }}>
-                  <OfficerCard {...MOCK_OFFICERS[centerIdx]} featured={true} />
-                </div>
-                <div className="hidden lg:block flex-shrink-0" style={{ width: 240 }}>
-                  <OfficerCard {...MOCK_OFFICERS[rightIdx]} featured={false} />
-                </div>
-              </motion.div>
-            </AnimatePresence>
+            {MOCK_OFFICERS.map((officer, i) => {
+              let diff = i - activeIndex;
+              if (diff > total / 2) diff -= total;
+              if (diff < -total / 2) diff += total;
+
+              const isFeatured = i === activeIndex;
+              const isVisible = Math.abs(diff) <= 1;
+
+              return (
+                <motion.div
+                  key={i}
+                  animate={{
+                    x: diff * 265,
+                    y: isFeatured ? -22 : 0,
+                    scale: isFeatured ? 1 : 0.9,
+                    opacity: isVisible ? 1 : 0,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 220,
+                    damping: 28,
+                  }}
+                  className="absolute bottom-14 flex-shrink-0"
+                  style={{
+                    width: 240,
+                    left: "50%",
+                    marginLeft: -120,
+                    pointerEvents: isVisible ? "auto" : "none",
+                    zIndex: isFeatured ? 10 : 2,
+                    willChange: "transform, opacity",
+                  }}
+                >
+                  <OfficerCard {...officer} featured={isFeatured} />
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* Nav button – Right */}
