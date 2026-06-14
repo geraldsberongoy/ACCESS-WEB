@@ -23,6 +23,7 @@ const defaultItems: NavItem[] = [
   { label: "Events", href: "/events" },
   { label: "Borrow", href: "/borrow" },
   { label: "Contact", href: "/contact" },
+  { label: "Officers", href: "/officers" },
 ];
 
 export default function Navbar({ items = defaultItems }: NavbarProps) {
