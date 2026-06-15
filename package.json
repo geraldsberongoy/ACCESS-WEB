@@ -10,7 +10,7 @@
     "img:webp": "node scripts/convert-to-webp.mjs"
   },
   "dependencies": {
-    "@react-spring/three": "^10.0.3",
+    "@react-spring/three": "^10.1.1",
     "@react-three/fiber": "^9.5.0",
     "@shadergradient/react": "^2.4.20",
     "@supabase/ssr": "^0.10.0",
