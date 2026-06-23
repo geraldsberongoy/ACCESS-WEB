@@ -48,9 +48,6 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@tailwindcss/oxide-linux-x64-gnu':
-        specifier: ^4.2.2
-        version: 4.2.2
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.2.0
@@ -72,9 +69,6 @@ importers:
       eslint-config-next:
         specifier: 16.1.6
         version: 16.1.6(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
-      lightningcss-linux-x64-gnu:
-        specifier: ^1.32.0
-        version: 1.32.0
       tailwindcss:
         specifier: ^4
         version: 4.2.0
@@ -621,12 +615,6 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [glibc]
-
-  '@tailwindcss/oxide-linux-x64-gnu@4.2.2':
-    resolution: {integrity: sha512-rTAGAkDgqbXHNp/xW0iugLVmX62wOp2PoE39BTCGKjv3Iocf6AFbRP/wZT/kuCxC9QBh9Pu8XPkv/zCZB2mcMg==}
-    engines: {node: '>= 20'}
-    cpu: [x64]
-    os: [linux]
 
   '@tailwindcss/oxide-linux-x64-musl@4.2.0':
     resolution: {integrity: sha512-lKUaygq4G7sWkhQbfdRRBkaq4LY39IriqBQ+Gk6l5nKq6Ay2M2ZZb1tlIyRNgZKS8cbErTwuYSor0IIULC0SHw==}
@@ -1663,12 +1651,6 @@ packages:
     cpu: [x64]
     os: [linux]
     libc: [glibc]
-
-  lightningcss-linux-x64-gnu@1.32.0:
-    resolution: {integrity: sha512-V7Qr52IhZmdKPVr+Vtw8o+WLsQJYCTd8loIfpDaMRWGUZfBOYEJeyJIkqGIDMZPwPx24pUMfwSxxI8phr/MbOA==}
-    engines: {node: '>= 12.0.0'}
-    cpu: [x64]
-    os: [linux]
 
   lightningcss-linux-x64-musl@1.31.1:
     resolution: {integrity: sha512-eowF8PrKHw9LpoZii5tdZwnBcYDxRw2rRCyvAXLi34iyeYfqCQNA9rmUM0ce62NlPhCvof1+9ivRaTY6pSKDaA==}
@@ -2722,8 +2704,6 @@ snapshots:
 
   '@tailwindcss/oxide-linux-x64-gnu@4.2.0':
     optional: true
-
-  '@tailwindcss/oxide-linux-x64-gnu@4.2.2': {}
 
   '@tailwindcss/oxide-linux-x64-musl@4.2.0':
     optional: true
@@ -3885,8 +3865,6 @@ snapshots:
 
   lightningcss-linux-x64-gnu@1.31.1:
     optional: true
-
-  lightningcss-linux-x64-gnu@1.32.0: {}
 
   lightningcss-linux-x64-musl@1.31.1:
     optional: true
