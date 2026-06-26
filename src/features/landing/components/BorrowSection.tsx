@@ -1,13 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
+import BorrowRequestForm from "./BorrowRequestForm";
 
 export default function BorrowSection() {
-  const cards = [
-    { title: "Borrow Equipments\nand Materials" },
-    { title: "Borrow Equipments\nand Materials" },
-    { title: "Borrow Equipments\nand Materials" },
-  ];
+  const [showForm, setShowForm] = useState(false);
 
   const glassCardStyle: React.CSSProperties = {
     background: "rgba(255, 255, 255, 0.08)",
@@ -27,39 +25,50 @@ export default function BorrowSection() {
 
 
       <div className="relative z-10 flex flex-col items-center max-w-5xl w-full text-center">
-        {/* Title */}
-        <h2
-          className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold pb-2 tracking-wide title-header"
-          style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #ffdfc4 40%, #f26223 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-            filter: "drop-shadow(0px 8px 12px rgba(0,0,0,0.5))",
-            letterSpacing: "0.05em",
-          }}
-        >
-          Want to Borrow?
-        </h2>
+        {!showForm && (
+          <>
+            {/* Title */}
+            <h2
+              className="text-[2.5rem] sm:text-5xl md:text-6xl lg:text-[4.5rem] font-extrabold pb-2 tracking-wide title-header"
+              style={{
+                background: "linear-gradient(180deg, #ffffff 0%, #ffdfc4 40%, #f26223 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0px 8px 12px rgba(0,0,0,0.5))",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Want to Borrow?
+            </h2>
 
-        {/* Subtitle */}
-        <p className="mt-4 text-white/95 text-[15px] sm:text-base max-w-2xl leading-relaxed">
-          Submit your request easily and track your borrowing anytime, anywhere.
-        </p>
+            {/* Subtitle */}
+            <p className="mt-4 text-white/95 text-[15px] sm:text-base max-w-2xl leading-relaxed">
+              Submit your request easily and track your borrowing anytime, anywhere.
+            </p>
+          </>
+        )}
 
-        {/* Cards */}
-        <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-6 lg:gap-10 w-full">
-          {cards.map((card, idx) => (
+        {showForm ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mt-10 w-full flex justify-center"
+          >
+            <BorrowRequestForm onBackToLanding={() => setShowForm(false)} />
+          </motion.div>
+        ) : (
+          <>
+            {/* Card */}
             <motion.div
-              key={idx}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: idx * 0.1 }}
-              className="flex flex-col items-center justify-center p-8 w-[240px] h-[240px] shrink-0 hover:-translate-y-2 transition-transform duration-300 cursor-pointer"
+              transition={{ duration: 0.5 }}
+              className="mt-16 flex flex-col items-center justify-center p-8 w-[240px] h-[240px] shrink-0 hover:-translate-y-2 transition-transform duration-300"
               style={glassCardStyle}
             >
-              {/* Icon Circle */}
               <div
                 className="w-[4.5rem] h-[4.5rem] rounded-full flex items-center justify-center mb-5"
                 style={{ background: "#F26223", boxShadow: "0 6px 16px rgba(242,98,35,0.4)" }}
@@ -79,35 +88,38 @@ export default function BorrowSection() {
                 </svg>
               </div>
               <p className="text-white text-[14px] font-bold text-center whitespace-pre-line leading-relaxed z-10 drop-shadow-md">
-                {card.title}
+                Borrow Equipments{"\n"}and Materials
               </p>
             </motion.div>
-          ))}
-        </div>
 
-        {/* Action Buttons */}
-        <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-5 w-full">
-          <button
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_25px_rgba(242,98,35,0.6)] hover:opacity-95 min-w-[220px]"
-            style={{
-              background: "#F26223",
-              boxShadow: "0 6px 20px rgba(242,98,35,0.4)",
-            }}
-          >
-            Submit a Request
-          </button>
-          <button
-            className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] min-w-[220px]"
-            style={{
-              background: "rgba(255, 255, 255, 0.12)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
-              backdropFilter: "blur(12px)",
-              WebkitBackdropFilter: "blur(12px)",
-            }}
-          >
-            Track my Request
-          </button>
-        </div>
+            {/* Action Buttons */}
+            <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-5 w-full">
+              <button
+                type="button"
+                onClick={() => setShowForm(true)}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_25px_rgba(242,98,35,0.6)] hover:opacity-95 min-w-[220px]"
+                style={{
+                  background: "#F26223",
+                  boxShadow: "0 6px 20px rgba(242,98,35,0.4)",
+                }}
+              >
+                Submit a Request
+              </button>
+              <button
+                type="button"
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white/20 hover:shadow-[0_8px_20px_rgba(0,0,0,0.15)] min-w-[220px]"
+                style={{
+                  background: "rgba(255, 255, 255, 0.12)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  backdropFilter: "blur(12px)",
+                  WebkitBackdropFilter: "blur(12px)",
+                }}
+              >
+                Track my Request
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

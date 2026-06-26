@@ -13,20 +13,21 @@ export default async function EventsSection() {
           </h2>
 
           {/* 3-column grid */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"></div>
-          {events?.map((event) => (
-            <EventCard
-              key={event.id}
-              title={event.title ?? ""}
-              description={event.content_description ?? ""}
-              date={event.event_date ? new Date(event.event_date).toLocaleDateString() : ""}
-              image={event.image_url ?? "/BG-ACCESS.webp"}
-              href={`/events/${event.id}`}
-            />
-          ))}
-          {(!events || events.length === 0) && (
-            <p className="col-span-3 text-center text-slate-400">No upcoming events.</p>
-          )}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {events?.map((event) => (
+              <EventCard
+                key={event.id}
+                title={event.title ?? ""}
+                description={event.content_description ?? ""}
+                date={event.event_date ? new Date(event.event_date).toLocaleDateString() : ""}
+                image={event.image_url ?? "/BG-ACCESS.webp"}
+                href={`/events/${event.id}`}
+              />
+            ))}
+            {(!events || events.length === 0) && (
+              <p className="col-span-3 text-center text-slate-400">No upcoming events.</p>
+            )}
+          </div>
         </div>
       </div>
   )

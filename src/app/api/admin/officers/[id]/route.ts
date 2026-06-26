@@ -20,10 +20,11 @@ import { AppError } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // Next.js Route Context: automatically provides route parameters
+// In Next.js 15+, params is a Promise that must be awaited
 interface RouteContext {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -38,7 +39,7 @@ export async function GET(
 ) {
   try {
     // Step 1: Extract officer ID from URL parameter
-    const officerId = params.id;
+    const { id: officerId } = await params;
 
     // Step 2: Call service to fetch officer by ID
     // If officer not found, service throws AppError with 404 status
@@ -79,7 +80,7 @@ export async function PUT(
 ) {
   try {
     // Step 1: Extract officer ID from URL parameter
-    const officerId = params.id;
+    const { id: officerId } = await params;
 
     // Step 2: Parse JSON request body
     const body = await req.json();
@@ -130,7 +131,7 @@ export async function DELETE(
 ) {
   try {
     // Step 1: Extract officer ID from URL parameter
-    const officerId = params.id;
+    const { id: officerId } = await params;
 
     // Step 2: Call service to soft-delete officer
     // This sets is_active to false instead of hard-deleting from database
