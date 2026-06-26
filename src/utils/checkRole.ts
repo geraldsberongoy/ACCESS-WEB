@@ -1,4 +1,5 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { AppError } from "@/lib/errors";
 
 export type Roles = {
   roles?: "Default" | "Organiztion" | "Pending" | "Admin" | null;
@@ -10,7 +11,11 @@ export async function checkRole({ roles = "Default" }: Roles) {
   const { data: { user } } = await supabase.auth.getUser();
   const userRole = user?.app_metadata?.role;
 
-  if (userRole !== roles) {
-    throw new Error("Invalid credentials!");
+  if (!user) {
+    throw new AppError("Unauthorized", 401);
   }
-} 
+
+  if (userRole !== roles) {
+    throw new AppError("Forbidden", 403);
+  }
+}
