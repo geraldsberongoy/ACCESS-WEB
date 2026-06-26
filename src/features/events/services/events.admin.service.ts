@@ -6,6 +6,7 @@ import {
   EventIdSchema,
   UpdateEventSchema,
 } from "../schemas";
+import { validateEventImage } from "../utils/image-validation";
 
 export type EventsFilter = {
   status?: "Published" | "Draft" | "All";
@@ -173,14 +174,14 @@ export async function postEvent(event: EventProps) {
 export async function uploadEventImage(file: File): Promise<string> {
   const supabase = await createSupabaseServerClient();
 
-  const ext = file.name.split(".").pop();
-  const fileName = `${crypto.randomUUID()}.${ext}`;
+  const { mimeType, extension } = await validateEventImage(file);
+  const fileName = `${crypto.randomUUID()}.${extension}`;
   const filePath = `events/${fileName}`;
 
   const { error: uploadError } = await supabase.storage
     .from("access_web_assets") // replace with your bucket name
     .upload(filePath, file, {
-      contentType: file.type,
+      contentType: mimeType,
       upsert: false,
     });
 
