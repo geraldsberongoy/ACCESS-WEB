@@ -166,7 +166,7 @@ export async function updateOfficer(
     .select()
     .single();
 
-  if (error) throw new AppError(error.message, 404);
+  if (error) throw new AppError(error.message, error.code === "PGRST116" ? 404 : 500);
 
   return data;
 }
@@ -193,7 +193,7 @@ export async function deleteOfficer(officerId: string): Promise<Officer> {
     .select()
     .single();
 
-  if (error) throw new AppError(error.message, 404);
+  if (error) throw new AppError(error.message, error.code === "PGRST116" ? 404 : 500);
 
   return data;
 }

@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { publishEventById, unpublishEventById, deleteEventById, postEvent, editEvent, uploadEventImage } from '../services/events.admin.service';
 import { EventIdSchema } from '../schemas';
+import { getActionErrorMessage } from '@/lib/errors';
 
 export async function togglePublishAction(id: string, currentStatus: 'Published' | 'Draft') {
   try {
@@ -24,7 +25,7 @@ export async function togglePublishAction(id: string, currentStatus: 'Published'
     return { success: true };
   } catch (error) {
     console.error("Failed to toggle status:", error);
-    return { success: false, error: "Update failed" };
+    return { success: false, error: getActionErrorMessage(error) };
   }
 }
 
@@ -44,7 +45,7 @@ export async function deleteEventAction(id: string) {
     return { success: true };
   } catch (error) {
     console.error("Failed to delete event:", error);
-    return { success: false, error: "Deletion failed" };
+    return { success: false, error: getActionErrorMessage(error) };
   }
 }
 
@@ -65,7 +66,7 @@ export async function createEventAction(formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("[createEventAction]", error);
-    return { success: false, error: "Failed to create event" + error};
+    return { success: false, error: getActionErrorMessage(error) };
   }
 }
 
@@ -93,6 +94,6 @@ export async function editEventAction(id: string, formData: FormData) {
     return { success: true };
   } catch (error) {
     console.error("[editEventAction]", error);
-    return { success: false, error: "Failed to update event" };
+    return { success: false, error: getActionErrorMessage(error) };
   }
 }

@@ -5,6 +5,7 @@ import {redirect} from "next/navigation";
 import { SignUpSchema, LoginSchema, ForgotPasswordSchema, ResetPasswordSchema } from "../schemas";
 import { forgotPasswordService, logInService, logOutService, registerOrganization, resetPasswordService } from "../services/auth.services";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { getActionErrorMessage } from "@/lib/errors";
 
 type ActionState =
   | { status: "idle" }
@@ -36,7 +37,7 @@ export async function signUpAction(
   } catch (err) {
     return { 
       status: "error", 
-      message: err instanceof Error ? err.message : "An unexpected error occurred" 
+      message: getActionErrorMessage(err) 
     };
   }
 };
@@ -65,7 +66,7 @@ export async function signInAction(
     if (isRedirectError(err)) throw err;
     return { 
       status: "error", 
-      message: err instanceof Error ? err.message : "An unexpected error occurred" 
+      message: getActionErrorMessage(err) 
     };
   }
 };
@@ -103,7 +104,7 @@ export async function forgotPasswordAction(
   } catch (err) {
     return { 
       status: "error", 
-      message: err instanceof Error ? err.message : "An unexpected error occurred" 
+      message: getActionErrorMessage(err) 
     };
   }
 };
@@ -129,7 +130,7 @@ export async function resetPasswordAction(
   } catch (err) {
     return { 
       status: "error", 
-      message: err instanceof Error ? err.message : "An unexpected error occurred" 
+      message: getActionErrorMessage(err) 
     };
   }
 };
