@@ -7,6 +7,7 @@ import {
   UpdateEventSchema,
 } from "../schemas";
 import { validateEventImage } from "../utils/image-validation";
+import { AppError } from "@/lib/errors";
 
 export type EventsFilter = {
   status?: "Published" | "Draft" | "All";
@@ -63,7 +64,7 @@ export async function getEventForAdminById(id: string) {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error(`Event with id ${id} not found`);
+  if (!data) throw new AppError(`Event with id ${id} not found`, 404);
   return data;
 }
 
@@ -215,6 +216,6 @@ export async function editEvent(id: string, event: UpdateEventProps) {
     .maybeSingle();
 
   if (error) throw error;
-  if (!data) throw new Error(`Event with id ${id} not found`);
+  if (!data) throw new AppError(`Event with id ${id} not found`, 404);
   return data;
 }

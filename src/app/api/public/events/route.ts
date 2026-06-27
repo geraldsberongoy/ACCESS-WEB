@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getPublishedEvents } from "@/features/events/services/events.public.service";
+import { toErrorResponse } from "@/lib/errors";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,6 +13,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("[GET /api/public/events]", error);
-    return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }

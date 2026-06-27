@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getEventsForAdmin, postEvent } from "@/features/events/services/events.admin.service";
+import { toErrorResponse } from "@/lib/errors";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("[GET /api/admin/events/:id]", error);
-    return NextResponse.json({ error: "Failed to fetch events" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }
 
@@ -30,6 +31,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error("[POST /api/admin/events]", error);
-    return NextResponse.json({ error: "Failed to create event" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }

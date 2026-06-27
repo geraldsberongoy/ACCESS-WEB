@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { deleteEventById, editEvent } from "@/features/events/services/events.admin.service";
 import { EventIdSchema } from "@/features/events/schemas";
+import { toErrorResponse } from "@/lib/errors";
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -15,7 +16,7 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
     return NextResponse.json(event);
   } catch (error) {
     console.error("[GET /api/admin/events/:id]", error);
-    return NextResponse.json({ error: "Failed to delete event" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }
 
@@ -35,6 +36,6 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json(result);
   } catch (error) {
     console.error("[PUT /api/admin/events/:id]", error);
-    return NextResponse.json({ error: "Failed to update event" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }

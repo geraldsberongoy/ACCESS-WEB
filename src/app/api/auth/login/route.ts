@@ -1,6 +1,6 @@
 import { logInService } from "@/features/auth/services/auth.services";
 import { LoginSchema } from "@/features/auth/schemas";
-import { AppError } from "@/lib/errors";
+import { AppError, toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // Note: rate limitting is handled by supabase internally
@@ -23,11 +23,6 @@ export async function POST(req: Request) {
     
     return NextResponse.json(result);
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-    
-    // Fallback for internal crashes (500)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }

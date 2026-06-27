@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getPublishedEventById } from "@/features/events/services/events.public.service";
 import { EventIdSchema } from "@/features/events/schemas";
+import { toErrorResponse } from "@/lib/errors";
 
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -17,6 +18,6 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json(event);
   } catch (error) {
     console.error("[GET /api/public/events/:id]", error);
-    return NextResponse.json({ error: "Failed to fetch event" }, { status: 500 });
+    return toErrorResponse(error);
   }
 }

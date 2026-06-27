@@ -10,7 +10,7 @@
 
 import { reorderOfficers } from "@/features/officers/services/officers.services";
 import { ReorderOfficersSchema } from "@/features/officers/schemas";
-import { AppError } from "@/lib/errors";
+import { toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -65,10 +65,6 @@ export async function POST(req: Request) {
       message: "Officers reordered successfully",
     });
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }
