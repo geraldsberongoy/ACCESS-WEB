@@ -4,18 +4,11 @@ import { getPublishedEvents } from "@/features/events/services/events.public.ser
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = request.nextUrl;
-
-    const valid_statuses = ["upcoming", "past", "all"] as const;
-    type PublicStatus = typeof valid_statuses[number];
-
-    const rawStatus = searchParams.get("status");
-    const status: PublicStatus = valid_statuses.includes(rawStatus as PublicStatus) 
-      ? (rawStatus as PublicStatus) 
-      : "all";
-    const page = Number(searchParams.get("page") ?? 1);
-    const limit = Number(searchParams.get("limit") ?? 10);
-
-    const result = await getPublishedEvents({ status: status ?? "all", page, limit });
+    const result = await getPublishedEvents({
+      status: searchParams.get("status") as "upcoming" | "past" | "all" | null ?? undefined,
+      page: searchParams.get("page") ? Number(searchParams.get("page")) : undefined,
+      limit: searchParams.get("limit") ? Number(searchParams.get("limit")) : undefined,
+    });
     return NextResponse.json(result);
   } catch (error) {
     console.error("[GET /api/public/events]", error);

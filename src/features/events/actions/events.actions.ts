@@ -2,13 +2,20 @@
 
 import { revalidatePath } from 'next/cache';
 import { publishEventById, unpublishEventById, deleteEventById, postEvent, editEvent, uploadEventImage } from '../services/events.admin.service';
+import { EventIdSchema } from '../schemas';
 
 export async function togglePublishAction(id: string, currentStatus: 'Published' | 'Draft') {
   try {
+    const validationResult = EventIdSchema.safeParse(id);
+
+    if (!validationResult.success) {
+      return { success: false, error: validationResult.error.issues[0]?.message ?? "Invalid event ID" };
+    }
+
     if (currentStatus === 'Published') {
-      await unpublishEventById(id);
+      await unpublishEventById(validationResult.data);
     } else {
-      await publishEventById(id);
+      await publishEventById(validationResult.data);
     }
 
     // Tells Next.js to remove cache for the dashboard and fetch fresh data from DB
@@ -23,7 +30,13 @@ export async function togglePublishAction(id: string, currentStatus: 'Published'
 
 export async function deleteEventAction(id: string) {
   try {
-    await deleteEventById(id);
+    const validationResult = EventIdSchema.safeParse(id);
+
+    if (!validationResult.success) {
+      return { success: false, error: validationResult.error.issues[0]?.message ?? "Invalid event ID" };
+    }
+
+    await deleteEventById(validationResult.data);
     
     // Refresh the list so the deleted item disappears
     revalidatePath('/admin/events');
@@ -38,16 +51,12 @@ export async function deleteEventAction(id: string) {
 export async function createEventAction(formData: FormData) {
   try {
     const image = formData.get("image") as File | null;
-    let image_url: string | undefined;
-
-    if (image && image.size > 0) {
-      image_url = await uploadEventImage(image);
-    }
+    const image_url = image && image.size > 0 ? await uploadEventImage(image) : undefined;
 
     await postEvent({
-      title: formData.get("title") as string,
-      content_description: formData.get("content_description") as string,
-      event_date: (formData.get("event_date") as string) || undefined,
+      title: String(formData.get("title") ?? ""),
+      content_description: String(formData.get("content_description") ?? ""),
+      event_date: String(formData.get("event_date") ?? "") || undefined,
       status: (formData.get("status") as "Draft" | "Published") ?? "Draft",
       image_url,
     });
@@ -62,17 +71,19 @@ export async function createEventAction(formData: FormData) {
 
 export async function editEventAction(id: string, formData: FormData) {
   try {
-    const image = formData.get("image") as File | null;
-    let image_url: string | undefined;
+    const idValidationResult = EventIdSchema.safeParse(id);
 
-    if (image && image.size > 0) {
-      image_url = await uploadEventImage(image);
+    if (!idValidationResult.success) {
+      return { success: false, error: idValidationResult.error.issues[0]?.message ?? "Invalid event ID" };
     }
 
-    await editEvent(id, {
-      title: formData.get("title") as string,
-      content_description: formData.get("content_description") as string,
-      event_date: (formData.get("event_date") as string) || undefined,
+    const image = formData.get("image") as File | null;
+    const image_url = image && image.size > 0 ? await uploadEventImage(image) : undefined;
+
+    await editEvent(idValidationResult.data, {
+      title: String(formData.get("title") ?? ""),
+      content_description: String(formData.get("content_description") ?? ""),
+      event_date: String(formData.get("event_date") ?? "") || undefined,
       status: (formData.get("status") as "Draft" | "Published") ?? "Draft",
       ...(image_url && { image_url }),
     });

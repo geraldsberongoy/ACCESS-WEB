@@ -1,10 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { deleteEventById, editEvent } from "@/features/events/services/events.admin.service";
+import { EventIdSchema } from "@/features/events/schemas";
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const event = await deleteEventById(id);
+    const validationResult = EventIdSchema.safeParse(id);
+
+    if (!validationResult.success) {
+      return NextResponse.json({ error: validationResult.error.issues[0]?.message ?? "Invalid event ID" }, { status: 400 });
+    }
+
+    const event = await deleteEventById(validationResult.data);
     return NextResponse.json(event);
   } catch (error) {
     console.error("[GET /api/admin/events/:id]", error);
