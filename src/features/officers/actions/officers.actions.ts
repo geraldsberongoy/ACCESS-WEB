@@ -25,6 +25,7 @@ import {
   deleteOfficer,
   reorderOfficers,
 } from "../services/officers.services";
+import { getActionErrorMessage } from "@/lib/errors";
 
 // ─────────────────────────────────────────────────────────────────────────
 // ACTION STATE TYPE
@@ -83,7 +84,7 @@ export async function createOfficerAction(
     // Catch any errors from the service layer
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "An unexpected error occurred",
+      message: getActionErrorMessage(err),
     };
   }
 }
@@ -141,7 +142,7 @@ export async function updateOfficerAction(
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "An unexpected error occurred",
+      message: getActionErrorMessage(err),
     };
   }
 }
@@ -177,7 +178,7 @@ export async function deactivateOfficerAction(
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "An unexpected error occurred",
+      message: getActionErrorMessage(err),
     };
   }
 }
@@ -220,7 +221,7 @@ export async function reorderOfficersAction(
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "An unexpected error occurred",
+      message: getActionErrorMessage(err),
     };
   }
 }

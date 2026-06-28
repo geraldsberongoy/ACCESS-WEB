@@ -16,7 +16,7 @@ import {
   deleteOfficer,
 } from "@/features/officers/services/officers.services";
 import { UpdateOfficerSchema } from "@/features/officers/schemas";
-import { AppError } from "@/lib/errors";
+import { toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // Next.js Route Context: automatically provides route parameters
@@ -48,11 +48,7 @@ export async function GET(
     // Step 3: Return officer as JSON
     return NextResponse.json(officer);
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }
 
@@ -105,11 +101,7 @@ export async function PUT(
     // Step 5: Return updated officer as JSON
     return NextResponse.json(officer);
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }
 
@@ -140,10 +132,6 @@ export async function DELETE(
     // Step 3: Return the updated officer showing it's now inactive
     return NextResponse.json(officer);
   } catch (err: unknown) {
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }

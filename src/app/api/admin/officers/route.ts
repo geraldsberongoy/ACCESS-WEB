@@ -12,7 +12,7 @@
 import { getAllOfficers } from "@/features/officers/services/officers.services";
 import { createOfficer } from "@/features/officers/services/officers.services";
 import { CreateOfficerSchema } from "@/features/officers/schemas";
-import { AppError } from "@/lib/errors";
+import { toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -30,12 +30,7 @@ export async function GET(req: Request) {
       count: officers.length,
     });
   } catch (err: unknown) {
-    // Error handling: Convert AppError to HTTP response
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }
 
@@ -78,11 +73,6 @@ export async function POST(req: Request) {
     // Step 4: Return created officer with 201 status code
     return NextResponse.json(officer, { status: 201 });
   } catch (err: unknown) {
-    // Error handling
-    if (err instanceof AppError) {
-      return NextResponse.json({ error: err.message }, { status: err.statusCode });
-    }
-
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return toErrorResponse(err);
   }
 }
