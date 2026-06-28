@@ -9,10 +9,12 @@
 // PURPOSE: Manage officers via REST API (alternative to server actions)
 // ─────────────────────────────────────────────────────────────────────────
 
-import { getAllOfficers } from "@/features/officers/services/officers.services";
-import { createOfficer } from "@/features/officers/services/officers.services";
+import {
+  createOfficer,
+  getOfficersForAdmin,
+} from "@/features/officers/services/officers.admin.service";
 import { CreateOfficerSchema } from "@/features/officers/schemas";
-import { toErrorResponse } from "@/lib/errors";
+import { AppError, toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -20,14 +22,28 @@ import { NextResponse } from "next/server";
 // ─────────────────────────────────────────────────────────────────────────
 export async function GET(req: Request) {
   try {
-    // Step 1: Call service to fetch all officers
-    // includeInactive: true shows both active and inactive officers in admin view
-    const officers = await getAllOfficers({ includeInactive: true });
+    // Step 1: Parse query params for pagination and filters
+    const { searchParams } = new URL(req.url);
+    const page = Number(searchParams.get("page") ?? "1") || 1;
+    const limit = Number(searchParams.get("limit") ?? "10") || 10;
+    const statusParam = searchParams.get("status") ?? "All";
+    const status = ["All", "Active", "Inactive"].includes(statusParam)
+      ? (statusParam as "All" | "Active" | "Inactive")
+      : "All";
+    const search = searchParams.get("q") ?? "";
 
-    // Step 2: Return JSON response with officers array and count
+    const { data, meta } = await getOfficersForAdmin({
+      page,
+      limit,
+      status,
+      search,
+    });
+
+    // Step 2: Return officers and pagination metadata
     return NextResponse.json({
-      data: officers,
-      count: officers.length,
+      data,
+      meta,
+      count: meta.total,
     });
   } catch (err: unknown) {
     return toErrorResponse(err);

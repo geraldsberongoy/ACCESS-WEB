@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { AppError } from "@/lib/errors";
 
 export type Roles = {
-  roles?: "Default" | "Organiztion" | "Pending" | "Admin" | null;
+  roles?: "Default" | "Organization" | "Pending" | "Admin" | null;
 };
 
 export async function checkRole({ roles = "Default" }: Roles) {

@@ -11,12 +11,12 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 import {
+  deactivateOfficer,
   getOfficerById,
   updateOfficer,
-  deleteOfficer,
-} from "@/features/officers/services/officers.services";
+} from "@/features/officers/services/officers.admin.service";
 import { UpdateOfficerSchema } from "@/features/officers/schemas";
-import { toErrorResponse } from "@/lib/errors";
+import { AppError, toErrorResponse } from "@/lib/errors";
 import { NextResponse } from "next/server";
 
 // Next.js Route Context: automatically provides route parameters
@@ -127,7 +127,7 @@ export async function DELETE(
 
     // Step 2: Call service to soft-delete officer
     // This sets is_active to false instead of hard-deleting from database
-    const officer = await deleteOfficer(officerId);
+    const officer = await deactivateOfficer(officerId);
 
     // Step 3: Return the updated officer showing it's now inactive
     return NextResponse.json(officer);
