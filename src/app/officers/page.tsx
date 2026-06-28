@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/ui";
 import { FooterSection } from "@/features/landing";
 import { OfficerCard } from "@/features/officers";
-import { getAllOfficers } from "@/features/officers/services/officers.services";
+import { getPublicOfficers } from "@/features/officers/services/officers.public.service";
 import Image from "next/image";
 import { CrystalDice3D, type CrystalConfig } from "@/features/effects";
 import { Database } from "@/lib/supabase/database.types";
@@ -42,7 +42,7 @@ export default async function OfficersPage() {
   let officersList: Officer[] = [];
 
   try {
-    officersList = await getAllOfficers();
+    officersList = await getPublicOfficers();
   } catch (error) {
     console.error("Supabase connect failed, falling back to mock data:", error);
   }

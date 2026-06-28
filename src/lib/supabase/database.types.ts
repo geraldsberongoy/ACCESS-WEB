@@ -347,6 +347,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_officer_atomic: {
+        Args: {
+          p_academic_year: string
+          p_department: string
+          p_display_order?: number | null
+          p_email: string
+          p_full_name: string
+          p_id: string
+          p_image_url: string | null
+          p_is_active: boolean
+          p_position_title: string
+        }
+        Returns: Database["public"]["Tables"]["Officers"]["Row"]
+      }
       get_server_time: { Args: never; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_authorized: { Args: never; Returns: boolean }
@@ -358,6 +372,12 @@ export type Database = {
           p_state_changes: Json
         }
         Returns: undefined
+      }
+      reorder_officers_atomic: {
+        Args: {
+          p_officers: Json
+        }
+        Returns: Database["public"]["Tables"]["Officers"]["Row"][]
       }
     }
     Enums: {

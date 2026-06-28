@@ -1,6 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { AppError } from "@/lib/errors";
-import { Database } from "@/lib/supabase/database.types";
+import { Database, Json } from "@/lib/supabase/database.types";
 import { checkRole } from "@/utils/checkRole";
 import {
   CreateOfficerInput,
@@ -9,6 +9,31 @@ import {
 } from "../schemas";
 
 type Officer = Database["public"]["Tables"]["Officers"]["Row"];
+
+type DbError = {
+  code?: string;
+  message: string;
+};
+
+function toAppError(error: DbError, fallbackStatus = 500): AppError {
+  if (error.code === "PGRST116" || error.code === "P0002") {
+    return new AppError(error.message, 404);
+  }
+
+  if (error.code === "42501") {
+    return new AppError(error.message, 403);
+  }
+
+  if (error.code === "23505") {
+    return new AppError(error.message, 409);
+  }
+
+  if (error.code === "22P02") {
+    return new AppError(error.message, 400);
+  }
+
+  return new AppError(error.message, fallbackStatus);
+}
 
 export type OfficersAdminFilter = {
   status?: "All" | "Active" | "Inactive";
@@ -81,7 +106,7 @@ export async function getOfficerById(officerId: string): Promise<Officer> {
     .eq("id", officerId)
     .single();
 
-  if (error) throw new AppError(error.message, error.code === "PGRST116" ? 404 : 500);
+  if (error) throw toAppError(error);
 
   return data;
 }
@@ -90,34 +115,21 @@ export async function createOfficer(input: CreateOfficerInput): Promise<Officer>
   await checkRole({ roles: "Admin" });
   const supabase = await createSupabaseServerClient();
 
-  const { data: maxOrder } = await supabase
-    .from("Officers")
-    .select("display_order")
-    .order("display_order", { ascending: false })
-    .limit(1)
-    .single();
-
-  const nextDisplayOrder = (maxOrder?.display_order ?? 0) + 1;
-
   const { data, error } = await supabase
-    .from("Officers")
-    .insert([
-      {
-        id: crypto.randomUUID(),
-        full_name: input.full_name,
-        email: input.email,
-        position_title: input.position_title,
-        department: input.department,
-        academic_year: input.academic_year,
-        image_url: input.image_url || null,
-        is_active: input.is_active ?? true,
-        display_order: input.display_order ?? nextDisplayOrder,
-      },
-    ])
-    .select()
+    .rpc("create_officer_atomic", {
+      p_id: crypto.randomUUID(),
+      p_full_name: input.full_name,
+      p_email: input.email,
+      p_position_title: input.position_title,
+      p_department: input.department,
+      p_academic_year: input.academic_year,
+      p_image_url: input.image_url || null,
+      p_is_active: input.is_active ?? true,
+      p_display_order: input.display_order ?? null,
+    })
     .single();
 
-  if (error) throw new AppError(error.message, 500);
+  if (error) throw toAppError(error);
 
   return data;
 }
@@ -147,7 +159,7 @@ export async function updateOfficer(
     .select()
     .single();
 
-  if (error) throw new AppError(error.message, 404);
+  if (error) throw toAppError(error);
 
   return data;
 }
@@ -163,7 +175,7 @@ export async function deactivateOfficer(officerId: string): Promise<Officer> {
     .select()
     .single();
 
-  if (error) throw new AppError(error.message, 404);
+  if (error) throw toAppError(error);
 
   return data;
 }
@@ -172,22 +184,11 @@ export async function reorderOfficers(input: ReorderOfficersInput): Promise<Offi
   await checkRole({ roles: "Admin" });
   const supabase = await createSupabaseServerClient();
 
-  const updatedOfficers: Officer[] = [];
+  const { data, error } = await supabase.rpc("reorder_officers_atomic", {
+    p_officers: input.officers as unknown as Json,
+  });
 
-  for (const { id, display_order } of input.officers) {
-    const { data, error } = await supabase
-      .from("Officers")
-      .update({ display_order })
-      .eq("id", id)
-      .select()
-      .single();
+  if (error) throw toAppError(error);
 
-    if (error) {
-      throw new AppError(`Failed to reorder officer ${id}: ${error.message}`, 500);
-    }
-
-    updatedOfficers.push(data);
-  }
-
-  return updatedOfficers;
+  return data ?? [];
 }
