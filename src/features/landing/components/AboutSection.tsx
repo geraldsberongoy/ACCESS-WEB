@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import type { AboutContent } from "@/features/cms";
 
 const CAROUSEL_IMAGES = [
   "/aboutCard1.JPG",
@@ -33,11 +32,7 @@ const fadeVariants = {
   },
 };
 
-type AboutSectionProps = {
-  content: AboutContent;
-};
-
-export default function AboutSection({ content }: AboutSectionProps) {
+export default function AboutSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
@@ -143,12 +138,15 @@ export default function AboutSection({ content }: AboutSectionProps) {
           <h2
             className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header"
           >
-            {content.title}
+            About Us
           </h2>
 
           {/* Centered Description Text */}
           <p className="text-zinc-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl text-center px-4 font-normal tracking-wide">
-            {content.body}
+            Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum
+            dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit
+            amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
+            consectetur Lorem ipsum dolor sit amet consectetur.
           </p>
         </div>
       </div>

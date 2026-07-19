@@ -1,8 +1,6 @@
 import { getEventsForAdmin } from "@/features/events/services/events.admin.service";
 import EventsDashboard from "./EventsDashboard";
 
-export const dynamic = "force-dynamic";
-
 export default async function Page({
   searchParams,
 }: {

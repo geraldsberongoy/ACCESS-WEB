@@ -7,9 +7,48 @@ interface FAQItem {
   answer: string;
 }
 
-type FAQSectionProps = {
-  items: FAQItem[];
-};
+const FAQ_ITEMS: FAQItem[] = [
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+  {
+    question: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+    answer:
+      "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+  },
+];
 
 function ChevronIcon({ open }: { open: boolean }) {
   return (
@@ -34,7 +73,7 @@ function ChevronIcon({ open }: { open: boolean }) {
   );
 }
 
-export default function FAQSection({ items }: FAQSectionProps) {
+export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggle = (i: number) => {
@@ -49,8 +88,8 @@ export default function FAQSection({ items }: FAQSectionProps) {
       <div className="faq-container">
         {/* Accordion list */}
         <div className="faq-list">
-          {items.map((item, i) => (
-            <div key={`${item.question}-${i}`} className="faq-item">
+          {FAQ_ITEMS.map((item, i) => (
+            <div key={i} className="faq-item">
               <button
                 className="faq-question"
                 onClick={() => toggle(i)}
