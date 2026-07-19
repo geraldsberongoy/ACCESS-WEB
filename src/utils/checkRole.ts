@@ -10,7 +10,6 @@ export async function checkRole({ roles = "Default" }: Roles) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const userRole = user?.app_metadata?.role;
 
   if (!user) {
     throw new AppError("Unauthorized", 401);

@@ -60,7 +60,7 @@ export default function AboutSection({ content }: AboutSectionProps) {
   };
 
   return (
-    <section className="relative overflow-hidden w-full bg-[#0d0d0d] flex flex-col">
+    <section id="about" className="landing-section relative overflow-hidden w-full bg-[#0d0d0d] flex flex-col scroll-mt-24">
       {/* ── IMAGE CAROUSEL CONTAINER (TOP HALF) ── */}
       <div className="relative w-full h-[280px] sm:h-[380px] md:h-[480px] lg:h-[560px] overflow-hidden bg-black flex items-center justify-center">
         <AnimatePresence initial={false}>

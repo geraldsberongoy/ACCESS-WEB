@@ -1,4 +1,4 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 import {
   AdminAlert,
@@ -22,7 +22,7 @@ export default async function AdminOfficersRosterPage({
 }) {
   const params = (await searchParams) ?? {};
   const content = await getOfficersSectionContent();
-  const rosterPreview = content.officersImageUrl || null;
+  const rosterImage = content.officersImageUrl?.trim() || null;
 
   async function handleUpload(formData: FormData) {
     "use server";
@@ -45,43 +45,43 @@ export default async function AdminOfficersRosterPage({
     <AdminPageShell width="narrow">
       <AdminPageHeader
         eyebrow="Site Content"
-        title="Officers File"
-        description="Upload an image or PDF of current ACCESS officers. It appears on the /officers page."
+        title="Officers Image"
+        description="Upload an image of current ACCESS officers. It appears on the /officers page."
       />
 
       {params.status && params.message ? (
         <AdminAlert status={params.status} message={params.message} />
       ) : null}
 
-      <AdminCard title="Current officers file">
-        {rosterPreview ? (
+      <AdminCard title="Current officers image">
+        {rosterImage ? (
           <div className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
             <OfficersRosterMedia
-              url={rosterPreview}
+              url={rosterImage}
               alt="Current officers roster"
-              frameClassName="h-[min(70vh,800px)] w-full rounded-xl border-0 bg-white"
+              className="h-[min(70vh,800px)] w-full rounded-xl border-0 bg-white object-contain"
             />
           </div>
         ) : (
-          <AdminEmptyState>No officers file uploaded yet.</AdminEmptyState>
+          <AdminEmptyState>No officers image uploaded yet.</AdminEmptyState>
         )}
       </AdminCard>
 
-      <AdminCard title="Upload file">
+      <AdminCard title="Upload image">
         <form action={handleUpload} encType="multipart/form-data" className="space-y-5">
           <div>
-            <AdminFieldLabel>Officers file</AdminFieldLabel>
+            <AdminFieldLabel>Officers image</AdminFieldLabel>
             <input
               type="file"
               name="officersImage"
-              accept="image/png,image/webp,image/jpeg,application/pdf,.pdf"
-              required={!rosterPreview}
+              accept="image/png,image/webp,image/jpeg,image/gif"
+              required={!rosterImage}
               className={adminFileClass}
             />
-            <p className="admin-help-text">PNG, JPG, WEBP, or PDF. One file showing all current officers.</p>
+            <p className="admin-help-text">PNG, JPG, WEBP, or GIF. One image showing all current officers.</p>
           </div>
           <button type="submit" className={adminBtnPrimaryClass}>
-            Save officers file
+            Save officers image
           </button>
         </form>
       </AdminCard>

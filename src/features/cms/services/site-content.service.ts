@@ -141,6 +141,14 @@ async function uploadSiteContentFileToStorage(
   return data.publicUrl;
 }
 
+const OFFICERS_ROSTER_IMAGE_TYPES = new Set([
+  "image/png",
+  "image/jpeg",
+  "image/jpg",
+  "image/webp",
+  "image/gif",
+]);
+
 export async function uploadSiteContentImage(file: File): Promise<string> {
   await checkRole({ roles: "Admin" });
 
@@ -149,6 +157,29 @@ export async function uploadSiteContentImage(file: File): Promise<string> {
 
   if (!contentType) {
     throw new Error("Unsupported file type. Use PNG, JPG, WEBP, or PDF.");
+  }
+
+  try {
+    const adminSupabase = createSupabaseAdminClient();
+    return await uploadSiteContentFileToStorage(adminSupabase, file, contentType, ext);
+  } catch (error) {
+    if (!isRlsPolicyError(error)) {
+      throw error instanceof Error ? error : new Error(getErrorMessage(error));
+    }
+  }
+
+  const serverSupabase = await createSupabaseServerClient();
+  return uploadSiteContentFileToStorage(serverSupabase, file, contentType, ext);
+}
+
+export async function uploadOfficersRosterImage(file: File): Promise<string> {
+  await checkRole({ roles: "Admin" });
+
+  const ext = (file.name.split(".").pop() ?? "png").toLowerCase();
+  const contentType = file.type || MIME_BY_EXT[ext];
+
+  if (!contentType || !OFFICERS_ROSTER_IMAGE_TYPES.has(contentType)) {
+    throw new Error("Officers roster must be an image (PNG, JPG, WEBP, or GIF).");
   }
 
   try {
