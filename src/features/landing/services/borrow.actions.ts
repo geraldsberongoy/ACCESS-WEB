@@ -2,7 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { BorrowRequestSchema } from "@/features/cms/schemas";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { getErrorMessage } from "@/lib/errors";
 
 type ActionState =
   | { status: "idle" }
@@ -99,23 +101,32 @@ export async function submitBorrowRequestAction(
       return { status: "error", message: "End date and time must be after the start." };
     }
 
-    const ext = letterFile.name.split(".").pop() ?? "pdf";
+    const ext = letterFile.name.split(".").pop()?.toLowerCase() ?? "pdf";
     const filePath = `borrow-letters/${user.id}/${crypto.randomUUID()}.${ext}`;
+    const contentType =
+      letterFile.type ||
+      ({
+        pdf: "application/pdf",
+        doc: "application/msword",
+        docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      }[ext] ?? "application/octet-stream");
 
-    const { error: uploadError } = await supabase.storage
+    const adminSupabase = createSupabaseAdminClient();
+
+    const { error: uploadError } = await adminSupabase.storage
       .from("access_web_assets")
       .upload(filePath, letterFile, {
-        contentType: letterFile.type,
+        contentType,
         upsert: false,
       });
 
     if (uploadError) throw uploadError;
 
-    const { data: publicUrlData } = supabase.storage
+    const { data: publicUrlData } = adminSupabase.storage
       .from("access_web_assets")
       .getPublicUrl(filePath);
 
-    const { error: insertError } = await supabase.from("BorrowRequests").insert({
+    const { error: insertError } = await adminSupabase.from("BorrowRequests").insert({
       user_id: user.id,
       borrower_contact_name: parsed.data.fullName,
       borrower_email: parsed.data.email,
@@ -140,7 +151,7 @@ export async function submitBorrowRequestAction(
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to submit borrow request",
+      message: getErrorMessage(err, "Failed to submit borrow request"),
     };
   }
 }

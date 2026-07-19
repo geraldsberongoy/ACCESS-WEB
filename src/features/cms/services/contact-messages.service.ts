@@ -1,4 +1,3 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { throwSupabaseError } from "@/lib/errors";
 import { checkRole } from "@/utils/checkRole";
@@ -15,7 +14,7 @@ export async function submitContactMessage(input: {
   purpose: string;
   concern: string;
 }) {
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("ContactMessages")

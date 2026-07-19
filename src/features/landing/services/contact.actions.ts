@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { ContactMessageSchema } from "@/features/cms/schemas";
 import { submitContactMessage } from "@/features/cms/services/contact-messages.service";
+import { getErrorMessage } from "@/lib/errors";
 
 type ActionState =
   | { status: "idle" }
@@ -48,7 +49,7 @@ export async function submitContactMessageAction(
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to submit message",
+      message: getErrorMessage(err, "Failed to submit message"),
     };
   }
 }

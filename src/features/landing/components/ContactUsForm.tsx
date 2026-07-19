@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import ContactSuccessModal from "./ContactSuccessModal";
 import { submitContactMessageAction } from "@/features/landing/services/contact.actions";
+import { getClientActionErrorMessage } from "@/lib/client-action-errors";
 
 type ContactFormData = {
   fullName: string;
@@ -138,12 +139,18 @@ export default function ContactUsForm({ onBack }: ContactUsFormProps) {
     formData.set("concern", form.concern);
 
     startTransition(async () => {
-      const result = await submitContactMessageAction({ status: "idle" }, formData);
-      if (result.status === "error") {
-        setFieldErrors({ form: result.message });
-        return;
+      try {
+        const result = await submitContactMessageAction({ status: "idle" }, formData);
+        if (result.status === "error") {
+          setFieldErrors({ form: result.message });
+          return;
+        }
+        setShowSuccess(true);
+      } catch (error) {
+        setFieldErrors({
+          form: getClientActionErrorMessage(error, "Failed to submit message"),
+        });
       }
-      setShowSuccess(true);
     });
   };
 

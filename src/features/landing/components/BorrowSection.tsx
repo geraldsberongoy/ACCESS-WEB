@@ -11,17 +11,21 @@ export default function BorrowSection() {
   const router = useRouter();
 
   const handleOpenForm = async () => {
-    const supabase = getSupabaseBrowserClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
+      if (!user) {
+        router.push("/auth/login?next=/");
+        return;
+      }
+
+      setShowForm(true);
+    } catch {
       router.push("/auth/login?next=/");
-      return;
     }
-
-    setShowForm(true);
   };
 
   const glassCardStyle: React.CSSProperties = {

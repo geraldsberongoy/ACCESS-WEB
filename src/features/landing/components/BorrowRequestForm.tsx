@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState, useTransition } from "react";
 import BorrowSuccessModal from "./BorrowSuccessModal";
 import { submitBorrowRequestAction } from "@/features/landing/services/borrow.actions";
+import { getClientActionErrorMessage } from "@/lib/client-action-errors";
 
 export type BorrowFormData = {
   fullName: string;
@@ -328,12 +329,18 @@ export default function BorrowRequestForm({ onBackToLanding }: BorrowRequestForm
     formData.set("letterFile", form.letterFile);
 
     startTransition(async () => {
-      const result = await submitBorrowRequestAction({ status: "idle" }, formData);
-      if (result.status === "error") {
-        setFieldErrors({ form: result.message });
-        return;
+      try {
+        const result = await submitBorrowRequestAction({ status: "idle" }, formData);
+        if (result.status === "error") {
+          setFieldErrors({ form: result.message });
+          return;
+        }
+        setShowSuccess(true);
+      } catch (error) {
+        setFieldErrors({
+          form: getClientActionErrorMessage(error, "Failed to submit borrow request"),
+        });
       }
-      setShowSuccess(true);
     });
   };
 
