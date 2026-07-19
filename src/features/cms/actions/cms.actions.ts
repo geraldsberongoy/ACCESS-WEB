@@ -100,6 +100,8 @@ export async function updateOfficersSectionAction(
   formData: FormData
 ): Promise<ActionState> {
   try {
+    const { getOfficersSectionContent } = await import("../services/site-content.service");
+    const current = await getOfficersSectionContent();
     const templateFile = formData.get("templateImage");
     let templateImageUrl =
       typeof formData.get("templateImageUrl") === "string"
@@ -114,6 +116,7 @@ export async function updateOfficersSectionAction(
       title: formData.get("title"),
       subtitle: formData.get("subtitle"),
       templateImageUrl,
+      officersImageUrl: current.officersImageUrl,
     });
 
     if (!parsed.success) {
@@ -132,6 +135,49 @@ export async function updateOfficersSectionAction(
     return {
       status: "error",
       message: getErrorMessage(err, "Failed to update officers section"),
+    };
+  }
+}
+
+export async function updateOfficersRosterAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    const { getOfficersSectionContent } = await import("../services/site-content.service");
+    const current = await getOfficersSectionContent();
+
+    const rosterFile = formData.get("officersImage");
+    let officersImageUrl = current.officersImageUrl ?? "";
+
+    if (rosterFile instanceof File && rosterFile.size > 0) {
+      officersImageUrl = await uploadSiteContentImage(rosterFile);
+    } else if (!officersImageUrl) {
+      return { status: "error", message: "Please choose an officers image to upload." };
+    }
+
+    const parsed = OfficersSectionContentSchema.safeParse({
+      ...current,
+      officersImageUrl,
+    });
+
+    if (!parsed.success) {
+      return {
+        status: "error",
+        message: parsed.error.issues.map((i) => i.message).at(0) ?? "Invalid input",
+      };
+    }
+
+    await updateSiteContent("officers_section", parsed.data);
+    revalidatePublicSite();
+    revalidatePath("/admin/officers");
+    revalidatePath("/officers");
+
+    return { status: "success", message: "Officers image updated." };
+  } catch (err) {
+    return {
+      status: "error",
+      message: getErrorMessage(err, "Failed to update officers image"),
     };
   }
 }

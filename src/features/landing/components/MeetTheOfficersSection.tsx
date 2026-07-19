@@ -1,66 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { OfficerCard, type OfficerCardProps } from "@/features/officers"
-import type { OfficersSectionContent } from "@/features/cms"
-
-const FALLBACK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
-  {
-    name: "Antonio ",
-    role: "Control Officer",
-    description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.webp",
-  },
-  {
-    name: "Mickel ",
-    role: "Control Officer",
-    description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.webp",
-  },
-  {
-    name: "Antonio Mickel ",
-    role: "Control Officer",
-    description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.webp",
-  },
-  {
-    name: "Mickel Tantia",
-    role: "Control Officer",
-    description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.webp",
-  },
-  {
-    name: "Tantia",
-    role: "Control Officer",
-    description: "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
-    image: "/BG-ACCESS.webp",
-  },
-]
+import Image from "next/image";
+import type { OfficersSectionContent } from "@/features/cms";
 
 type MeetTheOfficersSectionProps = {
   content: OfficersSectionContent;
-  officers?: Omit<OfficerCardProps, "featured">[];
 };
 
-export default function MeetTheOfficersSection({
-  content,
-  officers = FALLBACK_OFFICERS,
-}: MeetTheOfficersSectionProps) {
-  const [[activeIndex, direction], setPage] = useState([0, 0])
-  const displayOfficers = officers.length > 0 ? officers : FALLBACK_OFFICERS
-  const total = displayOfficers.length
-
-  const paginate = (dir: number) => {
-    setPage(([prev]) => [(prev + dir + total) % total, dir])
-  }
+export default function MeetTheOfficersSection({ content }: MeetTheOfficersSectionProps) {
+  const rosterImage = content.officersImageUrl?.trim();
 
   return (
     <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
-
-
-      {/* ── Horizontal image strip (decorative bg band) ── */}
       <div
         className="absolute left-0 right-0 pointer-events-none overflow-hidden top-[46%] sm:top-[44%] md:top-[42%] lg:top-[40%] -translate-y-1/2 h-[240px] sm:h-[260px] md:h-[300px] z-[1]"
         style={{
@@ -74,13 +25,13 @@ export default function MeetTheOfficersSection({
           fill
           unoptimized={content.templateImageUrl.startsWith("http")}
           className="object-cover object-center"
-          style={{ 
-            opacity: 0.8, filter: "blur(2px) saturate(1.4)",
+          style={{
+            opacity: 0.8,
+            filter: "blur(2px) saturate(1.4)",
             maskImage: "linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)",
             WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 35%, black 65%, transparent 100%)",
           }}
         />
-        {/* center orange glow overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -90,123 +41,35 @@ export default function MeetTheOfficersSection({
         />
       </div>
 
-      {/* ── Content ── */}
       <div className="relative z-20 mx-auto max-w-5xl w-full">
-
-
-
-        {/* ── Heading ── */}
         <h2 className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header">
           {content.title}
         </h2>
 
-        {/* ── Subtitle ── */}
         <p
-          className="mb-26 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
+          className="mb-12 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
           style={{ color: "rgb(255, 255, 255)" }}
         >
           {content.subtitle}
         </p>
 
-        {/* ── Carousel ── */}
-        <div className="relative flex items-center justify-center mt-4 sm:mt-6">
-
-          {/* Nav button – Left */}
-          <button
-            onClick={() => paginate(-1)}
-            aria-label="Previous officer"
-            className="absolute left-0 z-20 transition-all duration-200 hover:scale-110 active:scale-95"
-          >
-            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M28 19 L21 26 L28 33" stroke="white" strokeWidth="2"
-                strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-
-          {/* Cards — animated continuous layout showing exactly 3 cards */}
-          <div
-            className="relative w-full py-12 px-14"
-            style={{ minHeight: 510 }}
-          >
-            {displayOfficers.map((officer, i) => {
-              let diff = i - activeIndex;
-              if (diff > total / 2) diff -= total;
-              if (diff < -total / 2) diff += total;
-
-              const isFeatured = i === activeIndex;
-              const isVisible = Math.abs(diff) <= 1;
-
-              return (
-                <motion.div
-                  key={`${officer.name}-${i}`}
-                  animate={{
-                    x: diff * 265,
-                    y: isFeatured ? -22 : 0,
-                    scale: isFeatured ? 1 : 0.9,
-                    opacity: isVisible ? 1 : 0,
-                  }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 220,
-                    damping: 28,
-                  }}
-                  className="absolute bottom-14 flex-shrink-0"
-                  style={{
-                    width: 240,
-                    left: "50%",
-                    marginLeft: -120,
-                    pointerEvents: isVisible ? "auto" : "none",
-                    zIndex: isFeatured ? 10 : 2,
-                    willChange: "transform, opacity",
-                  }}
-                >
-                  <OfficerCard {...officer} featured={isFeatured} />
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Nav button – Right */}
-          <button
-            onClick={() => paginate(1)}
-            aria-label="Next officer"
-            className="absolute right-0 z-20 transition-all duration-200 hover:scale-110 active:scale-95"
-          >
-            <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24 19 L31 26 L24 33" stroke="white" strokeWidth="2"
-                strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        </div>
-
-        {/* ── Indicator strip ── */}
-        <div className="mt-10 flex items-center justify-center gap-2">
-          {displayOfficers.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(([prev]) => [i, i > prev ? 1 : -1])}
-              aria-label={`Go to officer ${i + 1}`}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: i === activeIndex ? 28 : 8,
-                height: 8,
-                background: i === activeIndex
-                  ? "linear-gradient(90deg, #F26223, #F5A070)"
-                  : "rgba(255,255,255,0.2)",
-                boxShadow: i === activeIndex ? "0 0 10px rgba(242,98,35,0.55)" : "none",
-              }}
+        {rosterImage ? (
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
+            <Image
+              src={rosterImage}
+              alt="Current ACCESS officers"
+              width={1400}
+              height={900}
+              className="h-auto w-full object-contain"
+              unoptimized={rosterImage.startsWith("http")}
             />
-          ))}
-        </div>
-
-        {/* ── Counter ── */}
-        <p
-          className="mt-4 text-center text-xs tabular-nums"
-          style={{ color: "rgba(255,255,255,0.28)", letterSpacing: "0.12em" }}
-        >
-          {String(activeIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-        </p>
+          </div>
+        ) : (
+          <div className="mx-auto flex max-w-2xl items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
+            Officers image will appear here once uploaded in the admin dashboard.
+          </div>
+        )}
       </div>
     </section>
-  )
+  );
 }

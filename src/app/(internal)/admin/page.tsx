@@ -35,7 +35,7 @@ export default async function AdminDashboardPage() {
     { href: "/admin/content/landing", label: "Edit landing page" },
     { href: "/admin/content/about", label: "Edit about us" },
     { href: "/admin/events/new", label: "Create event" },
-    { href: "/admin/content/officers-template", label: "Upload officers template" },
+    { href: "/admin/officers", label: "Upload officers image" },
     { href: "/admin/content/faqs", label: "Manage FAQs" },
     { href: "/admin/borrow-requests", label: "Review borrow requests" },
     { href: "/admin/contact-messages", label: "View contact messages" },

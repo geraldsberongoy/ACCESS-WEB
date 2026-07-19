@@ -16,6 +16,7 @@ export const OfficersSectionContentSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().min(1),
   templateImageUrl: z.string().min(1),
+  officersImageUrl: z.string().optional(),
 });
 
 export const FAQItemSchema = z.object({
@@ -84,4 +85,5 @@ export const DEFAULT_OFFICERS_SECTION_CONTENT: OfficersSectionContent = {
   subtitle:
     "We are a community of student leaders and innovators committed to advancing technology, collaboration, and excellence within PUP.",
   templateImageUrl: "/meet-the-officers.webp",
+  officersImageUrl: "",
 };

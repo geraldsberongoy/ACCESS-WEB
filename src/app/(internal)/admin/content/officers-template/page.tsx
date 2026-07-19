@@ -36,7 +36,7 @@ export default async function AdminOfficersTemplatePage({
         <header>
           <h2 className="text-2xl font-semibold">Meet the Officers Template</h2>
           <p className="mt-1 text-sm text-neutral-400">
-            Upload the decorative PNG used behind the officers carousel and edit section text.
+            Upload the decorative background PNG and edit the section title and subtitle.
           </p>
         </header>
 

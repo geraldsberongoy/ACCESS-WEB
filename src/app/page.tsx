@@ -16,7 +16,6 @@ import {
   getHeroContent,
   getOfficersSectionContent,
 } from "@/features/cms";
-import { getAllOfficers } from "@/features/officers/services/officers.services";
 import { CrystalDice3D, FloatingBlocks, type CrystalConfig } from "@/features/effects";
 import { unstable_noStore as noStore } from "next/cache";
 
@@ -38,23 +37,12 @@ const COMBINED_CRYSTALS: CrystalConfig[] = [
 export default async function LandingPage() {
   noStore();
 
-  const [hero, about, officersSection, faqs, officers] = await Promise.all([
+  const [hero, about, officersSection, faqs] = await Promise.all([
     getHeroContent(),
     getAboutContent(),
     getOfficersSectionContent(),
     getActiveFAQs(),
-    getAllOfficers().catch(() => []),
   ]);
-
-  const officerCards =
-    officers.length > 0
-      ? officers.map((officer) => ({
-          name: officer.full_name ?? "Officer",
-          role: officer.position_title ?? "Officer",
-          description: officer.department ?? "",
-          image: officer.image_url ?? "/BG-ACCESS.webp",
-        }))
-      : undefined;
 
   const faqItems =
     faqs.length > 0
@@ -211,7 +199,7 @@ export default async function LandingPage() {
           <div className="absolute top-[40%] left-[0%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
 
           <EventsSection />
-          <MeetTheOfficersSection content={officersSection} officers={officerCards} />
+          <MeetTheOfficersSection content={officersSection} />
           <BorrowSection />
           <FAQSection items={faqItems} />
           <CTASection />
