@@ -61,8 +61,10 @@ export default async function LandingPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <Navbar />
+
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen flex-col bg-black overflow-hidden">
+      <section id="home" className="landing-section scroll-mt-24 relative flex min-h-screen flex-col bg-black overflow-hidden">
 
         {/* background photo — shifted right on mobile so subject stays visible */}
         <Image
@@ -108,10 +110,8 @@ export default async function LandingPage() {
           }}
         />
 
-        {/* navbar */}
-        <div className="relative z-10">
-          <Navbar />
-        </div>
+        {/* navbar spacer — fixed nav overlays hero */}
+        <div className="relative z-10 h-[72px] shrink-0 md:h-[80px]" aria-hidden />
 
         {/* hero copy */}
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-4 text-center sm:px-8 sm:pb-12 md:px-16 lg:px-24">
@@ -143,7 +143,7 @@ export default async function LandingPage() {
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
             <Link
-              href="/about"
+              href="/#about"
               className="rounded-lg py-3 text-sm font-semibold text-white text-center
                          transition-opacity hover:opacity-90
                          px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"
@@ -153,7 +153,7 @@ export default async function LandingPage() {
             </Link>
 
             <Link
-              href="/contact"
+              href="/#contact"
               className="rounded-lg border border-white/30 bg-white/10 py-3 text-sm font-semibold
                          text-white text-center backdrop-blur-sm transition-colors hover:bg-white/20
                          px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"

@@ -42,7 +42,7 @@ export default function FAQSection({ items }: FAQSectionProps) {
   };
 
   return (
-    <section className="faq-section">
+    <section id="faq" className="landing-section scroll-mt-24 faq-section">
         {/* Title — full-width so whitespace-nowrap never gets clipped */}
         <h2 className="mb-10 text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-widest title-header md:whitespace-nowrap">Frequently Ask Questions</h2>
 

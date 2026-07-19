@@ -40,10 +40,10 @@ export default async function OfficersPage() {
         <CrystalDice3D crystals={OFFICERS_CRYSTALS} cameraZ={13} className="z-[1]" />
       </div>
 
-      <div className="relative z-10 -mt-[100vh] flex flex-col min-h-screen">
+      <div className="relative z-10 -mt-[100vh] flex flex-col min-h-screen pt-24 md:pt-28">
         <Navbar />
 
-        <main className="flex-1 py-20 px-5 sm:px-8 md:px-16 lg:px-24 relative overflow-hidden">
+        <main className="flex-1 py-12 px-5 sm:px-8 md:px-16 lg:px-24 relative overflow-hidden md:py-20">
           <div className="absolute top-[10%] left-[-30%] w-[600px] h-[500px] bg-black/85 blur-[120px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
           <div className="absolute top-[30%] right-[-20%] w-[700px] h-[600px] bg-black/90 blur-[130px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />
           <div className="absolute top-[60%] left-[-30%] w-[600px] h-[600px] bg-black/85 blur-[140px] rounded-full pointer-events-none z-[-1] mix-blend-multiply" />

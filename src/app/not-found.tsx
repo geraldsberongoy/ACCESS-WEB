@@ -55,12 +55,12 @@ export default function NotFound() {
       <CrystalDice3D crystals={CRYSTALS} cameraZ={13} className="z-[1]" />
 
       {/* ── Navbar ── */}
-      <div className="relative z-10">
+      <div className="relative z-10 pt-24 md:pt-28">
         <Navbar />
       </div>
 
       {/* ── 404 content ── */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-4 text-center">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-8 text-center">
         {/* "404" large gradient number */}
         <p
           className="text-[8rem] sm:text-[11rem] lg:text-[14rem] font-extrabold leading-none tracking-tight select-none"

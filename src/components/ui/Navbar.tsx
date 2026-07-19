@@ -5,7 +5,7 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 import { User } from "@supabase/supabase-js";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface NavItem {
@@ -17,16 +17,48 @@ interface NavbarProps {
   items?: NavItem[];
 }
 
-const defaultItems: NavItem[] = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Events", href: "/events" },
-  { label: "Borrow", href: "/borrow" },
-  { label: "Contact", href: "/contact" },
-  { label: "Officers", href: "/officers" },
+export const landingNavItems: NavItem[] = [
+  { label: "Home", href: "/#home" },
+  { label: "About", href: "/#about" },
+  { label: "Events", href: "/#events" },
+  { label: "Borrow", href: "/#borrow" },
+  { label: "Contact", href: "/#contact" },
+  { label: "Officers", href: "/#officers" },
 ];
 
-export default function Navbar({ items = defaultItems }: NavbarProps) {
+function NavLink({
+  href,
+  label,
+  className,
+  onNavigate,
+}: {
+  href: string;
+  label: string;
+  className: string;
+  onNavigate?: () => void;
+}) {
+  const pathname = usePathname();
+
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!href.startsWith("/#")) return;
+
+    const sectionId = href.slice(2);
+    if (pathname !== "/") return;
+
+    event.preventDefault();
+    document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.history.replaceState(null, "", href);
+    onNavigate?.();
+  };
+
+  return (
+    <Link href={href} className={className} onClick={handleClick}>
+      {label}
+    </Link>
+  );
+}
+
+export default function Navbar({ items = landingNavItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -71,16 +103,31 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
     return () => subscription.unsubscribe();
   }, [router]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const linkClass =
+    "whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-normal text-[#D8D8D8] transition-colors hover:text-white lg:px-4 lg:text-[15px]";
+  const mobileLinkClass =
+    "block rounded-xl px-3 py-2.5 text-sm font-normal text-[#D8D8D8] transition-colors hover:bg-white/5 hover:text-white";
+
   return (
-    <div className="sticky top-0 z-50 w-full px-3 pt-3 md:px-5 md:pt-4 lg:px-6 lg:pt-5">
+    <header className="fixed inset-x-0 top-0 z-50 w-full px-3 pt-3 md:px-5 md:pt-4 lg:px-6 lg:pt-5">
       <nav
         className="mx-auto grid w-full max-w-[1248px] grid-cols-[1fr_auto] items-center gap-3 rounded-full border border-white/10 px-4 py-2 backdrop-blur-xl md:grid-cols-[auto_1fr_auto] md:gap-4 md:px-6 md:py-2.5"
         style={{
-          background: "rgba(18, 18, 18, 0.72)",
+          background: "rgba(18, 18, 18, 0.82)",
           boxShadow: "0 4px 24px rgba(0, 0, 0, 0.35)",
         }}
+        aria-label="Main navigation"
       >
-        <Link href="/" className="flex shrink-0 items-center justify-self-start">
+        <Link href="/#home" className="flex shrink-0 items-center justify-self-start">
           <Image
             src="/AccessLogo.webp"
             alt="ACCESS"
@@ -94,13 +141,12 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
         <ul className="hidden list-none items-center justify-center gap-1 p-0 md:flex lg:gap-2">
           {items.map((item) => (
             <li key={item.href}>
-              <Link
+              <NavLink
                 href={item.href}
-                className="whitespace-nowrap rounded-full px-3 py-1.5 text-sm font-normal text-[#D8D8D8] transition-colors hover:text-white lg:px-4 lg:text-[15px]"
-                style={{ fontFamily: "Inter, sans-serif" }}
-              >
-                {item.label}
-              </Link>
+                label={item.label}
+                className={linkClass}
+                onNavigate={() => setMenuOpen(false)}
+              />
             </li>
           ))}
         </ul>
@@ -119,34 +165,8 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
             </Link>
           ) : null}
 
-          <div className="relative hidden h-8 w-[140px] shrink-0 md:block lg:w-[160px]">
-            <input
-              type="text"
-              placeholder=""
-              aria-label="Search"
-              className="absolute inset-0 z-10 h-full w-full rounded-xl border border-white/10 bg-transparent px-3 pr-9 text-sm outline-none"
-              style={{ color: "#D8D8D8", fontFamily: "Inter, sans-serif" }}
-            />
-            <div
-              className="pointer-events-none absolute inset-0 rounded-xl"
-              style={{ background: "rgba(242, 98, 35, 0.45)" }}
-            />
-            <svg
-              className="pointer-events-none absolute right-2.5 top-1/2 z-20 -translate-y-1/2"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#D8D8D8"
-              strokeWidth="2.5"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </div>
-
           {user ? (
-            <form action={signOut}>
+            <form action={signOut} className="hidden sm:block">
               <button
                 type="submit"
                 className="rounded-xl px-3 py-2 text-xs font-semibold text-white transition-all hover:opacity-90 sm:px-4 sm:text-sm"
@@ -158,16 +178,7 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
                 Logout
               </button>
             </form>
-          ) : (
-            <Link
-              href="/auth"
-              className="flex h-9 w-9 items-center justify-center rounded-full text-[#D8D8D8] transition-colors hover:bg-white/10 hover:text-white"
-              aria-label="Sign in"
-              title="Sign in"
-            >
-              <ProfileIcon />
-            </Link>
-          )}
+          ) : null}
 
           <button
             type="button"
@@ -189,51 +200,23 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
         </div>
       </nav>
 
-      {menuOpen && (
+      {menuOpen ? (
         <div
-          className="mx-auto mt-2 flex w-full max-w-[1248px] flex-col gap-4 rounded-3xl border border-white/10 px-5 pb-5 pt-4 backdrop-blur-xl md:hidden"
+          className="mx-auto mt-2 flex w-full max-w-[1248px] flex-col gap-3 rounded-3xl border border-white/10 px-5 pb-5 pt-4 backdrop-blur-xl md:hidden"
           style={{
-            background: "rgba(18, 18, 18, 0.92)",
+            background: "rgba(18, 18, 18, 0.95)",
             boxShadow: "0 4px 24px rgba(0, 0, 0, 0.35)",
           }}
         >
-          <div className="relative h-10 w-full">
-            <input
-              type="text"
-              placeholder="Search…"
-              aria-label="Search"
-              className="absolute inset-0 h-full w-full rounded-xl border border-white/10 px-4 pr-10 text-sm outline-none"
-              style={{
-                background: "rgba(242, 98, 35, 0.35)",
-                color: "#D8D8D8",
-                fontFamily: "Inter, sans-serif",
-              }}
-            />
-            <svg
-              className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#D8D8D8"
-              strokeWidth="2"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-          </div>
-
           <ul className="flex list-none flex-col gap-1 p-0">
             {items.map((item) => (
               <li key={item.href}>
-                <Link
+                <NavLink
                   href={item.href}
-                  className="block rounded-xl px-3 py-2.5 text-sm font-normal text-[#D8D8D8] transition-colors hover:bg-white/5 hover:text-white"
-                  style={{ fontFamily: "Inter, sans-serif" }}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
+                  label={item.label}
+                  className={mobileLinkClass}
+                  onNavigate={() => setMenuOpen(false)}
+                />
               </li>
             ))}
           </ul>
@@ -264,37 +247,9 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
                 Logout
               </button>
             </form>
-          ) : (
-            <Link
-              href="/auth"
-              className="flex items-center justify-center gap-2 rounded-xl border border-white/10 px-4 py-2.5 text-sm text-[#D8D8D8] transition-colors hover:bg-white/5"
-              onClick={() => setMenuOpen(false)}
-            >
-              <ProfileIcon />
-              Sign in
-            </Link>
-          )}
+          ) : null}
         </div>
-      )}
-    </div>
-  );
-}
-
-function ProfileIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 20c0-3.314 3.582-6 8-6s8 2.686 8 6" />
-    </svg>
+      ) : null}
+    </header>
   );
 }

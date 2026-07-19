@@ -10,7 +10,7 @@ type MeetTheOfficersSectionProps = {
 
 export default function MeetTheOfficersSection({ content }: MeetTheOfficersSectionProps) {
   return (
-    <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
+    <section id="officers" className="landing-section scroll-mt-24 relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
       <div
         className="absolute left-0 right-0 pointer-events-none overflow-hidden top-[46%] sm:top-[44%] md:top-[42%] lg:top-[40%] -translate-y-1/2 h-[240px] sm:h-[260px] md:h-[300px] z-[1]"
         style={{

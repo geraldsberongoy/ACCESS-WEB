@@ -8,7 +8,7 @@ export default function CTASection() {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24 text-center">
+    <section id="contact" className="landing-section scroll-mt-24 relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24 text-center">
       <div className="relative z-20 mx-auto max-w-7xl w-full flex flex-col items-center gap-4">
         {showForm ? (
           <motion.div

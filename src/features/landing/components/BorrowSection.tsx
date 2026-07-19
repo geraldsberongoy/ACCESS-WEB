@@ -38,7 +38,7 @@ export default function BorrowSection() {
   };
 
   return (
-    <section className="relative overflow-hidden py-24 px-5 sm:px-8 md:px-16 flex flex-col items-center">
+    <section id="borrow" className="landing-section scroll-mt-24 relative overflow-hidden py-24 px-5 sm:px-8 md:px-16 flex flex-col items-center">
       {/* Background gradient to match the vibrant warm vibe, slightly transparent for seamless integration */}
       <div
         className="absolute inset-0 pointer-events-none z-[0]"
