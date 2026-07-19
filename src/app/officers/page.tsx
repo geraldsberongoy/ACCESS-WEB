@@ -78,7 +78,7 @@ export default async function OfficersPage() {
               </div>
             ) : (
               <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
-                Officers file will appear here once uploaded in the admin dashboard.
+                Officers image will appear here once uploaded in the admin dashboard.
               </div>
             )}
           </div>

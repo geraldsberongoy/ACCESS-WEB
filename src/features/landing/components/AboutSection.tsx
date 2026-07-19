@@ -42,10 +42,10 @@ export default function AboutSection({ content }: AboutSectionProps) {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      handleNext();
+      setCurrentIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, []);
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);

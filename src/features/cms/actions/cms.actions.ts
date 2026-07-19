@@ -11,6 +11,7 @@ import {
 import {
   updateSiteContent,
   uploadSiteContentImage,
+  uploadOfficersRosterImage,
 } from "../services/site-content.service";
 import {
   createFAQItem,
@@ -151,9 +152,9 @@ export async function updateOfficersRosterAction(
     let officersImageUrl = current.officersImageUrl ?? "";
 
     if (rosterFile instanceof File && rosterFile.size > 0) {
-      officersImageUrl = await uploadSiteContentImage(rosterFile);
+      officersImageUrl = await uploadOfficersRosterImage(rosterFile);
     } else if (!officersImageUrl) {
-      return { status: "error", message: "Please choose an officers file to upload." };
+      return { status: "error", message: "Please choose an officers image to upload." };
     }
 
     const parsed = OfficersSectionContentSchema.safeParse({
@@ -170,10 +171,10 @@ export async function updateOfficersRosterAction(
 
     await updateSiteContent("officers_section", parsed.data);
     revalidatePublicSite();
-    revalidatePath("/admin/officers");
+    revalidatePath("/admin/content/officers-roster");
     revalidatePath("/officers");
 
-    return { status: "success", message: "Officers file updated." };
+    return { status: "success", message: "Officers image updated." };
   } catch (err) {
     return {
       status: "error",
