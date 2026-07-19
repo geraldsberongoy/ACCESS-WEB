@@ -29,7 +29,6 @@ const defaultItems: NavItem[] = [
 export default function Navbar({ items = defaultItems }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,33 +38,18 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
       const {
         data: { session },
       } = await supabase.auth.getSession();
-
-      const nextUser = session?.user ?? null;
-      setUser(nextUser);
-
-      if (!nextUser) {
-        setIsAdmin(false);
-        return;
-      }
-
-      const { data: userRow } = await supabase
-        .from("Users")
-        .select("role")
-        .eq("id", nextUser.id)
-        .maybeSingle();
-
-      setIsAdmin(userRow?.role === "Admin");
+      setUser(session?.user ?? null);
     };
 
     syncUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
       if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
         router.refresh();
       }
-      void syncUser();
     });
 
     return () => subscription.unsubscribe();
@@ -106,19 +90,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
         </ul>
 
         <div className="flex items-center justify-end gap-2 justify-self-end md:gap-3">
-          {isAdmin ? (
-            <Link
-              href="/admin"
-              className="hidden items-center gap-2 rounded-full border border-[#F26223]/45 bg-[#F26223]/15 px-3 py-1.5 transition hover:bg-[#F26223]/25 sm:inline-flex"
-              title="Open admin dashboard"
-            >
-              <span className="rounded-full bg-[#F26223] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                Admin
-              </span>
-              <span className="text-xs font-medium text-[#FFD4BC]">Dashboard</span>
-            </Link>
-          ) : null}
-
           <div className="relative hidden h-8 w-[140px] shrink-0 md:block lg:w-[160px]">
             <input
               type="text"
@@ -237,19 +208,6 @@ export default function Navbar({ items = defaultItems }: NavbarProps) {
               </li>
             ))}
           </ul>
-
-          {isAdmin ? (
-            <Link
-              href="/admin"
-              className="flex items-center justify-center gap-2 rounded-xl border border-[#F26223]/35 bg-[#F26223]/15 px-4 py-2.5 text-sm font-medium text-[#FFD4BC] transition hover:bg-[#F26223]/25"
-              onClick={() => setMenuOpen(false)}
-            >
-              <span className="rounded-full bg-[#F26223] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
-                Admin
-              </span>
-              Open dashboard
-            </Link>
-          ) : null}
 
           {user ? (
             <form action={signOut}>
