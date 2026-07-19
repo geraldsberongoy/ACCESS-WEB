@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/ui";
 import { FooterSection } from "@/features/landing";
+import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 import { getOfficersSectionContent } from "@/features/cms";
 import Image from "next/image";
 import { CrystalDice3D, type CrystalConfig } from "@/features/effects";
@@ -73,18 +74,11 @@ export default async function OfficersPage() {
           <div className="w-full max-w-5xl mx-auto relative z-20">
             {rosterImage ? (
               <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-                <Image
-                  src={rosterImage}
-                  alt="Current ACCESS officers"
-                  width={1400}
-                  height={900}
-                  className="h-auto w-full object-contain"
-                  unoptimized={rosterImage.startsWith("http")}
-                />
+                <OfficersRosterMedia url={rosterImage} />
               </div>
             ) : (
               <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
-                Officers image will appear here once uploaded in the admin dashboard.
+                Officers file will appear here once uploaded in the admin dashboard.
               </div>
             )}
           </div>

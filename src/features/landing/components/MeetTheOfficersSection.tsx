@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 import type { OfficersSectionContent } from "@/features/cms";
 
 type MeetTheOfficersSectionProps = {
@@ -55,18 +56,11 @@ export default function MeetTheOfficersSection({ content }: MeetTheOfficersSecti
 
         {rosterImage ? (
           <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-            <Image
-              src={rosterImage}
-              alt="Current ACCESS officers"
-              width={1400}
-              height={900}
-              className="h-auto w-full object-contain"
-              unoptimized={rosterImage.startsWith("http")}
-            />
+            <OfficersRosterMedia url={rosterImage} />
           </div>
         ) : (
           <div className="mx-auto flex max-w-2xl items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
-            Officers image will appear here once uploaded in the admin dashboard.
+            Officers file will appear here once uploaded in the admin dashboard.
           </div>
         )}
       </div>

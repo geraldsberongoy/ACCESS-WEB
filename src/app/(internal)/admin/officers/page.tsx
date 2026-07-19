@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { redirect } from "next/navigation";
+import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 import { getOfficersSectionContent } from "@/features/cms";
 import { updateOfficersRosterAction } from "@/features/cms/actions/cms.actions";
 
@@ -37,8 +37,8 @@ export default async function AdminOfficersPage({
         <header>
           <h2 className="text-2xl font-semibold">Officers</h2>
           <p className="mt-1 text-sm text-neutral-400">
-            Upload a single image showing the current ACCESS officers. This image is shown on the
-            landing page and the officers page.
+            Upload an image or PDF showing the current ACCESS officers. It is shown on the landing
+            page and the officers page.
           </p>
         </header>
 
@@ -55,21 +55,18 @@ export default async function AdminOfficersPage({
         ) : null}
 
         <section className="rounded-xl border border-neutral-800 bg-neutral-900/70 p-5">
-          <p className="mb-3 text-sm text-neutral-400">Current officers image</p>
+          <p className="mb-3 text-sm text-neutral-400">Current officers file</p>
           {rosterPreview ? (
             <div className="relative min-h-[280px] overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950">
-              <Image
-                src={rosterPreview}
+              <OfficersRosterMedia
+                url={rosterPreview}
                 alt="Current officers roster"
-                width={1200}
-                height={800}
-                className="h-auto w-full object-contain"
-                unoptimized={rosterPreview.startsWith("http")}
+                frameClassName="h-[min(70vh,800px)] w-full rounded-lg border-0 bg-white"
               />
             </div>
           ) : (
             <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-dashed border-neutral-700 bg-neutral-950 text-sm text-neutral-500">
-              No officers image uploaded yet.
+              No officers file uploaded yet.
             </div>
           )}
         </section>
@@ -81,17 +78,17 @@ export default async function AdminOfficersPage({
         >
           <div>
             <label className="mb-1.5 block text-sm text-neutral-300">
-              Upload officers image
+              Upload officers file
             </label>
             <input
               type="file"
               name="officersImage"
-              accept="image/png,image/webp,image/jpeg"
+              accept="image/png,image/webp,image/jpeg,application/pdf,.pdf"
               required={!rosterPreview}
               className="block w-full text-sm text-neutral-300 file:mr-4 file:rounded-md file:border-0 file:bg-orange-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-orange-500"
             />
             <p className="mt-2 text-xs text-neutral-500">
-              PNG, JPG, or WEBP. Use one image that shows all current officers.
+              PNG, JPG, WEBP, or PDF. Use one file that shows all current officers.
             </p>
           </div>
 
@@ -99,7 +96,7 @@ export default async function AdminOfficersPage({
             type="submit"
             className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500"
           >
-            Save officers image
+            Save officers file
           </button>
         </form>
       </div>

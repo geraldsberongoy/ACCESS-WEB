@@ -153,7 +153,7 @@ export async function updateOfficersRosterAction(
     if (rosterFile instanceof File && rosterFile.size > 0) {
       officersImageUrl = await uploadSiteContentImage(rosterFile);
     } else if (!officersImageUrl) {
-      return { status: "error", message: "Please choose an officers image to upload." };
+      return { status: "error", message: "Please choose an officers file to upload." };
     }
 
     const parsed = OfficersSectionContentSchema.safeParse({
@@ -173,7 +173,7 @@ export async function updateOfficersRosterAction(
     revalidatePath("/admin/officers");
     revalidatePath("/officers");
 
-    return { status: "success", message: "Officers image updated." };
+    return { status: "success", message: "Officers file updated." };
   } catch (err) {
     return {
       status: "error",

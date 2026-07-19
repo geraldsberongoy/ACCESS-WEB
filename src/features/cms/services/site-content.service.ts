@@ -1,7 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
-import { throwSupabaseError } from "@/lib/errors";
+import { getErrorMessage, isRlsPolicyError, throwSupabaseError } from "@/lib/errors";
 import { checkRole } from "@/utils/checkRole";
 import {
   AboutContentSchema,
@@ -110,18 +110,28 @@ export async function updateSiteContent(
   return saved;
 }
 
-export async function uploadSiteContentImage(file: File): Promise<string> {
-  await checkRole({ roles: "Admin" });
-  const supabase = createSupabaseAdminClient();
+const MIME_BY_EXT: Record<string, string> = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  gif: "image/gif",
+  pdf: "application/pdf",
+};
 
-  const ext = file.name.split(".").pop() ?? "png";
+async function uploadSiteContentFileToStorage(
+  supabase: ReturnType<typeof createSupabaseAdminClient>,
+  file: File,
+  contentType: string,
+  ext: string
+): Promise<string> {
   const fileName = `${crypto.randomUUID()}.${ext}`;
   const filePath = `site-content/${fileName}`;
 
   const { error: uploadError } = await supabase.storage
     .from("access_web_assets")
     .upload(filePath, file, {
-      contentType: file.type,
+      contentType,
       upsert: false,
     });
 
@@ -129,4 +139,27 @@ export async function uploadSiteContentImage(file: File): Promise<string> {
 
   const { data } = supabase.storage.from("access_web_assets").getPublicUrl(filePath);
   return data.publicUrl;
+}
+
+export async function uploadSiteContentImage(file: File): Promise<string> {
+  await checkRole({ roles: "Admin" });
+
+  const ext = (file.name.split(".").pop() ?? "png").toLowerCase();
+  const contentType = file.type || MIME_BY_EXT[ext];
+
+  if (!contentType) {
+    throw new Error("Unsupported file type. Use PNG, JPG, WEBP, or PDF.");
+  }
+
+  try {
+    const adminSupabase = createSupabaseAdminClient();
+    return await uploadSiteContentFileToStorage(adminSupabase, file, contentType, ext);
+  } catch (error) {
+    if (!isRlsPolicyError(error)) {
+      throw error instanceof Error ? error : new Error(getErrorMessage(error));
+    }
+  }
+
+  const serverSupabase = await createSupabaseServerClient();
+  return uploadSiteContentFileToStorage(serverSupabase, file, contentType, ext);
 }

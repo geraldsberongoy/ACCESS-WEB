@@ -13,6 +13,11 @@ type SupabaseErrorLike = {
   code?: string;
 };
 
+export function isRlsPolicyError(error: unknown): boolean {
+  const message = getErrorMessage(error, "").toLowerCase();
+  return message.includes("row-level security");
+}
+
 export function getErrorMessage(error: unknown, fallback = "Something went wrong"): string {
   if (error instanceof Error) return error.message;
 
