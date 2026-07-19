@@ -1,5 +1,15 @@
 import { redirect } from "next/navigation";
 import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
+import {
+  AdminAlert,
+  AdminCard,
+  AdminEmptyState,
+  AdminFieldLabel,
+  AdminPageHeader,
+  AdminPageShell,
+  adminBtnPrimaryClass,
+  adminFileClass,
+} from "../components/admin-ui";
 import { getOfficersSectionContent } from "@/features/cms";
 import { updateOfficersRosterAction } from "@/features/cms/actions/cms.actions";
 
@@ -19,9 +29,7 @@ export default async function AdminOfficersPage({
     const result = await updateOfficersRosterAction({ status: "idle" }, formData);
 
     if (result.status === "error") {
-      redirect(
-        `/admin/officers?status=error&message=${encodeURIComponent(result.message)}`
-      );
+      redirect(`/admin/officers?status=error&message=${encodeURIComponent(result.message)}`);
     }
 
     redirect(
@@ -32,74 +40,49 @@ export default async function AdminOfficersPage({
   }
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-3xl space-y-8">
-        <header>
-          <h2 className="text-2xl font-semibold">Officers</h2>
-          <p className="mt-1 text-sm text-neutral-400">
-            Upload an image or PDF showing the current ACCESS officers. It is shown on the landing
-            page and the officers page.
-          </p>
-        </header>
+    <AdminPageShell width="narrow">
+      <AdminPageHeader
+        eyebrow="Site Content"
+        title="Officers File"
+        description="Upload an image or PDF of current ACCESS officers. It appears on the /officers page."
+      />
 
-        {params.status && params.message ? (
-          <div
-            className={
-              params.status === "success"
-                ? "rounded-lg border border-emerald-700/60 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-200"
-                : "rounded-lg border border-rose-700/60 bg-rose-950/40 px-4 py-3 text-sm text-rose-200"
-            }
-          >
-            {params.message}
+      {params.status && params.message ? (
+        <AdminAlert status={params.status} message={params.message} />
+      ) : null}
+
+      <AdminCard title="Current officers file">
+        {rosterPreview ? (
+          <div className="overflow-hidden rounded-xl border border-white/10 bg-black/30">
+            <OfficersRosterMedia
+              url={rosterPreview}
+              alt="Current officers roster"
+              frameClassName="h-[min(70vh,800px)] w-full rounded-xl border-0 bg-white"
+            />
           </div>
-        ) : null}
+        ) : (
+          <AdminEmptyState>No officers file uploaded yet.</AdminEmptyState>
+        )}
+      </AdminCard>
 
-        <section className="rounded-xl border border-neutral-800 bg-neutral-900/70 p-5">
-          <p className="mb-3 text-sm text-neutral-400">Current officers file</p>
-          {rosterPreview ? (
-            <div className="relative min-h-[280px] overflow-hidden rounded-lg border border-neutral-800 bg-neutral-950">
-              <OfficersRosterMedia
-                url={rosterPreview}
-                alt="Current officers roster"
-                frameClassName="h-[min(70vh,800px)] w-full rounded-lg border-0 bg-white"
-              />
-            </div>
-          ) : (
-            <div className="flex min-h-[200px] items-center justify-center rounded-lg border border-dashed border-neutral-700 bg-neutral-950 text-sm text-neutral-500">
-              No officers file uploaded yet.
-            </div>
-          )}
-        </section>
-
-        <form
-          action={handleUpload}
-          encType="multipart/form-data"
-          className="space-y-5 rounded-xl border border-neutral-800 bg-neutral-900/70 p-5"
-        >
+      <AdminCard title="Upload file">
+        <form action={handleUpload} encType="multipart/form-data" className="space-y-5">
           <div>
-            <label className="mb-1.5 block text-sm text-neutral-300">
-              Upload officers file
-            </label>
+            <AdminFieldLabel>Officers file</AdminFieldLabel>
             <input
               type="file"
               name="officersImage"
               accept="image/png,image/webp,image/jpeg,application/pdf,.pdf"
               required={!rosterPreview}
-              className="block w-full text-sm text-neutral-300 file:mr-4 file:rounded-md file:border-0 file:bg-orange-600 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-orange-500"
+              className={adminFileClass}
             />
-            <p className="mt-2 text-xs text-neutral-500">
-              PNG, JPG, WEBP, or PDF. Use one file that shows all current officers.
-            </p>
+            <p className="admin-help-text">PNG, JPG, WEBP, or PDF. One file showing all current officers.</p>
           </div>
-
-          <button
-            type="submit"
-            className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500"
-          >
+          <button type="submit" className={adminBtnPrimaryClass}>
             Save officers file
           </button>
         </form>
-      </div>
-    </div>
+      </AdminCard>
+    </AdminPageShell>
   );
 }

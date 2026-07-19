@@ -1,4 +1,14 @@
 import { redirect } from "next/navigation";
+import {
+  AdminAlert,
+  AdminCard,
+  AdminFieldLabel,
+  AdminPageHeader,
+  AdminPageShell,
+  adminBtnPrimaryClass,
+  adminInputClass,
+  adminTextareaClass,
+} from "../../components/admin-ui";
 import { getHeroContent } from "@/features/cms";
 import { updateHeroContentAction } from "@/features/cms/actions/cms.actions";
 
@@ -30,76 +40,51 @@ export default async function AdminLandingContentPage({
   }
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-3xl space-y-8">
-        <header>
-          <h2 className="text-2xl font-semibold">Landing Content</h2>
-          <p className="mt-1 text-sm text-neutral-400">Edit the hero section on the homepage.</p>
-        </header>
+    <AdminPageShell width="narrow">
+      <AdminPageHeader
+        eyebrow="Site Content"
+        title="Landing Content"
+        description="Edit the hero section on the homepage."
+      />
 
-        {params.status && params.message ? (
-          <div
-            className={
-              params.status === "success"
-                ? "rounded-lg border border-emerald-700/60 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-200"
-                : "rounded-lg border border-rose-700/60 bg-rose-950/40 px-4 py-3 text-sm text-rose-200"
-            }
-          >
-            {params.message}
-          </div>
-        ) : null}
+      {params.status && params.message ? (
+        <AdminAlert status={params.status} message={params.message} />
+      ) : null}
 
-        <form action={handleUpdate} className="space-y-5 rounded-xl border border-neutral-800 bg-neutral-900/70 p-5">
+      <AdminCard title="Hero section">
+        <form action={handleUpdate} className="space-y-5">
           {[0, 1, 2].map((index) => (
             <div key={index}>
-              <label className="mb-1.5 block text-sm text-neutral-300">
-                Title line {index + 1}
-              </label>
+              <AdminFieldLabel>Title line {index + 1}</AdminFieldLabel>
               <input
                 name={`titleLine${index + 1}`}
                 defaultValue={hero.titleLines[index] ?? ""}
-                className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
+                className={adminInputClass}
               />
             </div>
           ))}
 
           <div>
-            <label className="mb-1.5 block text-sm text-neutral-300">Subtitle</label>
-            <textarea
-              name="subtitle"
-              defaultValue={hero.subtitle}
-              rows={4}
-              className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-            />
+            <AdminFieldLabel>Subtitle</AdminFieldLabel>
+            <textarea name="subtitle" defaultValue={hero.subtitle} rows={4} className={adminTextareaClass} />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1.5 block text-sm text-neutral-300">Primary CTA label</label>
-              <input
-                name="primaryCtaLabel"
-                defaultValue={hero.primaryCtaLabel}
-                className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-              />
+              <AdminFieldLabel>Primary CTA label</AdminFieldLabel>
+              <input name="primaryCtaLabel" defaultValue={hero.primaryCtaLabel} className={adminInputClass} />
             </div>
             <div>
-              <label className="mb-1.5 block text-sm text-neutral-300">Secondary CTA label</label>
-              <input
-                name="secondaryCtaLabel"
-                defaultValue={hero.secondaryCtaLabel}
-                className="w-full rounded-md border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none ring-orange-500 focus:ring-2"
-              />
+              <AdminFieldLabel>Secondary CTA label</AdminFieldLabel>
+              <input name="secondaryCtaLabel" defaultValue={hero.secondaryCtaLabel} className={adminInputClass} />
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="rounded-md bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-500"
-          >
+          <button type="submit" className={adminBtnPrimaryClass}>
             Save landing content
           </button>
         </form>
-      </div>
-    </div>
+      </AdminCard>
+    </AdminPageShell>
   );
 }

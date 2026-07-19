@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getAdminDashboardStats } from "@/features/cms";
+import { AdminPageHeader, AdminPageShell } from "./components/admin-ui";
 
 export const dynamic = "force-dynamic";
 
@@ -51,19 +52,12 @@ export default async function AdminDashboardPage() {
   const stats = await getAdminDashboardStats();
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-6xl space-y-10">
-        <header className="space-y-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#FFB89A]/70">
-            Command Center
-          </p>
-          <h2 className="title-header text-3xl font-extrabold tracking-wide sm:text-4xl">
-            Dashboard
-          </h2>
-          <p className="max-w-2xl text-sm leading-relaxed text-white/55">
-            Manage landing content, events, borrow requests, and contact messages from one place.
-          </p>
-        </header>
+    <AdminPageShell width="wide">
+      <AdminPageHeader
+        eyebrow="Command Center"
+        title="Dashboard"
+        description="Manage landing content, events, borrow requests, and contact messages from one place."
+      />
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard
@@ -196,7 +190,6 @@ export default async function AdminDashboardPage() {
             )}
           </div>
         </section>
-      </div>
-    </div>
+    </AdminPageShell>
   );
 }

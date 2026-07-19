@@ -1,6 +1,14 @@
+import { redirect } from "next/navigation";
+import {
+  AdminAlert,
+  AdminCard,
+  AdminEmptyState,
+  AdminPageHeader,
+  AdminPageShell,
+  adminBtnMutedClass,
+} from "../components/admin-ui";
 import { getContactMessagesForAdmin } from "@/features/cms";
 import { markContactMessageReadAction } from "@/features/cms/actions/cms.actions";
-import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -27,104 +35,79 @@ export default async function AdminContactMessagesPage({
     const result = await markContactMessageReadAction(id);
 
     if (result.status === "error") {
-      redirect(
-        `/admin/contact-messages?status=error&message=${encodeURIComponent(result.message)}`
-      );
+      redirect(`/admin/contact-messages?status=error&message=${encodeURIComponent(result.message)}`);
     }
 
     redirect("/admin/contact-messages?status=success&message=Marked%20as%20read");
   }
 
   return (
-    <div className="px-6 py-8">
-      <div className="mx-auto max-w-5xl space-y-8">
-        <header>
-          <h2 className="text-2xl font-semibold">Contact Messages</h2>
-          <p className="mt-1 text-sm text-neutral-400">
-            Messages submitted through the Contact Us form on the landing page.
-          </p>
-        </header>
+    <AdminPageShell width="default">
+      <AdminPageHeader
+        eyebrow="Operations"
+        title="Contact Messages"
+        description="Messages submitted through the Contact Us form on the landing page."
+      />
 
-        {params.status && params.message ? (
-          <div
-            className={
-              params.status === "success"
-                ? "rounded-lg border border-emerald-700/60 bg-emerald-950/40 px-4 py-3 text-sm text-emerald-200"
-                : "rounded-lg border border-rose-700/60 bg-rose-950/40 px-4 py-3 text-sm text-rose-200"
-            }
-          >
-            {params.message}
-          </div>
-        ) : null}
+      {params.status && params.message ? (
+        <AdminAlert status={params.status} message={params.message} />
+      ) : null}
 
-        <div className="space-y-4">
-          {messages.length === 0 ? (
-            <p className="text-sm text-neutral-500">No contact messages yet.</p>
-          ) : (
-            messages.map((message) => (
-              <article
-                key={message.id}
-                className="rounded-xl border border-neutral-800 bg-neutral-900/70 p-5"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-medium text-white">{message.full_name}</h3>
-                      {!message.is_read && (
-                        <span className="rounded-full bg-orange-600/20 px-2 py-0.5 text-xs text-orange-300">
-                          Unread
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-neutral-400">{message.email}</p>
-                    <p className="mt-1 text-xs text-neutral-500">
-                      {formatDate(message.created_at)}
-                    </p>
+      <div className="space-y-4">
+        {messages.length === 0 ? (
+          <AdminEmptyState>No contact messages yet.</AdminEmptyState>
+        ) : (
+          messages.map((message) => (
+            <AdminCard key={message.id}>
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold text-white">{message.full_name}</h3>
+                    {!message.is_read ? (
+                      <span className="admin-badge admin-badge-unread">Unread</span>
+                    ) : null}
                   </div>
-
-                  {!message.is_read && (
-                    <form action={handleMarkRead}>
-                      <input type="hidden" name="id" value={message.id} />
-                      <button
-                        type="submit"
-                        className="rounded-md bg-neutral-800 px-3 py-1.5 text-sm text-neutral-200 hover:bg-neutral-700"
-                      >
-                        Mark as read
-                      </button>
-                    </form>
-                  )}
+                  <p className="text-sm text-white/45">{message.email}</p>
+                  <p className="mt-1 text-xs text-white/35">{formatDate(message.created_at)}</p>
                 </div>
 
-                <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-                  <div>
-                    <dt className="text-neutral-500">Course / Year / Section</dt>
-                    <dd className="text-neutral-200">{message.course_year_section ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-neutral-500">Contact number</dt>
-                    <dd className="text-neutral-200">{message.contact_number ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-neutral-500">Organization</dt>
-                    <dd className="text-neutral-200">{message.organization ?? "—"}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-neutral-500">Purpose</dt>
-                    <dd className="text-neutral-200">{message.purpose ?? "—"}</dd>
-                  </div>
-                </dl>
+                {!message.is_read && (
+                  <form action={handleMarkRead}>
+                    <input type="hidden" name="id" value={message.id} />
+                    <button type="submit" className={adminBtnMutedClass}>
+                      Mark as read
+                    </button>
+                  </form>
+                )}
+              </div>
 
-                <div className="mt-4">
-                  <p className="text-sm text-neutral-500">Concern</p>
-                  <p className="mt-1 whitespace-pre-wrap text-sm text-neutral-200">
-                    {message.concern}
-                  </p>
+              <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-white/40">Course / Year / Section</dt>
+                  <dd className="text-white/80">{message.course_year_section ?? "—"}</dd>
                 </div>
-              </article>
-            ))
-          )}
-        </div>
+                <div>
+                  <dt className="text-white/40">Contact number</dt>
+                  <dd className="text-white/80">{message.contact_number ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-white/40">Organization</dt>
+                  <dd className="text-white/80">{message.organization ?? "—"}</dd>
+                </div>
+                <div>
+                  <dt className="text-white/40">Purpose</dt>
+                  <dd className="text-white/80">{message.purpose ?? "—"}</dd>
+                </div>
+              </dl>
+
+              <div className="mt-4">
+                <p className="text-sm text-white/40">Concern</p>
+                <p className="mt-1 whitespace-pre-wrap text-sm text-white/75">{message.concern}</p>
+              </div>
+            </AdminCard>
+          ))
+        )}
       </div>
-    </div>
+    </AdminPageShell>
   );
 }
