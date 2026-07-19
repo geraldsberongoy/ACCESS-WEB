@@ -1,10 +1,28 @@
+import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
 
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next({
-    request: {
-      headers: request.headers,
+  let supabaseResponse = NextResponse.next({ request });
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return supabaseResponse;
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        supabaseResponse = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options)
+        );
+      },
     },
   });
 
@@ -12,51 +30,52 @@ export async function proxy(request: NextRequest) {
   const adminRoutes = ["/admin"];
   const authOnlyRoutes = ["/auth/reset-password"];
 
-  const isAuthOnlyRoute = authOnlyRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  );
-  const isInternalRoute = internalRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  );
-  const isAdminRoute = adminRoutes.some(route =>
-    request.nextUrl.pathname.startsWith(route)
-  );
+  const pathname = request.nextUrl.pathname;
+  const isAuthOnlyRoute = authOnlyRoutes.some((route) => pathname.startsWith(route));
+  const isInternalRoute = internalRoutes.some((route) => pathname.startsWith(route));
+  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
 
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // Extract the role from metadata (synced by SQL triggers)
-  const userRole = user?.app_metadata?.role;
+  let userRole = user?.app_metadata?.role as string | undefined;
 
-  // 1. Guard unauthorized password resets
-  if (!user && isAuthOnlyRoute) {
-    return NextResponse.rewrite(new URL('/404', request.url));
-  }
+  if (user) {
+    const { data: userRow } = await supabase
+      .from("Users")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
 
-  // 2. Guard unauthorized users
-  if (!user && (isInternalRoute || isAuthOnlyRoute || isAdminRoute)) {
-    // TODO: notification "sign in to continue"
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
-
-  // 3. Guard for /admin routes
-  if (user && isAdminRoute) {
-    if (userRole !== "Admin") {
-      return NextResponse.rewrite(new URL('/404', request.url));
+    if (userRow?.role) {
+      userRole = userRow.role;
     }
   }
 
-  // Redirect authenticated users away from auth pages
+  if (!user && isAuthOnlyRoute) {
+    return NextResponse.rewrite(new URL("/404", request.url));
+  }
+
+  if (!user && (isInternalRoute || isAuthOnlyRoute || isAdminRoute)) {
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+
+  if (user && isAdminRoute && userRole !== "Admin") {
+    return NextResponse.redirect(new URL("/404", request.url));
+  }
+
   const authEntryPaths = ["/auth", "/auth/login", "/auth/register"];
-  if (user && authEntryPaths.includes(request.nextUrl.pathname)) {
+  if (user && authEntryPaths.includes(pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  return response;
+  return supabaseResponse;
 }
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
     "/borrow/:path*",
     "/auth/reset-password/:path*",

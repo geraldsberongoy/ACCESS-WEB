@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import ContactSuccessModal from "./ContactSuccessModal";
+import { submitContactMessageAction } from "@/features/landing/services/contact.actions";
+import { getClientActionErrorMessage } from "@/lib/client-action-errors";
 
 type ContactFormData = {
   fullName: string;
@@ -100,6 +102,7 @@ export default function ContactUsForm({ onBack }: ContactUsFormProps) {
   const [form, setForm] = useState<ContactFormData>(INITIAL_FORM);
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const updateField = <K extends keyof ContactFormData>(key: K, value: ContactFormData[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -124,8 +127,31 @@ export default function ContactUsForm({ onBack }: ContactUsFormProps) {
       setFieldErrors({ ...errors, form: "Please complete all required fields before submitting." });
       return;
     }
+
     setFieldErrors({});
-    setShowSuccess(true);
+    const formData = new FormData();
+    formData.set("fullName", form.fullName);
+    formData.set("email", form.email);
+    formData.set("courseYearSection", form.courseYearSection);
+    formData.set("contactNumber", form.contactNumber);
+    formData.set("organization", form.organization);
+    formData.set("purpose", form.purpose);
+    formData.set("concern", form.concern);
+
+    startTransition(async () => {
+      try {
+        const result = await submitContactMessageAction({ status: "idle" }, formData);
+        if (result.status === "error") {
+          setFieldErrors({ form: result.message });
+          return;
+        }
+        setShowSuccess(true);
+      } catch (error) {
+        setFieldErrors({
+          form: getClientActionErrorMessage(error, "Failed to submit message"),
+        });
+      }
+    });
   };
 
   const handleSuccessClose = () => {
@@ -248,13 +274,14 @@ export default function ContactUsForm({ onBack }: ContactUsFormProps) {
               </button>
               <button
                 type="submit"
-                className="rounded-xl px-6 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:opacity-95 hover:shadow-[0_6px_20px_rgba(242,98,35,0.5)]"
+                disabled={isPending}
+                className="rounded-xl px-6 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:opacity-95 hover:shadow-[0_6px_20px_rgba(242,98,35,0.5)] disabled:opacity-60"
                 style={{
                   background: "#F26223",
                   boxShadow: "0 4px 16px rgba(242,98,35,0.35)",
                 }}
               >
-                Submit
+                {isPending ? "Submitting..." : "Submit"}
               </button>
             </div>
             <button
