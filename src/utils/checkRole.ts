@@ -7,8 +7,9 @@ export type Roles = {
 
 export async function checkRole({ roles = "Default" }: Roles) {
   const supabase = await createSupabaseServerClient();
-  // Extract the role from metadata (synced by SQL triggers)
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   const userRole = user?.app_metadata?.role;
 
   if (!user) {
