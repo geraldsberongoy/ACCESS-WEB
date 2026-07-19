@@ -1,6 +1,7 @@
 -- Fix storage RLS for CMS uploads and borrow letters.
 -- Run in Supabase SQL Editor if uploads fail with "row-level security policy".
 
+
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
 LANGUAGE sql
