@@ -154,14 +154,19 @@ export type Database = {
       }
       BorrowRequests: {
         Row: {
+          additional_info: string | null
           borrower_contact_name: string | null
           borrower_email: string | null
           borrower_phone: string | null
+          course_year_section: string | null
           created_at: string | null
           id: string
           letter_file_url: string | null
+          organization_name: string | null
+          purpose: string | null
           rejection_reason: string | null
           requested_end_date: string | null
+          requested_item: string | null
           requested_start_date: string | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -170,14 +175,19 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          additional_info?: string | null
           borrower_contact_name?: string | null
           borrower_email?: string | null
           borrower_phone?: string | null
+          course_year_section?: string | null
           created_at?: string | null
-          id: string
+          id?: string
           letter_file_url?: string | null
+          organization_name?: string | null
+          purpose?: string | null
           rejection_reason?: string | null
           requested_end_date?: string | null
+          requested_item?: string | null
           requested_start_date?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -186,14 +196,19 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          additional_info?: string | null
           borrower_contact_name?: string | null
           borrower_email?: string | null
           borrower_phone?: string | null
+          course_year_section?: string | null
           created_at?: string | null
           id?: string
           letter_file_url?: string | null
+          organization_name?: string | null
+          purpose?: string | null
           rejection_reason?: string | null
           requested_end_date?: string | null
+          requested_item?: string | null
           requested_start_date?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -217,6 +232,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ContactMessages: {
+        Row: {
+          concern: string
+          contact_number: string | null
+          course_year_section: string | null
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          is_read: boolean | null
+          organization: string | null
+          purpose: string | null
+        }
+        Insert: {
+          concern: string
+          contact_number?: string | null
+          course_year_section?: string | null
+          created_at?: string | null
+          email: string
+          full_name: string
+          id?: string
+          is_read?: boolean | null
+          organization?: string | null
+          purpose?: string | null
+        }
+        Update: {
+          concern?: string
+          contact_number?: string | null
+          course_year_section?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          is_read?: boolean | null
+          organization?: string | null
+          purpose?: string | null
+        }
+        Relationships: []
+      }
+      FAQItems: {
+        Row: {
+          answer: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          question: string
+          updated_at: string | null
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          question: string
+          updated_at?: string | null
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          question?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       Events: {
         Row: {
@@ -256,6 +340,35 @@ export type Database = {
           {
             foreignKeyName: "Events_created_by_fkey"
             columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "Users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      SiteContent: {
+        Row: {
+          key: string
+          updated_at: string | null
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "SiteContent_updated_by_fkey"
+            columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "Users"
             referencedColumns: ["id"]
