@@ -62,7 +62,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (user && isAdminRoute && userRole !== "Admin") {
-    return NextResponse.rewrite(new URL("/404", request.url));
+    return NextResponse.redirect(new URL("/404", request.url));
   }
 
   const authEntryPaths = ["/auth", "/auth/login", "/auth/register"];
@@ -75,6 +75,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin",
     "/admin/:path*",
     "/borrow/:path*",
     "/auth/reset-password/:path*",
