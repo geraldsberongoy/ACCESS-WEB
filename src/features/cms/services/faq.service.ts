@@ -1,12 +1,16 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { unstable_noStore as noStore } from "next/cache";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
+import { throwSupabaseError } from "@/lib/errors";
 import { checkRole } from "@/utils/checkRole";
 import type { Tables } from "@/lib/supabase/database.types";
 
 export type FAQItem = Tables<"FAQItems">;
 
 export async function getActiveFAQs(): Promise<FAQItem[]> {
+  noStore();
+
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const { data, error } = await supabase
       .from("FAQItems")
@@ -14,23 +18,24 @@ export async function getActiveFAQs(): Promise<FAQItem[]> {
       .eq("is_active", true)
       .order("display_order", { ascending: true });
 
-    if (error) throw error;
+    throwSupabaseError(error);
     return data ?? [];
-  } catch {
+  } catch (error) {
+    console.error("[FAQItems] Failed to read active FAQs:", error);
     return [];
   }
 }
 
 export async function getAllFAQsForAdmin(): Promise<FAQItem[]> {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("FAQItems")
     .select("*")
     .order("display_order", { ascending: true });
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data ?? [];
 }
 
@@ -41,7 +46,7 @@ export async function createFAQItem(input: {
   is_active?: boolean;
 }) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("FAQItems")
@@ -54,7 +59,7 @@ export async function createFAQItem(input: {
     .select()
     .single();
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data;
 }
 
@@ -68,7 +73,7 @@ export async function updateFAQItem(
   }>
 ) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("FAQItems")
@@ -80,26 +85,26 @@ export async function updateFAQItem(
     .select()
     .single();
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data;
 }
 
 export async function deleteFAQItem(id: string) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { error } = await supabase.from("FAQItems").delete().eq("id", id);
-  if (error) throw error;
+  throwSupabaseError(error);
 }
 
 export async function getFAQCount(): Promise<number> {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { count, error } = await supabase
     .from("FAQItems")
     .select("*", { count: "exact", head: true });
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return count ?? 0;
 }

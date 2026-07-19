@@ -1,6 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { getErrorMessage } from "@/lib/errors";
+import { revalidatePublicSite } from "../revalidate-public-site";
 import {
   AboutContentSchema,
   HeroContentSchema,
@@ -51,14 +53,14 @@ export async function updateHeroContentAction(
     }
 
     await updateSiteContent("hero", parsed.data);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/landing");
 
     return { status: "success", message: "Landing content updated." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to update landing content",
+      message: getErrorMessage(err, "Failed to update landing content"),
     };
   }
 }
@@ -81,14 +83,14 @@ export async function updateAboutContentAction(
     }
 
     await updateSiteContent("about", parsed.data);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/about");
 
     return { status: "success", message: "About content updated." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to update about content",
+      message: getErrorMessage(err, "Failed to update about content"),
     };
   }
 }
@@ -122,14 +124,14 @@ export async function updateOfficersSectionAction(
     }
 
     await updateSiteContent("officers_section", parsed.data);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/officers-template");
 
     return { status: "success", message: "Officers section updated." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to update officers section",
+      message: getErrorMessage(err, "Failed to update officers section"),
     };
   }
 }
@@ -148,14 +150,14 @@ export async function createFAQAction(
     }
 
     await createFAQItem(parsed.data);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/faqs");
 
     return { status: "success", message: "FAQ created." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to create FAQ",
+      message: getErrorMessage(err, "Failed to create FAQ"),
     };
   }
 }
@@ -180,14 +182,14 @@ export async function updateFAQAction(
 
     const { id, ...updates } = parsed.data;
     await updateFAQItem(id, updates);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/faqs");
 
     return { status: "success", message: "FAQ updated." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to update FAQ",
+      message: getErrorMessage(err, "Failed to update FAQ"),
     };
   }
 }
@@ -198,14 +200,14 @@ export async function deleteFAQAction(
 ): Promise<ActionState> {
   try {
     await deleteFAQItem(id);
-    revalidatePath("/", "layout");
+    revalidatePublicSite();
     revalidatePath("/admin/content/faqs");
 
     return { status: "success", message: "FAQ deleted." };
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to delete FAQ",
+      message: getErrorMessage(err, "Failed to delete FAQ"),
     };
   }
 }
@@ -220,7 +222,7 @@ export async function markContactMessageReadAction(id: string): Promise<ActionSt
   } catch (err) {
     return {
       status: "error",
-      message: err instanceof Error ? err.message : "Failed to mark message as read",
+      message: getErrorMessage(err, "Failed to mark message as read"),
     };
   }
 }

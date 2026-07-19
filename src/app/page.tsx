@@ -18,8 +18,10 @@ import {
 } from "@/features/cms";
 import { getAllOfficers } from "@/features/officers/services/officers.services";
 import { CrystalDice3D, FloatingBlocks, type CrystalConfig } from "@/features/effects";
+import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const COMBINED_CRYSTALS: CrystalConfig[] = [
   { x: -7.0, y: 4.2, z: 0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
@@ -34,6 +36,8 @@ const COMBINED_CRYSTALS: CrystalConfig[] = [
 ];
 
 export default async function LandingPage() {
+  noStore();
+
   const [hero, about, officersSection, faqs, officers] = await Promise.all([
     getHeroContent(),
     getAboutContent(),

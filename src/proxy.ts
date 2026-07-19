@@ -39,7 +39,19 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const userRole = user?.app_metadata?.role;
+  let userRole = user?.app_metadata?.role as string | undefined;
+
+  if (user) {
+    const { data: userRow } = await supabase
+      .from("Users")
+      .select("role")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (userRow?.role) {
+      userRole = userRow.role;
+    }
+  }
 
   if (!user && isAuthOnlyRoute) {
     return NextResponse.rewrite(new URL("/404", request.url));

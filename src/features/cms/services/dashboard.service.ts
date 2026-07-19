@@ -1,4 +1,4 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { checkRole } from "@/utils/checkRole";
 import { getUnreadContactMessageCount } from "./contact-messages.service";
 import { getPendingBorrowRequestCount, getRecentBorrowRequests } from "./borrow-requests.admin.service";
@@ -9,7 +9,7 @@ export async function getAdminDashboardStats() {
   await checkRole({ roles: "Admin" });
 
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const [
       pendingBorrowRequests,

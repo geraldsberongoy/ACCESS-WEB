@@ -1,4 +1,5 @@
-import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { throwSupabaseError } from "@/lib/errors";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { checkRole } from "@/utils/checkRole";
 import type { Tables } from "@/lib/supabase/database.types";
 
@@ -16,7 +17,7 @@ export async function getBorrowRequestsForAdmin({
   limit = 10,
 }: BorrowRequestsFilter = {}) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const maxRows = Math.min(limit, 50);
   const from = (page - 1) * limit;
@@ -33,7 +34,7 @@ export async function getBorrowRequestsForAdmin({
   query = query.order("created_at", { ascending: false }).range(from, to);
 
   const { data, error, count } = await query;
-  if (error) throw error;
+  throwSupabaseError(error);
 
   return {
     data: data ?? [],
@@ -48,7 +49,7 @@ export async function getBorrowRequestsForAdmin({
 
 export async function getBorrowRequestById(id: string) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("BorrowRequests")
@@ -56,27 +57,27 @@ export async function getBorrowRequestById(id: string) {
     .eq("id", id)
     .maybeSingle();
 
-  if (error) throw error;
+  throwSupabaseError(error);
   if (!data) throw new Error("Borrow request not found");
   return data;
 }
 
 export async function getPendingBorrowRequestCount(): Promise<number> {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { count, error } = await supabase
     .from("BorrowRequests")
     .select("*", { count: "exact", head: true })
     .eq("status", "Pending");
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return count ?? 0;
 }
 
 export async function getRecentBorrowRequests(limit = 5) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("BorrowRequests")
@@ -84,6 +85,6 @@ export async function getRecentBorrowRequests(limit = 5) {
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data ?? [];
 }

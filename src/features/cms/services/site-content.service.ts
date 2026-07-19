@@ -1,4 +1,7 @@
+import { unstable_noStore as noStore } from "next/cache";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { throwSupabaseError } from "@/lib/errors";
 import { checkRole } from "@/utils/checkRole";
 import {
   AboutContentSchema,
@@ -19,8 +22,10 @@ async function getContentByKey<T>(
   schema: { safeParse: (data: unknown) => { success: boolean; data?: T } },
   fallback: T
 ): Promise<T> {
+  noStore();
+
   try {
-    const supabase = await createSupabaseServerClient();
+    const supabase = createSupabaseAdminClient();
 
     const { data, error } = await supabase
       .from("SiteContent")
@@ -28,13 +33,24 @@ async function getContentByKey<T>(
       .eq("key", key)
       .maybeSingle();
 
-    if (error || !data?.value) {
+    if (error) {
+      console.error(`[SiteContent] Failed to read "${key}":`, error.message);
+      return fallback;
+    }
+
+    if (!data?.value) {
       return fallback;
     }
 
     const parsed = schema.safeParse(data.value);
-    return parsed.success && parsed.data ? parsed.data : fallback;
-  } catch {
+    if (!parsed.success || !parsed.data) {
+      console.error(`[SiteContent] Invalid stored value for "${key}"`);
+      return fallback;
+    }
+
+    return parsed.data;
+  } catch (error) {
+    console.error(`[SiteContent] Unexpected read error for "${key}":`, error);
     return fallback;
   }
 }
@@ -60,27 +76,43 @@ export async function updateSiteContent(
   value: HeroContent | AboutContent | OfficersSectionContent
 ) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
+  const serverSupabase = await createSupabaseServerClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await serverSupabase.auth.getUser();
 
-  const { error } = await supabase.from("SiteContent").upsert(
-    {
-      key,
-      value,
-      updated_by: user?.id ?? null,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "key" }
-  );
+  const updatePayload = {
+    value,
+    updated_by: user?.id ?? null,
+    updated_at: new Date().toISOString(),
+  };
 
-  if (error) throw error;
+  const { data: existing, error: readError } = await supabase
+    .from("SiteContent")
+    .select("key")
+    .eq("key", key)
+    .maybeSingle();
+
+  throwSupabaseError(readError);
+
+  const mutation = existing
+    ? supabase.from("SiteContent").update(updatePayload).eq("key", key).select("key, value").single()
+    : supabase.from("SiteContent").insert({ key, ...updatePayload }).select("key, value").single();
+
+  const { data: saved, error } = await mutation;
+  throwSupabaseError(error);
+
+  if (!saved?.value) {
+    throw new Error(`Site content "${key}" was not saved.`);
+  }
+
+  return saved;
 }
 
 export async function uploadSiteContentImage(file: File): Promise<string> {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const ext = file.name.split(".").pop() ?? "png";
   const fileName = `${crypto.randomUUID()}.${ext}`;
@@ -93,7 +125,7 @@ export async function uploadSiteContentImage(file: File): Promise<string> {
       upsert: false,
     });
 
-  if (uploadError) throw uploadError;
+  if (uploadError) throw new Error(uploadError.message);
 
   const { data } = supabase.storage.from("access_web_assets").getPublicUrl(filePath);
   return data.publicUrl;

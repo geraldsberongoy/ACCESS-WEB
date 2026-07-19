@@ -1,4 +1,6 @@
 import { createSupabaseServerClient } from "@/lib/supabase/server-client";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin-client";
+import { throwSupabaseError } from "@/lib/errors";
 import { checkRole } from "@/utils/checkRole";
 import type { Tables } from "@/lib/supabase/database.types";
 
@@ -21,7 +23,7 @@ export async function submitContactMessage(input: {
     .select()
     .single();
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data;
 }
 
@@ -30,7 +32,7 @@ export async function getContactMessagesForAdmin(options?: {
   limit?: number;
 }) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   let query = supabase
     .from("ContactMessages")
@@ -46,13 +48,13 @@ export async function getContactMessagesForAdmin(options?: {
   }
 
   const { data, error } = await query;
-  if (error) throw error;
+  throwSupabaseError(error);
   return data ?? [];
 }
 
 export async function markContactMessageRead(id: string) {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("ContactMessages")
@@ -61,19 +63,19 @@ export async function markContactMessageRead(id: string) {
     .select()
     .single();
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return data;
 }
 
 export async function getUnreadContactMessageCount(): Promise<number> {
   await checkRole({ roles: "Admin" });
-  const supabase = await createSupabaseServerClient();
+  const supabase = createSupabaseAdminClient();
 
   const { count, error } = await supabase
     .from("ContactMessages")
     .select("*", { count: "exact", head: true })
     .eq("is_read", false);
 
-  if (error) throw error;
+  throwSupabaseError(error);
   return count ?? 0;
 }
