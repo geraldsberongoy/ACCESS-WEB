@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
+import Link from "next/link";
 import type { OfficersSectionContent } from "@/features/cms";
 
 type MeetTheOfficersSectionProps = {
@@ -9,8 +9,6 @@ type MeetTheOfficersSectionProps = {
 };
 
 export default function MeetTheOfficersSection({ content }: MeetTheOfficersSectionProps) {
-  const rosterImage = content.officersImageUrl?.trim();
-
   return (
     <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
       <div
@@ -54,15 +52,14 @@ export default function MeetTheOfficersSection({ content }: MeetTheOfficersSecti
           {content.subtitle}
         </p>
 
-        {rosterImage ? (
-          <div className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-            <OfficersRosterMedia url={rosterImage} />
-          </div>
-        ) : (
-          <div className="mx-auto flex max-w-2xl items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
-            Officers file will appear here once uploaded in the admin dashboard.
-          </div>
-        )}
+        <div className="mx-auto flex max-w-2xl flex-col items-center justify-center">
+          <Link
+            href="/officers"
+            className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-10 py-5 text-base font-semibold text-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F26223]/60 hover:bg-[#F26223]/20 hover:shadow-[0_16px_48px_rgba(242,98,35,0.35)]"
+          >
+            See officers here
+          </Link>
+        </div>
       </div>
     </section>
   );
