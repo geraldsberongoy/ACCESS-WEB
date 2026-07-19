@@ -1,11 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { AnimatePresence, motion } from "framer-motion"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { OfficerCard, type OfficerCardProps } from "@/features/officers"
+import type { OfficersSectionContent } from "@/features/cms"
 
-const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
+const FALLBACK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   {
     name: "Antonio ",
     role: "Control Officer",
@@ -38,38 +39,22 @@ const MOCK_OFFICERS: Omit<OfficerCardProps, "featured">[] = [
   },
 ]
 
+type MeetTheOfficersSectionProps = {
+  content: OfficersSectionContent;
+  officers?: Omit<OfficerCardProps, "featured">[];
+};
 
-const slideVariants = {
-  enter: (dir: number) => ({
-    x: dir > 0 ? "55%" : "-55%",
-    opacity: 0,
-    scale: 0.94,
-  }),
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    transition: { type: "spring" as const, stiffness: 300, damping: 30, mass: 0.8 },
-  },
-  exit: (dir: number) => ({
-    x: dir > 0 ? "-55%" : "55%",
-    opacity: 0,
-    scale: 0.94,
-    transition: { duration: 0.22, ease: "easeIn" as const },
-  }),
-}
-
-export default function MeetTheOfficersSection() {
+export default function MeetTheOfficersSection({
+  content,
+  officers = FALLBACK_OFFICERS,
+}: MeetTheOfficersSectionProps) {
   const [[activeIndex, direction], setPage] = useState([0, 0])
-  const total = MOCK_OFFICERS.length
+  const displayOfficers = officers.length > 0 ? officers : FALLBACK_OFFICERS
+  const total = displayOfficers.length
 
   const paginate = (dir: number) => {
     setPage(([prev]) => [(prev + dir + total) % total, dir])
   }
-
-  const leftIdx = (activeIndex - 1 + total) % total
-  const centerIdx = activeIndex
-  const rightIdx = (activeIndex + 1) % total
 
   return (
     <section className="relative overflow-hidden py-16 px-5 sm:px-8 md:px-16 lg:px-24">
@@ -84,9 +69,10 @@ export default function MeetTheOfficersSection() {
         }}
       >
         <Image
-          src="/meet-the-officers.webp"
+          src={content.templateImageUrl}
           alt=""
           fill
+          unoptimized={content.templateImageUrl.startsWith("http")}
           className="object-cover object-center"
           style={{ 
             opacity: 0.8, filter: "blur(2px) saturate(1.4)",
@@ -111,7 +97,7 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Heading ── */}
         <h2 className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header">
-          Meet the Officers
+          {content.title}
         </h2>
 
         {/* ── Subtitle ── */}
@@ -119,8 +105,7 @@ export default function MeetTheOfficersSection() {
           className="mb-26 text-center text-sm sm:text-base max-w-lg mx-auto leading-relaxed"
           style={{ color: "rgb(255, 255, 255)" }}
         >
-          We are a community of student leaders and innovators committed to advancing technology,
-          collaboration, and excellence within PUP.
+          {content.subtitle}
         </p>
 
         {/* ── Carousel ── */}
@@ -143,7 +128,7 @@ export default function MeetTheOfficersSection() {
             className="relative w-full py-12 px-14"
             style={{ minHeight: 510 }}
           >
-            {MOCK_OFFICERS.map((officer, i) => {
+            {displayOfficers.map((officer, i) => {
               let diff = i - activeIndex;
               if (diff > total / 2) diff -= total;
               if (diff < -total / 2) diff += total;
@@ -153,7 +138,7 @@ export default function MeetTheOfficersSection() {
 
               return (
                 <motion.div
-                  key={i}
+                  key={`${officer.name}-${i}`}
                   animate={{
                     x: diff * 265,
                     y: isFeatured ? -22 : 0,
@@ -196,7 +181,7 @@ export default function MeetTheOfficersSection() {
 
         {/* ── Indicator strip ── */}
         <div className="mt-10 flex items-center justify-center gap-2">
-          {MOCK_OFFICERS.map((_, i) => (
+          {displayOfficers.map((_, i) => (
             <button
               key={i}
               onClick={() => setPage(([prev]) => [i, i > prev ? 1 : -1])}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useTransition } from "react";
 import BorrowSuccessModal from "./BorrowSuccessModal";
+import { submitBorrowRequestAction } from "@/features/landing/services/borrow.actions";
 
 export type BorrowFormData = {
   fullName: string;
@@ -218,6 +219,7 @@ export default function BorrowRequestForm({ onBackToLanding }: BorrowRequestForm
   const [fileError, setFileError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FormErrors>({});
   const [isDragging, setIsDragging] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const updateField = <K extends keyof BorrowFormData>(key: K, value: BorrowFormData[K]) => {
@@ -300,8 +302,39 @@ export default function BorrowRequestForm({ onBackToLanding }: BorrowRequestForm
       setFieldErrors({ ...errors, form: "Please complete all required fields before submitting." });
       return;
     }
+    if (!form.letterFile) {
+      setFieldErrors({ form: "Request letter file is required." });
+      return;
+    }
+
     setFieldErrors({});
-    setShowSuccess(true);
+    const formData = new FormData();
+    formData.set("fullName", form.fullName);
+    formData.set("email", form.email);
+    formData.set("courseYearSection", form.courseYearSection);
+    formData.set("contactNumber", form.contactNumber);
+    formData.set("organization", form.organization);
+    formData.set("purpose", form.purpose);
+    formData.set("additionalInfo", form.additionalInfo);
+    formData.set("item", form.item);
+    formData.set("startDate", form.startDate);
+    formData.set("startHour", form.startHour);
+    formData.set("startMinute", form.startMinute);
+    formData.set("startPeriod", form.startPeriod);
+    formData.set("endDate", form.endDate);
+    formData.set("endHour", form.endHour);
+    formData.set("endMinute", form.endMinute);
+    formData.set("endPeriod", form.endPeriod);
+    formData.set("letterFile", form.letterFile);
+
+    startTransition(async () => {
+      const result = await submitBorrowRequestAction({ status: "idle" }, formData);
+      if (result.status === "error") {
+        setFieldErrors({ form: result.message });
+        return;
+      }
+      setShowSuccess(true);
+    });
   };
 
   const handleSuccessClose = () => {
@@ -532,13 +565,14 @@ export default function BorrowRequestForm({ onBackToLanding }: BorrowRequestForm
               ) : (
                 <button
                   type="submit"
-                  className="rounded-xl px-6 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:opacity-95 hover:shadow-[0_6px_20px_rgba(242,98,35,0.5)]"
+                  disabled={isPending}
+                  className="rounded-xl px-6 py-2.5 text-sm font-bold text-white transition-all duration-200 hover:opacity-95 hover:shadow-[0_6px_20px_rgba(242,98,35,0.5)] disabled:opacity-60"
                   style={{
                     background: "#F26223",
                     boxShadow: "0 4px 16px rgba(242,98,35,0.35)",
                   }}
                 >
-                  Submit
+                  {isPending ? "Submitting..." : "Submit"}
                 </button>
               )}
             </div>
