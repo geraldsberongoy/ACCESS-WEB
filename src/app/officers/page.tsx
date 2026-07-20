@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/ui";
 import { FooterSection } from "@/features/landing";
-import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 import { getOfficersSectionContent } from "@/features/cms";
 import Image from "next/image";
 import { CrystalDice3D, type CrystalConfig } from "@/features/effects";
+import OfficersTabs from "./OfficersTabs";
 import { unstable_noStore as noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -72,15 +72,14 @@ export default async function OfficersPage() {
           </div>
 
           <div className="w-full max-w-5xl mx-auto relative z-20">
-            {rosterImage ? (
-              <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)]">
-                <OfficersRosterMedia url={rosterImage} />
-              </div>
-            ) : (
-              <div className="flex min-h-[240px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60">
-                Officers image will appear here once uploaded in the admin dashboard.
-              </div>
-            )}
+            <OfficersTabs 
+              rosterImage={rosterImage}
+              image2Url={content.officersImage2Url}
+              image3Url={content.officersImage3Url}
+              button1Label={content.button1Label || "Batch Officers"}
+              button2Label={content.button2Label || "ACCESS"}
+              button3Label={content.button3Label || "Class Representatives"}
+            />
           </div>
         </main>
 

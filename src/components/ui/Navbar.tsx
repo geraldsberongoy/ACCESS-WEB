@@ -21,9 +21,9 @@ export const landingNavItems: NavItem[] = [
   { label: "Home", href: "/#home" },
   { label: "About", href: "/#about" },
   { label: "Events", href: "/#events" },
+  { label: "Officers", href: "/#officers" },
   { label: "Borrow", href: "/#borrow" },
   { label: "Contact", href: "/#contact" },
-  { label: "Officers", href: "/#officers" },
 ];
 
 function NavLink({

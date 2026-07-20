@@ -16,6 +16,7 @@ const NAV_GROUPS: {
     items: [
       { href: "/admin/content/landing", label: "Landing" },
       { href: "/admin/content/about", label: "About Us" },
+      { href: "/admin/content/about-images", label: "About Images" },
       { href: "/admin/content/officers-template", label: "Officers Section" },
       { href: "/admin/content/officers-roster", label: "Officers Image" },
       { href: "/admin/content/faqs", label: "FAQs" },

@@ -74,6 +74,7 @@ export async function updateAboutContentAction(
     const parsed = AboutContentSchema.safeParse({
       title: formData.get("title"),
       body: formData.get("body"),
+      textAlign: formData.get("textAlign"),
     });
 
     if (!parsed.success) {
@@ -92,6 +93,50 @@ export async function updateAboutContentAction(
     return {
       status: "error",
       message: getErrorMessage(err, "Failed to update about content"),
+    };
+  }
+}
+
+export async function updateAboutImagesAction(
+  _prevState: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  try {
+    const { getAboutContent, uploadSiteContentImage } = await import("../services/site-content.service");
+    const current = await getAboutContent();
+    const newImages = [...(current.carouselImages || [])];
+
+    // We expect up to 5 images
+    for (let i = 0; i < 5; i++) {
+      const file = formData.get(`image${i}`);
+      if (file instanceof File && file.size > 0) {
+        newImages[i] = await uploadSiteContentImage(file);
+      }
+    }
+
+    const parsed = AboutContentSchema.safeParse({
+      ...current,
+      carouselImages: newImages,
+    });
+
+    if (!parsed.success) {
+      return {
+        status: "error",
+        message: parsed.error.issues.map((i) => i.message).at(0) ?? "Invalid input",
+      };
+    }
+
+    await updateSiteContent("about", parsed.data);
+    revalidatePublicSite();
+    revalidatePath("/admin/content/about-images");
+    revalidatePath("/admin/content/about");
+    revalidatePath("/"); // Update landing page too
+
+    return { status: "success", message: "About images updated." };
+  } catch (err) {
+    return {
+      status: "error",
+      message: getErrorMessage(err, "Failed to update about images"),
     };
   }
 }
@@ -118,6 +163,12 @@ export async function updateOfficersSectionAction(
       subtitle: formData.get("subtitle"),
       templateImageUrl,
       officersImageUrl: current.officersImageUrl,
+      button1Label: formData.get("button1Label") || undefined,
+      button1Link: formData.get("button1Link") || undefined,
+      button2Label: formData.get("button2Label") || undefined,
+      button2Link: formData.get("button2Link") || undefined,
+      button3Label: formData.get("button3Label") || undefined,
+      button3Link: formData.get("button3Link") || undefined,
     });
 
     if (!parsed.success) {
@@ -148,18 +199,31 @@ export async function updateOfficersRosterAction(
     const { getOfficersSectionContent } = await import("../services/site-content.service");
     const current = await getOfficersSectionContent();
 
-    const rosterFile = formData.get("officersImage");
+    const rosterFile1 = formData.get("officersImage");
+    const rosterFile2 = formData.get("officersImage2");
+    const rosterFile3 = formData.get("officersImage3");
+    
     let officersImageUrl = current.officersImageUrl ?? "";
+    let officersImage2Url = current.officersImage2Url ?? "";
+    let officersImage3Url = current.officersImage3Url ?? "";
 
-    if (rosterFile instanceof File && rosterFile.size > 0) {
-      officersImageUrl = await uploadOfficersRosterImage(rosterFile);
-    } else if (!officersImageUrl) {
-      return { status: "error", message: "Please choose an officers image to upload." };
+    if (rosterFile1 instanceof File && rosterFile1.size > 0) {
+      officersImageUrl = await uploadOfficersRosterImage(rosterFile1);
+    }
+    
+    if (rosterFile2 instanceof File && rosterFile2.size > 0) {
+      officersImage2Url = await uploadOfficersRosterImage(rosterFile2);
+    }
+    
+    if (rosterFile3 instanceof File && rosterFile3.size > 0) {
+      officersImage3Url = await uploadOfficersRosterImage(rosterFile3);
     }
 
     const parsed = OfficersSectionContentSchema.safeParse({
       ...current,
       officersImageUrl,
+      officersImage2Url,
+      officersImage3Url,
     });
 
     if (!parsed.success) {

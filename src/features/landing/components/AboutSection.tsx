@@ -5,13 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import type { AboutContent } from "@/features/cms";
 
-const CAROUSEL_IMAGES = [
-  "/aboutCard1.JPG",
-  "/aboutCard2.jpg",
-  "/aboutCard3.jpg",
-  "/aboutCard4.jpg",
-  "/aboutCard5.jpg",
-];
+
 
 const fadeVariants = {
   enter: {
@@ -38,21 +32,25 @@ type AboutSectionProps = {
 };
 
 export default function AboutSection({ content }: AboutSectionProps) {
+  const carouselImages = content.carouselImages || [];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (carouselImages.length === 0) return;
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+      setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
     }, 5000);
     return () => clearInterval(timer);
   }, []);
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+    if (carouselImages.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
+    if (carouselImages.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
   };
 
   const handleDotClick = (index: number) => {
@@ -72,13 +70,15 @@ export default function AboutSection({ content }: AboutSectionProps) {
             exit="exit"
             className="absolute inset-0 w-full h-full"
           >
-            <Image
-              src={CAROUSEL_IMAGES[currentIndex]}
-              alt={`About us slide ${currentIndex + 1}`}
-              fill
-              priority
-              className="object-cover object-center"
-            />
+            {carouselImages.length > 0 && (
+              <Image
+                src={carouselImages[currentIndex]}
+                alt={`About us slide ${currentIndex + 1}`}
+                fill
+                priority
+                className="object-cover object-center"
+              />
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -106,7 +106,7 @@ export default function AboutSection({ content }: AboutSectionProps) {
 
         {/* Centered Indicator Dots */}
         <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center items-center gap-2.5">
-          {CAROUSEL_IMAGES.map((_, index) => (
+          {carouselImages.map((_, index) => (
             <button
               key={index}
               onClick={() => handleDotClick(index)}
@@ -147,7 +147,10 @@ export default function AboutSection({ content }: AboutSectionProps) {
           </h2>
 
           {/* Centered Description Text */}
-          <p className="text-zinc-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl text-center px-4 font-normal tracking-wide">
+          <p 
+            className="text-zinc-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl px-4 font-normal tracking-wide whitespace-pre-wrap"
+            style={{ textAlign: content.textAlign || "center" }}
+          >
             {content.body}
           </p>
         </div>

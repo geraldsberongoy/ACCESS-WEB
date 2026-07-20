@@ -84,6 +84,48 @@ export default async function AdminOfficersTemplatePage({
             <input type="file" name="templateImage" accept="image/png,image/webp,image/jpeg" className={adminFileClass} />
           </div>
 
+          <div className="pt-4 border-t border-white/10">
+            <h4 className="text-sm font-semibold text-zinc-200 mb-4">Button 1 Settings</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <AdminFieldLabel>Label</AdminFieldLabel>
+                <input name="button1Label" defaultValue={content.button1Label} className={adminInputClass} />
+              </div>
+              <div>
+                <AdminFieldLabel>Link / Anchor</AdminFieldLabel>
+                <input name="button1Link" defaultValue={content.button1Link} className={adminInputClass} />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-white/10">
+            <h4 className="text-sm font-semibold text-zinc-200 mb-4">Button 2 Settings</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <AdminFieldLabel>Label</AdminFieldLabel>
+                <input name="button2Label" defaultValue={content.button2Label} className={adminInputClass} />
+              </div>
+              <div>
+                <AdminFieldLabel>Link / Anchor</AdminFieldLabel>
+                <input name="button2Link" defaultValue={content.button2Link} className={adminInputClass} />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-white/10">
+            <h4 className="text-sm font-semibold text-zinc-200 mb-4">Button 3 Settings</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <AdminFieldLabel>Label</AdminFieldLabel>
+                <input name="button3Label" defaultValue={content.button3Label} className={adminInputClass} />
+              </div>
+              <div>
+                <AdminFieldLabel>Link / Anchor</AdminFieldLabel>
+                <input name="button3Link" defaultValue={content.button3Link} className={adminInputClass} />
+              </div>
+            </div>
+          </div>
+
           <button type="submit" className={adminBtnPrimaryClass}>
             Save officers section
           </button>

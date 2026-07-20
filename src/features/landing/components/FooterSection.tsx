@@ -46,7 +46,7 @@ const SOCIALS = [
 
 const ORG_LINKS = [
   { label: "About Us", href: "/#about" },
-  { label: "Location", href: "/#location" },
+  { label: "Location", href: "https://maps.app.goo.gl/Bwg4EjM7fw5hJqiKA" },
   { label: "Contacts", href: "/#contact" },
   { label: "Contributors", href: "/contributors" },
 ];
@@ -68,21 +68,13 @@ const ACCESS_ADDRESS =
   "Room 424, College of Engineering and Architecture Building, Pureza St. cor. Anonas St., Sta. Mesa, City of Manila, Metro Manila, Philippines.";
 
 function FooterAnchor({ href, label }: { href: string; label: string }) {
-  if (href.startsWith("/#")) {
-    return (
-      <Link
-        href={href}
-        className="text-sm transition-colors duration-150 hover:text-white"
-        style={{ color: "rgba(255,255,255,0.55)", fontFamily: `'Josefin Sans', sans-serif` }}
-      >
-        {label}
-      </Link>
-    );
-  }
+  const isExternal = href.startsWith("http");
 
   return (
     <Link
       href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className="text-sm transition-colors duration-150 hover:text-white"
       style={{ color: "rgba(255,255,255,0.55)", fontFamily: `'Josefin Sans', sans-serif` }}
     >

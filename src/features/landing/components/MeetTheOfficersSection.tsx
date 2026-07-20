@@ -52,12 +52,24 @@ export default function MeetTheOfficersSection({ content }: MeetTheOfficersSecti
           {content.subtitle}
         </p>
 
-        <div className="mx-auto flex max-w-2xl flex-col items-center justify-center">
+        <div className="mx-auto flex max-w-4xl flex-col sm:flex-row flex-wrap items-center justify-center gap-4 sm:gap-6">
           <Link
-            href="/officers"
-            className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-10 py-5 text-base font-semibold text-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F26223]/60 hover:bg-[#F26223]/20 hover:shadow-[0_16px_48px_rgba(242,98,35,0.35)]"
+            href={content.button1Link || "/officers#part-1"}
+            className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-8 py-5 text-sm sm:text-base font-semibold text-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F26223]/60 hover:bg-[#F26223]/20 hover:shadow-[0_16px_48px_rgba(242,98,35,0.35)] text-center w-full sm:w-auto"
           >
-            See officers here
+            {content.button1Label || "Batch Officers"}
+          </Link>
+          <Link
+            href={content.button2Link || "/officers#part-2"}
+            className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-8 py-5 text-sm sm:text-base font-semibold text-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F26223]/60 hover:bg-[#F26223]/20 hover:shadow-[0_16px_48px_rgba(242,98,35,0.35)] text-center w-full sm:w-auto"
+          >
+            {content.button2Label || "ACCESS"}
+          </Link>
+          <Link
+            href={content.button3Link || "/officers#part-3"}
+            className="inline-flex items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-8 py-5 text-sm sm:text-base font-semibold text-white shadow-[0_12px_40px_rgba(0,0,0,0.35)] transition-all duration-200 hover:-translate-y-0.5 hover:border-[#F26223]/60 hover:bg-[#F26223]/20 hover:shadow-[0_16px_48px_rgba(242,98,35,0.35)] text-center w-full sm:w-auto"
+          >
+            {content.button3Label || "Class Representatives"}
           </Link>
         </div>
       </div>

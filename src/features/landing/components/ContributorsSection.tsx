@@ -6,13 +6,71 @@ interface Contributor {
   name: string
   role: string
   image: string
+  backdropImage?: string
 }
 
-const MOCK_CONTRIBUTORS: Contributor[] = Array(6).fill({
-  name: "Antonio Mickel\nTantia",
-  role: "Control Officer",
-  image: "/BG-ACCESS.webp",
-})
+const CONTRIBUTORS: Contributor[] = [
+  {
+    name: "Zachary Ralf Crescel Charles DG. Nudalo",
+    role: "Project Manager",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Charles.png",
+  },
+  {
+    name: "Gerald S. Berongoy",
+    role: "System/Business Analyst",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Geraldv2.png",
+  },
+  {
+    name: "Ren Fernandez Zapanta",
+    role: "Scrum Master",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/SM.png",
+  },
+  {
+    name: "Renz Tyrone F. Arcilla",
+    role: "Lead Backend Developer",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Renz.png",
+  },
+  {
+    name: "Arvie Lastra",
+    role: "Backend Developer",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Arviee.png",
+  },
+  {
+    name: "Earl Clyde M. Bañez",
+    role: "Lead Frontend Developer",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Earl.png",
+  },
+  {
+    name: "Elton James U. Donato",
+    role: "Frontend Developer",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Elton.png",
+  },
+  {
+    name: "Sophia Lim",
+    role: "Lead UI/UX",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Sophialead.png",
+  },
+  {
+    name: "Blessie Jane Alba",
+    role: "UI/UX",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Blessie.png",
+  },
+  {
+    name: "Clark Jao Alarcon",
+    role: "QA & Data Integrity",
+    backdropImage: "/BG-ACCESS.webp",
+    image: "/Clark.png",
+  },
+];
 
 export default function ContributorsSection() {
   return (
@@ -55,7 +113,7 @@ export default function ContributorsSection() {
 
         {/* Cards Wrapper */}
         <div className="flex flex-wrap justify-center items-center gap-0 w-full" style={{ gap: '6px' }}>
-          {MOCK_CONTRIBUTORS.map((contributor, idx) => (
+          {CONTRIBUTORS.map((contributor, idx) => (
             <div key={idx} className="flex flex-col items-center flex-shrink-0 mb-6 sm:mb-0">
               {/* Skewed Container */}
               <div 
@@ -77,8 +135,20 @@ export default function ContributorsSection() {
                   <div className="absolute inset-0 bg-black" />
                 
                   
+                  {/* Backdrop Photo */}
+                  {contributor.backdropImage && (
+                    <div className="absolute inset-0 z-0">
+                       <Image 
+                          src={contributor.backdropImage} 
+                          alt={`${contributor.name} backdrop`} 
+                          fill
+                          className="object-cover object-[center_top] opacity-50"
+                       />
+                    </div>
+                  )}
+                  
                   {/* Person Photo */}
-                  <div className="absolute inset-0 z-10 flex justify-center items-end pb-[10%]">
+                  <div className="absolute inset-0 z-10 flex justify-center items-end">
                      <Image 
                         src={contributor.image} 
                         alt={contributor.name} 
@@ -119,6 +189,27 @@ export default function ContributorsSection() {
             </div>
           ))}
         </div>
+
+        {/* Text-Only Contributors Section 
+        <div className="mt-24 w-full flex flex-col items-center max-w-5xl mx-auto border-t border-white/10 pt-12">
+          <h4 className="mb-8 text-center text-2xl sm:text-3xl font-bold tracking-widest text-zinc-100 title-header">
+            Additional Contributors
+          </h4>
+          
+          <div className="text-center">
+            <p className="text-zinc-400 text-sm sm:text-base italic max-w-2xl mx-auto">
+              This space is dedicated to future contributors who will help maintain and grow the project. They will be listed here in recognition of their efforts.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-x-12 gap-y-6">
+              <div className="flex flex-col">
+                <span className="font-bold text-zinc-200">Charles Nudalo</span>
+                <span className="text-xs text-[#E3835B]">Kupal</span>
+              </div>
+            </div> 
+          
+          </div>
+        </div>
+        */}
       </div>
     </section>
   )

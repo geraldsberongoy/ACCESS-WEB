@@ -56,6 +56,15 @@ export default async function AdminAboutContentPage({
             <input name="title" defaultValue={about.title} className={adminInputClass} />
           </div>
           <div>
+            <AdminFieldLabel>Text Alignment</AdminFieldLabel>
+            <select name="textAlign" defaultValue={about.textAlign || "center"} className={adminInputClass}>
+              <option value="left">Left</option>
+              <option value="center">Center</option>
+              <option value="right">Right</option>
+              <option value="justify">Justify</option>
+            </select>
+          </div>
+          <div>
             <AdminFieldLabel>Body text</AdminFieldLabel>
             <textarea name="body" defaultValue={about.body} rows={8} className={adminTextareaClass} />
           </div>
