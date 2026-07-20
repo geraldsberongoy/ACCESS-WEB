@@ -24,7 +24,6 @@ const OFFICERS_CRYSTALS: CrystalConfig[] = [
 export default async function OfficersPage() {
   noStore();
   const content = await getOfficersSectionContent();
-  const rosterImage = content.officersImageUrl?.trim();
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white relative">

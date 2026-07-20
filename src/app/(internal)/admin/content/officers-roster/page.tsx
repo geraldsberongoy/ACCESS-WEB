@@ -22,7 +22,6 @@ export default async function AdminOfficersRosterPage({
 }) {
   const params = (await searchParams) ?? {};
   const content = await getOfficersSectionContent();
-  const rosterImage = content.officersImageUrl?.trim() || null;
 
   async function handleUpload(formData: FormData) {
     "use server";
