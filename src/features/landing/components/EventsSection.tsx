@@ -5,7 +5,7 @@ export default async function EventsSection() {
   const { data: events } = await getPublishedEvents({ status: "all", limit: 9 });
 
   return (
-    <div className="py-20 px-5 sm:px-8 md:px-16 lg:px-24">
+    <div id="events" className="landing-section scroll-mt-24 py-20 px-5 sm:px-8 md:px-16 lg:px-24">
         <div className="mx-auto max-w-6xl">
           {/* Section heading */}
           <h2 className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header">

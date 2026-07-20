@@ -19,7 +19,7 @@ export default function ContactPage() {
 
       <Navbar />
 
-      <main className="relative z-10 flex flex-1 items-center justify-center px-5 py-16 sm:px-8">
+      <main className="relative z-10 flex flex-1 items-center justify-center px-5 pb-16 pt-28 sm:px-8">
         <ContactUsForm onBack={() => router.push("/")} />
       </main>
     </div>

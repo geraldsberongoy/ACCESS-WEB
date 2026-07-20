@@ -1,11 +1,32 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import BorrowRequestForm from "./BorrowRequestForm";
+import { getSupabaseBrowserClient } from "@/lib/supabase/browser-client";
 
 export default function BorrowSection() {
   const [showForm, setShowForm] = useState(false);
+  const router = useRouter();
+
+  const handleOpenForm = async () => {
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/auth/login?next=/");
+        return;
+      }
+
+      setShowForm(true);
+    } catch {
+      router.push("/auth/login?next=/");
+    }
+  };
 
   const glassCardStyle: React.CSSProperties = {
     background: "rgba(255, 255, 255, 0.08)",
@@ -17,7 +38,7 @@ export default function BorrowSection() {
   };
 
   return (
-    <section className="relative overflow-hidden py-24 px-5 sm:px-8 md:px-16 flex flex-col items-center">
+    <section id="borrow" className="landing-section scroll-mt-24 relative overflow-hidden py-24 px-5 sm:px-8 md:px-16 flex flex-col items-center">
       {/* Background gradient to match the vibrant warm vibe, slightly transparent for seamless integration */}
       <div
         className="absolute inset-0 pointer-events-none z-[0]"
@@ -96,7 +117,7 @@ export default function BorrowSection() {
             <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-5 w-full">
               <button
                 type="button"
-                onClick={() => setShowForm(true)}
+                onClick={handleOpenForm}
                 className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_8px_25px_rgba(242,98,35,0.6)] hover:opacity-95 min-w-[220px]"
                 style={{
                   background: "#F26223",

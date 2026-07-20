@@ -10,7 +10,18 @@ import {
   FooterSection,
   MeetTheOfficersSection,
 } from "@/features/landing";
+import {
+  getAboutContent,
+  getActiveFAQs,
+  getHeroContent,
+  getOfficersSectionContent,
+} from "@/features/cms";
 import { CrystalDice3D, FloatingBlocks, type CrystalConfig } from "@/features/effects";
+import { unstable_noStore as noStore } from "next/cache";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const COMBINED_CRYSTALS: CrystalConfig[] = [
   { x: -7.0, y: 4.2, z: 0.5, size: 2.6, hue: 0.02, sx: 0.003, sy: 0.004, sz: 0.002, fa: 0.32, fs: 0.45, phase: 0.0 },
   { x: -5.8, y: 1.5, z: -0.5, size: 1.4, hue: 0.01, sx: 0.005, sy: 0.003, sz: 0.004, fa: 0.24, fs: 0.60, phase: 1.1 },
@@ -21,13 +32,39 @@ const COMBINED_CRYSTALS: CrystalConfig[] = [
   { x: 7.2, y: -1.2, z: 0.8, size: 1.6, hue: 0.03, sx: 0.004, sy: 0.005, sz: 0.003, fa: 0.28, fs: 0.55, phase: 2.2 },
   { x: 6.0, y: -4.5, z: 0.5, size: 2.0, hue: 0.01, sx: 0.003, sy: 0.004, sz: 0.003, fa: 0.35, fs: 0.50, phase: 1.8 },
   { x: 2.5, y: 4.8, z: -1.2, size: 0.6, hue: 0.00, sx: 0.007, sy: 0.003, sz: 0.005, fa: 0.18, fs: 0.90, phase: 0.8 },
-]
+];
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  noStore();
+
+  const [hero, about, officersSection, faqs] = await Promise.all([
+    getHeroContent(),
+    getAboutContent(),
+    getOfficersSectionContent(),
+    getActiveFAQs(),
+  ]);
+
+  const faqItems =
+    faqs.length > 0
+      ? faqs.map((item) => ({
+          question: item.question,
+          answer: item.answer,
+        }))
+      : [
+          {
+            question:
+              "Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur",
+            answer:
+              "Lorem ipsum dolor sit amet consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.",
+          },
+        ];
+
   return (
     <div className="flex min-h-screen flex-col">
+      <Navbar />
+
       {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative flex min-h-screen flex-col bg-black overflow-hidden">
+      <section id="home" className="landing-section scroll-mt-24 relative flex min-h-screen flex-col bg-black overflow-hidden">
 
         {/* background photo — shifted right on mobile so subject stays visible */}
         <Image
@@ -73,10 +110,8 @@ export default function LandingPage() {
           }}
         />
 
-        {/* navbar */}
-        <div className="relative z-10">
-          <Navbar />
-        </div>
+        {/* navbar spacer — fixed nav overlays hero */}
+        <div className="relative z-10 h-[72px] shrink-0 md:h-[80px]" aria-hidden />
 
         {/* hero copy */}
         <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-5 pb-16 pt-4 text-center sm:px-8 sm:pb-12 md:px-16 lg:px-24">
@@ -92,44 +127,44 @@ export default function LandingPage() {
               backgroundClip: "text",
             }}
           >
-            Association of Concerned
-            <br />
-            Computer Engineering
-            <br />
-            for Service
+            {hero.titleLines.map((line, index) => (
+              <span key={`${line}-${index}`}>
+                {line}
+                {index < hero.titleLines.length - 1 && <br />}
+              </span>
+            ))}
           </h1>
 
           <p className="mt-5 max-w-sm text-sm leading-relaxed text-zinc-300
                         sm:max-w-md sm:text-base
                         md:max-w-lg">
-            Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet
-            consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum
+            {hero.subtitle}
           </p>
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:gap-4">
             <Link
-              href="/about"
+              href="/#about"
               className="rounded-lg py-3 text-sm font-semibold text-white text-center
                          transition-opacity hover:opacity-90
                          px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"
               style={{ background: "#F26223" }}
             >
-              Get Started
+              {hero.primaryCtaLabel}
             </Link>
 
             <Link
-              href="/contact"
+              href="/#contact"
               className="rounded-lg border border-white/30 bg-white/10 py-3 text-sm font-semibold
                          text-white text-center backdrop-blur-sm transition-colors hover:bg-white/20
                          px-8 sm:px-9 md:px-10 md:py-3.5 md:text-base"
             >
-              Get In Touch
+              {hero.secondaryCtaLabel}
             </Link>
           </div>
         </div>
       </section>
             
-      <AboutSection />
+      <AboutSection content={about} />
       
       <div className="relative">
         {/* Sticky Background & Crystals seamlessly spanning the sections */}
@@ -164,9 +199,9 @@ export default function LandingPage() {
           <div className="absolute top-[40%] left-[0%] w-[500px] h-[500px] bg-[#FFB800] opacity-40 blur-[120px] rounded-full pointer-events-none z-[-1]" />
 
           <EventsSection />
-          <MeetTheOfficersSection />
+          <MeetTheOfficersSection content={officersSection} />
           <BorrowSection />
-          <FAQSection />
+          <FAQSection items={faqItems} />
           <CTASection />
           <FooterSection />
         </div>

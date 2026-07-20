@@ -3,14 +3,9 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import type { AboutContent } from "@/features/cms";
 
-const CAROUSEL_IMAGES = [
-  "/aboutCard1.JPG",
-  "/aboutCard2.jpg",
-  "/aboutCard3.jpg",
-  "/aboutCard4.jpg",
-  "/aboutCard5.jpg",
-];
+
 
 const fadeVariants = {
   enter: {
@@ -32,22 +27,30 @@ const fadeVariants = {
   },
 };
 
-export default function AboutSection() {
+type AboutSectionProps = {
+  content: AboutContent;
+};
+
+export default function AboutSection({ content }: AboutSectionProps) {
+  const carouselImages = content.carouselImages || [];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+    if (carouselImages.length === 0) return;
     const timer = setInterval(() => {
-      handleNext();
+      setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [currentIndex]);
+  }, []);
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % CAROUSEL_IMAGES.length);
+    if (carouselImages.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % carouselImages.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + CAROUSEL_IMAGES.length) % CAROUSEL_IMAGES.length);
+    if (carouselImages.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
   };
 
   const handleDotClick = (index: number) => {
@@ -55,7 +58,7 @@ export default function AboutSection() {
   };
 
   return (
-    <section className="relative overflow-hidden w-full bg-[#0d0d0d] flex flex-col">
+    <section id="about" className="landing-section relative overflow-hidden w-full bg-[#0d0d0d] flex flex-col scroll-mt-24">
       {/* ── IMAGE CAROUSEL CONTAINER (TOP HALF) ── */}
       <div className="relative w-full h-[280px] sm:h-[380px] md:h-[480px] lg:h-[560px] overflow-hidden bg-black flex items-center justify-center">
         <AnimatePresence initial={false}>
@@ -67,13 +70,15 @@ export default function AboutSection() {
             exit="exit"
             className="absolute inset-0 w-full h-full"
           >
-            <Image
-              src={CAROUSEL_IMAGES[currentIndex]}
-              alt={`About us slide ${currentIndex + 1}`}
-              fill
-              priority
-              className="object-cover object-center"
-            />
+            {carouselImages.length > 0 && (
+              <Image
+                src={carouselImages[currentIndex]}
+                alt={`About us slide ${currentIndex + 1}`}
+                fill
+                priority
+                className="object-cover object-center"
+              />
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -101,7 +106,7 @@ export default function AboutSection() {
 
         {/* Centered Indicator Dots */}
         <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center items-center gap-2.5">
-          {CAROUSEL_IMAGES.map((_, index) => (
+          {carouselImages.map((_, index) => (
             <button
               key={index}
               onClick={() => handleDotClick(index)}
@@ -138,15 +143,15 @@ export default function AboutSection() {
           <h2
             className="mb-10 text-center text-6xl font-extrabold tracking-widest title-header"
           >
-            About Us
+            {content.title}
           </h2>
 
           {/* Centered Description Text */}
-          <p className="text-zinc-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl text-center px-4 font-normal tracking-wide">
-            Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum
-            dolor sit amet consectetur. Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit
-            amet consectetur Lorem ipsum dolor sit amet consectetur Lorem ipsum dolor sit amet consectetur. Lorem ipsum dolor sit amet
-            consectetur Lorem ipsum dolor sit amet consectetur.
+          <p 
+            className="text-zinc-200 text-sm sm:text-base md:text-lg leading-relaxed max-w-4xl px-4 font-normal tracking-wide whitespace-pre-wrap"
+            style={{ textAlign: content.textAlign || "center" }}
+          >
+            {content.body}
           </p>
         </div>
       </div>
