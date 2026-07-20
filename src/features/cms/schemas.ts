@@ -24,15 +24,12 @@ export const OfficersSectionContentSchema = z.object({
   title: z.string().min(1),
   subtitle: z.string().min(1),
   templateImageUrl: z.string().min(1),
-  officersImageUrl: z.string().optional(),
-  officersImage2Url: z.string().optional(),
-  officersImage3Url: z.string().optional(),
-  button1Label: z.string().optional().default("Batch Officers"),
-  button1Link: z.string().optional().default("/officers#part-1"),
-  button2Label: z.string().optional().default("ACCESS"),
-  button2Link: z.string().optional().default("/officers#part-2"),
-  button3Label: z.string().optional().default("Class Representatives"),
-  button3Link: z.string().optional().default("/officers#part-3"),
+  parts: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    link: z.string(),
+    imageUrl: z.string().optional(),
+  })).optional().default([]),
 });
 
 export const FAQItemSchema = z.object({
@@ -109,13 +106,24 @@ export const DEFAULT_OFFICERS_SECTION_CONTENT: OfficersSectionContent = {
   subtitle:
     "We are a community of student leaders and innovators committed to advancing technology, collaboration, and excellence within PUP.",
   templateImageUrl: "/meet-the-officers.webp",
-  officersImageUrl: "",
-  officersImage2Url: "",
-  officersImage3Url: "",
-  button1Label: "Batch Officers",
-  button1Link: "/officers#part-1",
-  button2Label: "ACCESS",
-  button2Link: "/officers#part-2",
-  button3Label: "Class Representatives",
-  button3Link: "/officers#part-3",
+  parts: [
+    {
+      id: "part-1",
+      label: "Batch Officers",
+      link: "/officers#part-1",
+      imageUrl: "",
+    },
+    {
+      id: "part-2",
+      label: "ACCESS",
+      link: "/officers#part-2",
+      imageUrl: "",
+    },
+    {
+      id: "part-3",
+      label: "Class Representatives",
+      link: "/officers#part-3",
+      imageUrl: "",
+    },
+  ],
 };

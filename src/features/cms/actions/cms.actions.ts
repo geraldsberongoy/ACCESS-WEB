@@ -158,17 +158,32 @@ export async function updateOfficersSectionAction(
       templateImageUrl = await uploadSiteContentImage(templateFile);
     }
 
+    // Parse dynamic buttons
+    let parts = current.parts || [];
+    const partsJson = formData.get("partsJson");
+    if (typeof partsJson === "string") {
+      try {
+        const parsedParts = JSON.parse(partsJson);
+        // Preserve imageUrls when updating labels/links
+        parts = parsedParts.map((p: any) => {
+          const existing = parts.find((ep) => ep.id === p.id);
+          return {
+            id: p.id,
+            label: p.label,
+            link: p.link,
+            imageUrl: existing?.imageUrl || "",
+          };
+        });
+      } catch (e) {
+        console.error("Failed to parse partsJson", e);
+      }
+    }
+
     const parsed = OfficersSectionContentSchema.safeParse({
       title: formData.get("title"),
       subtitle: formData.get("subtitle"),
       templateImageUrl,
-      officersImageUrl: current.officersImageUrl,
-      button1Label: formData.get("button1Label") || undefined,
-      button1Link: formData.get("button1Link") || undefined,
-      button2Label: formData.get("button2Label") || undefined,
-      button2Link: formData.get("button2Link") || undefined,
-      button3Label: formData.get("button3Label") || undefined,
-      button3Link: formData.get("button3Link") || undefined,
+      parts,
     });
 
     if (!parsed.success) {
@@ -199,31 +214,19 @@ export async function updateOfficersRosterAction(
     const { getOfficersSectionContent } = await import("../services/site-content.service");
     const current = await getOfficersSectionContent();
 
-    const rosterFile1 = formData.get("officersImage");
-    const rosterFile2 = formData.get("officersImage2");
-    const rosterFile3 = formData.get("officersImage3");
-    
-    let officersImageUrl = current.officersImageUrl ?? "";
-    let officersImage2Url = current.officersImage2Url ?? "";
-    let officersImage3Url = current.officersImage3Url ?? "";
+    let parts = [...(current.parts || [])];
 
-    if (rosterFile1 instanceof File && rosterFile1.size > 0) {
-      officersImageUrl = await uploadOfficersRosterImage(rosterFile1);
-    }
-    
-    if (rosterFile2 instanceof File && rosterFile2.size > 0) {
-      officersImage2Url = await uploadOfficersRosterImage(rosterFile2);
-    }
-    
-    if (rosterFile3 instanceof File && rosterFile3.size > 0) {
-      officersImage3Url = await uploadOfficersRosterImage(rosterFile3);
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      const file = formData.get(`image_${part.id}`);
+      if (file instanceof File && file.size > 0) {
+        parts[i].imageUrl = await uploadOfficersRosterImage(file);
+      }
     }
 
     const parsed = OfficersSectionContentSchema.safeParse({
       ...current,
-      officersImageUrl,
-      officersImage2Url,
-      officersImage3Url,
+      parts,
     });
 
     if (!parsed.success) {

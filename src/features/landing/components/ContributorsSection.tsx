@@ -56,7 +56,7 @@ const CONTRIBUTORS: Contributor[] = [
     name: "Sophia Lim",
     role: "Lead UI/UX",
     backdropImage: "/BG-ACCESS.webp",
-    image: "/Sophialead.png",
+    image: "/Phia.png",
   },
   {
     name: "Blessie Jane Alba",
