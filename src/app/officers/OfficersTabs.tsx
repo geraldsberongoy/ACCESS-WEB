@@ -4,45 +4,41 @@ import { useState, useEffect } from "react";
 import OfficersRosterMedia from "@/features/cms/components/OfficersRosterMedia";
 
 type OfficersTabsProps = {
-  rosterImage: string | undefined;
-  image2Url: string | undefined;
-  image3Url: string | undefined;
-  button1Label: string;
-  button2Label: string;
-  button3Label: string;
+  parts: {
+    id: string;
+    label: string;
+    link: string;
+    imageUrl?: string;
+  }[];
 };
 
-export default function OfficersTabs({
-  rosterImage,
-  image2Url,
-  image3Url,
-  button1Label,
-  button2Label,
-  button3Label,
-}: OfficersTabsProps) {
-  const [activeTab, setActiveTab] = useState<string>("part-1");
+export default function OfficersTabs({ parts }: OfficersTabsProps) {
+  const defaultTab = parts.length > 0 ? parts[0].id : "";
+  const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     // Read hash on mount
     const hash = window.location.hash;
-    if (hash === "#part-2" || hash === "#part-3") {
-      setActiveTab(hash.replace("#", ""));
+    const cleanHash = hash.replace("#", "");
+    if (parts.some(p => p.id === cleanHash)) {
+      setActiveTab(cleanHash);
     }
-  }, []);
+  }, [parts]);
 
   // Handle hash changes if user navigates back/forward
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash;
-      if (hash === "#part-1" || hash === "#part-2" || hash === "#part-3") {
-        setActiveTab(hash.replace("#", ""));
+      const cleanHash = hash.replace("#", "");
+      if (parts.some(p => p.id === cleanHash)) {
+        setActiveTab(cleanHash);
       }
     };
     window.addEventListener("hashchange", handleHashChange);
     return () => window.removeEventListener("hashchange", handleHashChange);
-  }, []);
+  }, [parts]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -58,74 +54,42 @@ export default function OfficersTabs({
     );
   }
 
+  if (parts.length === 0) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60 animate-in fade-in duration-300">
+        No officers configured yet.
+      </div>
+    );
+  }
+
+  const activePart = parts.find(p => p.id === activeTab) || parts[0];
+
   return (
     <div className="w-full">
       <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10">
-        <button
-          onClick={() => handleTabChange("part-1")}
-          className={`px-6 py-3 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 ${
-            activeTab === "part-1"
-              ? "bg-[#F26223] text-white shadow-[0_8px_24px_rgba(242,98,35,0.4)] scale-105"
-              : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          {button1Label}
-        </button>
-        <button
-          onClick={() => handleTabChange("part-2")}
-          className={`px-6 py-3 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 ${
-            activeTab === "part-2"
-              ? "bg-[#F26223] text-white shadow-[0_8px_24px_rgba(242,98,35,0.4)] scale-105"
-              : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          {button2Label}
-        </button>
-        <button
-          onClick={() => handleTabChange("part-3")}
-          className={`px-6 py-3 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 ${
-            activeTab === "part-3"
-              ? "bg-[#F26223] text-white shadow-[0_8px_24px_rgba(242,98,35,0.4)] scale-105"
-              : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          {button3Label}
-        </button>
+        {parts.map(part => (
+          <button
+            key={part.id}
+            onClick={() => handleTabChange(part.id)}
+            className={`px-6 py-3 rounded-2xl font-semibold text-sm sm:text-base transition-all duration-300 ${
+              activeTab === part.id
+                ? "bg-[#F26223] text-white shadow-[0_8px_24px_rgba(242,98,35,0.4)] scale-105"
+                : "bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            {part.label}
+          </button>
+        ))}
       </div>
 
       <div className="relative">
-        {activeTab === "part-1" && rosterImage && (
+        {activePart.imageUrl ? (
           <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)] animate-in fade-in zoom-in-95 duration-300">
-            <OfficersRosterMedia url={rosterImage} />
+            <OfficersRosterMedia url={activePart.imageUrl} />
           </div>
-        )}
-        
-        {activeTab === "part-2" && image2Url && (
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)] animate-in fade-in zoom-in-95 duration-300">
-            <OfficersRosterMedia url={image2Url} />
-          </div>
-        )}
-        
-        {activeTab === "part-3" && image3Url && (
-          <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/20 shadow-[0_20px_60px_rgba(0,0,0,0.45)] animate-in fade-in zoom-in-95 duration-300">
-            <OfficersRosterMedia url={image3Url} />
-          </div>
-        )}
-        
-        {/* Empty states for active tab */}
-        {activeTab === "part-1" && !rosterImage && (
+        ) : (
           <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60 animate-in fade-in duration-300">
-            No image uploaded for {button1Label} yet.
-          </div>
-        )}
-        {activeTab === "part-2" && !image2Url && (
-          <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60 animate-in fade-in duration-300">
-            No image uploaded for {button2Label} yet.
-          </div>
-        )}
-        {activeTab === "part-3" && !image3Url && (
-          <div className="flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/5 px-6 py-16 text-center text-sm text-white/60 animate-in fade-in duration-300">
-            No image uploaded for {button3Label} yet.
+            No image uploaded for {activePart.label} yet.
           </div>
         )}
       </div>

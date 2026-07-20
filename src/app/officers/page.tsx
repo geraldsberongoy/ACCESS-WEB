@@ -24,7 +24,6 @@ const OFFICERS_CRYSTALS: CrystalConfig[] = [
 export default async function OfficersPage() {
   noStore();
   const content = await getOfficersSectionContent();
-  const rosterImage = content.officersImageUrl?.trim();
 
   return (
     <div className="min-h-screen flex flex-col bg-black text-white relative">
@@ -72,14 +71,7 @@ export default async function OfficersPage() {
           </div>
 
           <div className="w-full max-w-5xl mx-auto relative z-20">
-            <OfficersTabs 
-              rosterImage={rosterImage}
-              image2Url={content.officersImage2Url}
-              image3Url={content.officersImage3Url}
-              button1Label={content.button1Label || "Batch Officers"}
-              button2Label={content.button2Label || "ACCESS"}
-              button3Label={content.button3Label || "Class Representatives"}
-            />
+            <OfficersTabs parts={content.parts || []} />
           </div>
         </main>
 

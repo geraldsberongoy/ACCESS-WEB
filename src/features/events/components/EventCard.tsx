@@ -76,9 +76,9 @@ export default function EventCard({
             </svg>
           </button>
 
-          <div className="h-px w-full" />
+          <div className="h-px w-full bg-white/10" />
 
-          <p className="text-sm leading-relaxed text-zinc-500 line-clamp-3">{description}</p>
+          <p className="text-sm leading-relaxed text-zinc-300 line-clamp-6">{description}</p>
         </div>
       </div>
 
