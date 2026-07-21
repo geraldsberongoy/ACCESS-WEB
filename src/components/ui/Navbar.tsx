@@ -120,7 +120,7 @@ export default function Navbar({ items = landingNavItems }: NavbarProps) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 w-full px-3 pt-3 md:px-5 md:pt-4 lg:px-6 lg:pt-5">
       <nav
-        className="mx-auto grid w-full max-w-[1248px] grid-cols-[1fr_auto] items-center gap-3 rounded-full border border-white/10 px-4 py-2 backdrop-blur-xl md:grid-cols-[auto_1fr_auto] md:gap-4 md:px-6 md:py-2.5"
+        className="mx-auto grid w-full max-w-[1248px] grid-cols-[1fr_auto] items-center gap-3 rounded-full border border-white/10 px-4 py-2 backdrop-blur-xl md:grid-cols-[1fr_auto_1fr] md:gap-4 md:px-6 md:py-2.5"
         style={{
           background: "rgba(18, 18, 18, 0.82)",
           boxShadow: "0 4px 24px rgba(0, 0, 0, 0.35)",

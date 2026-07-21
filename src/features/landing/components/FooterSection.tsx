@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -59,9 +61,9 @@ const RESOURCE_LINKS = [
 ];
 
 const BOTTOM_LINKS = [
-  { label: "Privacy Center", href: "/#contact" },
-  { label: "Terms of Service", href: "/#contact" },
-  { label: "Cookie Policy", href: "/#contact" },
+  { label: "Privacy Center", href: "#" },
+  { label: "Terms of Service", href: "#" },
+  { label: "Cookie Policy", href: "#" },
 ];
 
 const ACCESS_ADDRESS =
@@ -70,9 +72,16 @@ const ACCESS_ADDRESS =
 function FooterAnchor({ href, label }: { href: string; label: string }) {
   const isExternal = href.startsWith("http");
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (href === "#") {
+      e.preventDefault();
+    }
+  };
+
   return (
     <Link
       href={href}
+      onClick={handleClick}
       target={isExternal ? "_blank" : undefined}
       rel={isExternal ? "noopener noreferrer" : undefined}
       className="text-sm transition-colors duration-150 hover:text-white"
