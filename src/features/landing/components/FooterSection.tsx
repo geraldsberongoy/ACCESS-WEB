@@ -103,7 +103,7 @@ export default function FooterSection() {
             className="max-w-[260px] text-xs leading-relaxed text-justify sm:max-w-[280px]"
             style={{ color: "rgb(255, 255, 255)", fontFamily: `'Josefin Sans', sans-serif` }}
           >
-            Association of Computer Engineering Students — College of Engineering and Architecture,
+            Association of Concern Computer Engineering Students for Service — College of Engineering and Architecture,
             Polytechnic University of the Philippines.
           </p>
           <address
