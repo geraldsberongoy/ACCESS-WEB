@@ -72,12 +72,28 @@ export async function getUsersForAdmin(options: GetUsersOptions = {}) {
 
 export async function updateUserRole(userId: string, newRole: UserRole) {
   await checkRole({ roles: rolesForArea("users") });
-  const supabase = createSupabaseAdminClient();
 
   const validRoles: UserRole[] = ["Admin", "Organization", "Pending", "Tech", "SponsorsPartners", "Govs"];
   if (!validRoles.includes(newRole)) {
     throw new AppError("Invalid role provided", 400);
   }
+
+  // The admin client below bypasses RLS (including the "Admin: ... cannot
+  // self-demote" WITH CHECK from the user_role_new migration), so that
+  // protection has to be re-enforced here: an admin changing their own row
+  // could otherwise strip their own admin-area access with no other admin
+  // able to grant it back through this same page.
+  const { createSupabaseServerClient } = await import("@/lib/supabase/server-client");
+  const serverSupabase = await createSupabaseServerClient();
+  const {
+    data: { user: currentAdmin },
+  } = await serverSupabase.auth.getUser();
+
+  if (currentAdmin && currentAdmin.id === userId) {
+    throw new AppError("You cannot change your own role. Ask another admin to do it.", 400);
+  }
+
+  const supabase = createSupabaseAdminClient();
 
   const { data, error } = await supabase
     .from("Users")
