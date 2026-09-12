@@ -84,6 +84,7 @@ describe("Users Admin Service", () => {
     process.env.RESEND_API_KEY = "re_mock_test_key";
     process.env.NEXT_PUBLIC_SITE_URL = "https://pupaccess.org";
     vi.mocked(checkRoleModule.checkRole).mockResolvedValue(undefined);
+    mockServerGetUser.mockResolvedValue({ data: { user: { id: "acting-admin-id" } } });
   });
 
   describe("getUserStats", () => {
@@ -236,6 +237,17 @@ describe("Users Admin Service", () => {
       expect(mockAdminUpdate).toHaveBeenCalledWith(
         expect.objectContaining({ role: "Tech" })
       );
+    });
+
+    it("prevents an admin from changing their own role", async () => {
+      mockServerGetUser.mockResolvedValue({
+        data: { user: { id: "acting-admin-id" } },
+      });
+
+      await expect(updateUserRole("acting-admin-id", "Tech")).rejects.toThrow(
+        "You cannot change your own role."
+      );
+      expect(mockAdminUpdate).not.toHaveBeenCalled();
     });
 
     it("does not send the borrowing-approval email for scoped admin roles", async () => {
